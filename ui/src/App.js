@@ -6,7 +6,10 @@ import axios from 'axios';
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import CityObjects from './twobuildings.city.json';
+import CustomMesh from './cityJSONLoader.js'
+//import CityObjects from './twobuildings.city.json';
+
+const backendURL = 'http://localhost:5000/'
 
 function Box(props) {
   // This reference gives us direct access to the THREE.Mesh object
@@ -45,7 +48,7 @@ class App extends React.Component {
   componentDidMount() {
     let data ;
 
-    axios.get('http://localhost:5000/wel/')
+    axios.get(backendURL+'wel/')
     .then(res => {
         data = res.data;
         this.setState({
@@ -85,7 +88,7 @@ class App extends React.Component {
           <pointLight position={[10, 10, 10]} />
           <Box position={[-1.2, 0, 0]} />
           <Box position={[1.2, 0, 0]} />
-          
+          <CustomMesh position={[5,0,0]}/>
         </Canvas>
 
       </div>
