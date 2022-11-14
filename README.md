@@ -13,7 +13,7 @@ The project has:
 1. Use one terminal in cityquery\django_env `.\Scripts\activate` to activate the python environment.
 2. Then `python manage.py runserver` to start the backend.
 3. The Backend is now available at localhost:8000
-4. In another terminal at cityquery/ui, run `npm start`
+4. In another terminal at cityquery/ui, run `yarn start`
 5. The frontend is now available at localhost:5000
 
 ## Setup
