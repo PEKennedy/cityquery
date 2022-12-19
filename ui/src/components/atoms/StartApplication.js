@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable } from 'native-base';
-import { strings } from '../strings';
+import { strings } from '../../constants/strings';
 import { useNavigate } from 'react-router-native';
 
 const style = {

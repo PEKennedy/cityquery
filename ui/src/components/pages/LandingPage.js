@@ -1,7 +1,7 @@
 import React from 'react';
 import { VStack } from 'native-base';
 import PageTitle from '../atoms/PageTitle';
-import { strings } from '../strings';
+import { strings } from '../../constants/strings';
 import StartApplication from '../atoms/StartApplication';
 
 const style = {

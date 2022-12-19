@@ -3,6 +3,7 @@ import { VStack } from 'native-base';
 import PageTitle from '../atoms/PageTitle';
 import { strings } from '../../constants/strings';
 import ToolBar from '../organisms/ToolBar';
+import VisualizationRoot from '../organisms/VisualizationRoot';
 
 const style = {
   pageContainer: {
@@ -11,7 +12,7 @@ const style = {
     backgroundColor: '#d2303b',
     alignItems: 'center',
   },
-  homeTitle: {
+  visualizationTitle: {
     fontSize: 48,
     fontWeight: 500,
     color: '#ffffff',
@@ -19,13 +20,14 @@ const style = {
   },
 };
 
-const HomePage = () => {
+const VisualizationPage = () => {
   return (
     <VStack style={style.pageContainer}>
       <ToolBar />
-      <PageTitle titleStyle={style.homeTitle} title={strings.home} />
+      <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
+      <VisualizationRoot />
     </VStack>
   );
 };
 
-export default HomePage;
+export default VisualizationPage;
