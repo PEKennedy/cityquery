@@ -6,10 +6,11 @@ import { createRoot } from 'react-dom/client'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import CityObjects from './twobuildings.city.json';
+//import CityObjects from './twobuildings.city.json';
 
-
+//test funnction for getting and displaying a cityjson mesh (not working)
 function CustomMesh(props){
+    var CityObjects = props.CityObjects;
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef()
     // Hold state for hovered and clicked events
