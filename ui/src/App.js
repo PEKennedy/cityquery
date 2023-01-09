@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import { loadPointCloud, PointCloudObj } from './pointCloud';
+import { PointCloudObj } from './pointCloud';
 
 import CustomMesh from './cityJSONLoader.js'
 
@@ -84,6 +84,7 @@ class App extends React.Component {
     }
   }
 
+  //clear all files from the canvas
   clearCityFiles(e){
     this.setState({
       cityFiles:[],
@@ -94,6 +95,7 @@ class App extends React.Component {
     })
   }
 
+  //takes a file's contents, returns a list of objects as proper jsx types
   displayObjList(cityJSONFile){
     console.log(cityJSONFile.CityObjects);
     const keys = Object.keys(cityJSONFile.CityObjects);
@@ -108,6 +110,8 @@ class App extends React.Component {
     );
   }
 
+  //given a file (need a file as it contains the both object and the vertices) and an object name,
+  //gives the proper jsx for display
   chooseObjectType(cityFile,objectName){
     //if(object is a mesh)
     //  return 'mesh'
@@ -126,7 +130,8 @@ class App extends React.Component {
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
     }*/
-    
+
+    //default
     return <Box position={[-2.4, 0, 0]}/>
 
     //Some notes:
@@ -150,8 +155,8 @@ class App extends React.Component {
     const filesList = this.state.cityFilesMetaData.map((file) => 
       <li>{file.name}</li>
     );
-    //console.log(filesList);
-    //<PointCloudObj position={[5, 0, 0]} cityFile={this.state.cityFiles[0]} object={'25749c9a-e242-4f0e-bfb4-c1e28f2211f1'}/>
+    
+    //go through every uploaded file, add it to the canvas
     const objList = this.state.cityFiles.map((file) =>
       this.displayObjList(file)
     );
