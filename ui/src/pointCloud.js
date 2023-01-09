@@ -62,9 +62,6 @@ async function loadExternalLASPointCloud(cityJSONObj, file){
  * @returns 
  */
 function loadCityJsonPointCloud(cityJSONFile,objIndex){
-    //const ref = useRef();
-//ref={ref}
-
     if(cityJSONFile.CityObjects == undefined){
         console.log("provided cityJSON file did not contain \"CityObjects\"")
         return;
@@ -76,7 +73,7 @@ function loadCityJsonPointCloud(cityJSONFile,objIndex){
         return;
     }
 
-    //console.log(obj);
+    console.log(obj);
 
     var vert_inds = obj.geometry[0].boundaries;
     var verts = cityJSONFile.vertices;
@@ -106,6 +103,7 @@ function PointCloudObj(props){
     useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
     if(props.cityFile == undefined){ //not loaded yet
+    //if(props.object == undefined){
         //console.log("pt cloud not defined yet")
         return (<points ref={ref} visible={false}></points>);
     }
@@ -114,6 +112,7 @@ function PointCloudObj(props){
     console.log(props.object);
 
     var verts = loadPointCloud(props.cityFile,props.object);
+    //var verts = loadPointCloud(props.object);
     console.log(verts)
     if(verts == undefined){
         return (<points ref={ref} visible={false}></points>);

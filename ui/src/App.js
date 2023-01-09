@@ -1,7 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useRef, useState } from 'react';
-import axios from 'axios';
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
@@ -9,10 +8,6 @@ import { BufferAttribute, BufferGeometry } from 'three';
 import { loadPointCloud, PointCloudObj } from './pointCloud';
 
 import CustomMesh from './cityJSONLoader.js'
-//import CityObjects from './twobuildings.city.json';
-//import CityObjects from './example.city.json';
-
-//const backendURL = 'http://localhost:5000/'
 
 function Box(props) {
   // This reference gives us direct access to the THREE.Mesh object
@@ -47,8 +42,8 @@ function Box(props) {
 class App extends React.Component {
 
   state = {
+    cityFilesMetaData: [],
     cityFiles: [],
-    pointCloudGeo : undefined,
     details:[],
   }
 
@@ -56,10 +51,16 @@ class App extends React.Component {
     super(props);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.clearCityFiles = this.clearCityFiles.bind(this);
+    this.clearFileInput = this.clearFileInput.bind(this);
+    this.chooseObjectType = this.chooseObjectType.bind(this);
   }
 
   componentDidMount() {
 
+  }
+
+  clearFileInput(){
+    document.getElementById("FileIn").value = '';
   }
 
   handleFileChange(e) {
@@ -69,66 +70,101 @@ class App extends React.Component {
 
       const fr = new FileReader();
 
-      fr.addEventListener("load",e=>{
-        console.log(JSON.parse(fr.result));
-        this.setState({
-          cityFiles:[...this.state.cityFiles, JSON.parse(fr.result)]
+      fr.addEventListener("load",e=>{ //add an event listener for when the filereader has finished
+        //console.log(JSON.parse(fr.result));
+        this.setState({ //add the parsed file to the file list
+          cityFiles:[...this.state.cityFiles, JSON.parse(fr.result)],
+          cityFilesMetaData:[...this.state.cityFilesMetaData,file]
         },()=>{
-          console.log(this.state.cityFiles);
+          //console.log(this.state.cityFiles);
+          this.clearFileInput(); //reset the file upload html component 
         })
       });
       fr.readAsText(file);
-
-      /*this.setState({
-        cityFiles:[...this.state.cityFiles, CityObjects]
-      },()=>{
-        console.log(this.state.cityFiles);
-      })*/
     }
   }
 
   clearCityFiles(e){
     this.setState({
-      cityFiles:[]
+      cityFiles:[],
+      cityFilesMetaData:[]
     },()=>{
-      console.log(this.state.cityFiles);
+      //console.log(this.state.cityFiles);
+      this.clearFileInput();
     })
   }
 
-  parseObjectType(object){
+  displayObjList(cityJSONFile){
+    console.log(cityJSONFile.CityObjects);
+    const keys = Object.keys(cityJSONFile.CityObjects);
+    var objs = keys.map((key)=>{
+      return this.chooseObjectType(cityJSONFile,key);
+    });
+
+    return (
+      <>
+        {objs}
+      </>
+    );
+  }
+
+  chooseObjectType(cityFile,objectName){
     //if(object is a mesh)
     //  return 'mesh'
-    //if(object is a pointcloud)
-    //  return 'pointcloud'
-    //if(object is an external pointcloud)
-    //  return 'ext_pointcloud'
     //if(object is a polygon terrain)
     //  return 'poly_terrain'
     //if(object is a heightmap terrain)
     //  return 'dem_terrain'
+    console.log(cityFile);
+    console.log(objectName);
+    var object = cityFile.CityObjects[objectName];
+    console.log(object);
+
+    if(object.geometry[0] != undefined && object.geometry[0].type == "MultiPoint"){
+      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    }
+    /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
+      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    }*/
+    
+    return <Box position={[-2.4, 0, 0]}/>
+
+    //Some notes:
+    //- cityJSON files with PointClouds always specify an extension you could check for in the file
+    //- For an 'internal' pointcloud (ie. a pt cloud with the vertices specified in the file)
+    // it seems we can check for a "geometry" of type "MultiPoint"
+    //- For an 'external' pointcloud, we can check for an object with no geometry, 
+    //but with "attributes"."pointcloud-file".pointFile
+    //- For a mesh, check for a geometry of type "Multisurface" as a starting point. There are many
+    //different "types" of geometry in the cityJson spec, so this worries me the most
+
+    //Might just let pointcloud determine itself whether its external or not
+    // (such that there is only 1 type of pointcloud object in our project),
+    // but we still need to parse both cases here
   }
 
   render(){
 
-    //let filesList = [];
-    //if(this.state.cityFiles != undefined){
-
     //+ " (" + file.size + ")"
-    let filesList = this.state.cityFiles.map((file) => {
-    //console.log(file);
-      <li>{file.name }</li>
-    });
+    //console.log(this.state.cityFilesMetaData)
+    const filesList = this.state.cityFilesMetaData.map((file) => 
+      <li>{file.name}</li>
+    );
     //console.log(filesList);
-
+    //<PointCloudObj position={[5, 0, 0]} cityFile={this.state.cityFiles[0]} object={'25749c9a-e242-4f0e-bfb4-c1e28f2211f1'}/>
+    const objList = this.state.cityFiles.map((file) =>
+      this.displayObjList(file)
+    );
     return (
       <div>
 
         <br/>
 
-        <input type="file" id="myFile" name="filename" onChange={this.handleFileChange}></input>
+        <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} ref={this.fileInRef} accept=".json"></input>
         <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
           value="Clear CityJSON Files"/>
-
+        <br/>
+        Uploaded File List:
         <br/>
         <ul>{filesList}</ul>
         <br/>
@@ -139,7 +175,7 @@ class App extends React.Component {
           <pointLight position={[10, 10, 10]} />
           <Box position={[-1.2, 0, 0]} />
           <Box position={[1.2, 0, 0]} />
-          <PointCloudObj position={[5, 0, 0]} cityFile={this.state.cityFiles[0]} object={'25749c9a-e242-4f0e-bfb4-c1e28f2211f1'}/>
+          {objList}
         </Canvas>
 
       </div>
