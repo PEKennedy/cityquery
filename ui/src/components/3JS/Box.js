@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 
 const Box = (props) => {
-  const { position } = props;
-  // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef()
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false)
@@ -11,11 +9,9 @@ const Box = (props) => {
   // Subscribe this component to the render-loop, rotate the mesh every frame
   useFrame((state, delta) => (ref.current.rotation.x += 0.01))
   // Return the view, these are regular Threejs elements expressed in JSX
-  //<CustomMesh position={[1.7,0,0]} />
-  //In another file I have a cityJSON test I'm working on
   return (
     <mesh
-      position={position}
+      {...props}
       ref={ref}
       scale={clicked ? 1.5 : 1}
       onClick={(event) => click(!clicked)}
@@ -28,3 +24,8 @@ const Box = (props) => {
 };
 
 export default Box;
+
+//<CustomMesh position={[1.7,0,0]} />
+//In another file I have a cityJSON test I'm working on
+
+//<CustomMesh position={[5,0,0]}/>
