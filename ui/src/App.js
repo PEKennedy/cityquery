@@ -5,6 +5,8 @@ import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 
+import { PerspectiveCamera } from '@react-three/drei';
+
 import { PointCloudObj } from './pointCloud';
 
 import CustomMesh from './cityJSONLoader.js'
@@ -160,6 +162,10 @@ class App extends React.Component {
     const objList = this.state.cityFiles.map((file) =>
       this.displayObjList(file)
     );
+    
+    //, lookAt:[0,0,1]
+    //camera can be manipulated manually by passing certain props to <Canvas>
+    //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
     return (
       <div>
 
@@ -175,13 +181,16 @@ class App extends React.Component {
         <br/>
         This demos <code>react-three-fiber</code>, a library for using three.js and react together:
         <br/>
-        <Canvas>
-          <ambientLight />
-          <pointLight position={[10, 10, 10]} />
-          <Box position={[-1.2, 0, 0]} />
-          <Box position={[1.2, 0, 0]} />
-          {objList}
-        </Canvas>
+        <div style={{position:"relative",width:800,height:600}}>
+          <Canvas camera={{position:[0,0,10], fov:75, }} >
+            <ambientLight />
+            <pointLight position={[10, 10, 10]} />
+            <Box position={[-1.2, 0, 0]} />
+            <Box position={[1.2, 0, 0]} />
+            {objList}
+          </Canvas>
+        </div>
+
 
       </div>
     );
