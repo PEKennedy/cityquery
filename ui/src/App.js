@@ -1,200 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-import React, { useRef, useState } from 'react';
+import React from 'react';
+import LandingPage from './components/pages/LandingPage';
+import { NativeBaseProvider } from 'native-base';
+import { Routes, Route } from 'react-router-dom';
+import { strings } from './constants/strings';
+import HomePage from './components/pages/HomePage';
+import VisualizationPage from './components/pages/VisualizationPage';
 
-import { Canvas, useFrame } from '@react-three/fiber'
-import { BufferAttribute, BufferGeometry } from 'three';
-
-import { PerspectiveCamera } from '@react-three/drei';
-
-import { PointCloudObj } from './pointCloud';
-
-import CustomMesh from './cityJSONLoader.js'
-
-function Box(props) {
-  // This reference gives us direct access to the THREE.Mesh object
-  const ref = useRef()
-  // Hold state for hovered and clicked events
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (ref.current.rotation.x += 0.01))
-  // Return the view, these are regular Threejs elements expressed in JSX
-
+const App = () => {
   return (
-    <mesh
-      {...props}
-      ref={ref}
-      scale={clicked ? 1.5 : 1}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-
-  )
-}
-
-//<CustomMesh position={[1.7,0,0]} />
-//In another file I have a cityJSON test I'm working on
-
-//<CustomMesh position={[5,0,0]}/>
-
-class App extends React.Component {
-
-  state = {
-    cityFilesMetaData: [],
-    cityFiles: [],
-    details:[],
-  }
-
-  constructor(props){
-    super(props);
-    this.handleFileChange = this.handleFileChange.bind(this);
-    this.clearCityFiles = this.clearCityFiles.bind(this);
-    this.clearFileInput = this.clearFileInput.bind(this);
-    this.chooseObjectType = this.chooseObjectType.bind(this);
-  }
-
-  componentDidMount() {
-
-  }
-
-  clearFileInput(){
-    document.getElementById("FileIn").value = '';
-  }
-
-  handleFileChange(e) {
-    if (e.target.files) {
-      const file = e.target.files[0]
-      console.log(file)
-
-      const fr = new FileReader();
-
-      fr.addEventListener("load",e=>{ //add an event listener for when the filereader has finished
-        //console.log(JSON.parse(fr.result));
-        this.setState({ //add the parsed file to the file list
-          cityFiles:[...this.state.cityFiles, JSON.parse(fr.result)],
-          cityFilesMetaData:[...this.state.cityFilesMetaData,file]
-        },()=>{
-          //console.log(this.state.cityFiles);
-          this.clearFileInput(); //reset the file upload html component 
-        })
-      });
-      fr.readAsText(file);
-    }
-  }
-
-  //clear all files from the canvas
-  clearCityFiles(e){
-    this.setState({
-      cityFiles:[],
-      cityFilesMetaData:[]
-    },()=>{
-      //console.log(this.state.cityFiles);
-      this.clearFileInput();
-    })
-  }
-
-  //takes a file's contents, returns a list of objects as proper jsx types
-  displayObjList(cityJSONFile){
-    console.log(cityJSONFile.CityObjects);
-    const keys = Object.keys(cityJSONFile.CityObjects);
-    var objs = keys.map((key)=>{
-      return this.chooseObjectType(cityJSONFile,key);
-    });
-
-    return (
-      <>
-        {objs}
-      </>
-    );
-  }
-
-  //given a file (need a file as it contains the both object and the vertices) and an object name,
-  //gives the proper jsx for display
-  chooseObjectType(cityFile,objectName){
-    //if(object is a mesh)
-    //  return 'mesh'
-    //if(object is a polygon terrain)
-    //  return 'poly_terrain'
-    //if(object is a heightmap terrain)
-    //  return 'dem_terrain'
-    console.log(cityFile);
-    console.log(objectName);
-    var object = cityFile.CityObjects[objectName];
-    console.log(object);
-
-    if(object.geometry[0] != undefined && object.geometry[0].type == "MultiPoint"){
-      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
-    }
-    /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
-      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
-    }*/
-
-    //default
-    return <Box position={[-2.4, 0, 0]}/>
-
-    //Some notes:
-    //- cityJSON files with PointClouds always specify an extension you could check for in the file
-    //- For an 'internal' pointcloud (ie. a pt cloud with the vertices specified in the file)
-    // it seems we can check for a "geometry" of type "MultiPoint"
-    //- For an 'external' pointcloud, we can check for an object with no geometry, 
-    //but with "attributes"."pointcloud-file".pointFile
-    //- For a mesh, check for a geometry of type "Multisurface" as a starting point. There are many
-    //different "types" of geometry in the cityJson spec, so this worries me the most
-
-    //Might just let pointcloud determine itself whether its external or not
-    // (such that there is only 1 type of pointcloud object in our project),
-    // but we still need to parse both cases here
-  }
-
-  render(){
-
-    //+ " (" + file.size + ")"
-    //console.log(this.state.cityFilesMetaData)
-    const filesList = this.state.cityFilesMetaData.map((file) => 
-      <li>{file.name}</li>
-    );
-    
-    //go through every uploaded file, add it to the canvas
-    const objList = this.state.cityFiles.map((file) =>
-      this.displayObjList(file)
-    );
-    
-    //, lookAt:[0,0,1]
-    //camera can be manipulated manually by passing certain props to <Canvas>
-    //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
-    return (
-      <div>
-
-        <br/>
-
-        <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} ref={this.fileInRef} accept=".json"></input>
-        <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
-          value="Clear CityJSON Files"/>
-        <br/>
-        Uploaded File List:
-        <br/>
-        <ul>{filesList}</ul>
-        <br/>
-        This demos <code>react-three-fiber</code>, a library for using three.js and react together:
-        <br/>
-        <div style={{position:"relative",width:800,height:600}}>
-          <Canvas camera={{position:[0,0,10], fov:75, }} >
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
-            {objList}
-          </Canvas>
-        </div>
-
-
-      </div>
-    );
-  }
+    <NativeBaseProvider>
+      <Routes>
+        <Route exact path={strings.routes.landingPage} element={<LandingPage />} />
+        <Route path={strings.routes.homePage} element={<HomePage />} />
+        <Route path={strings.routes.visualizationPage} element={<VisualizationPage />} />
+      </Routes>
+    </NativeBaseProvider>
+  );
 }
 
 export default App;
