@@ -9,6 +9,7 @@ import { PointCloudObj } from '../3JS/pointCloud';
 
 import CustomMesh from '../3JS/cityJSONLoader.js'
 import Box from '../3JS/Box';
+import { VStack } from 'native-base';
 
 class VisualizationRoot extends React.Component {
   state = {
@@ -135,32 +136,34 @@ class VisualizationRoot extends React.Component {
     //camera can be manipulated manually by passing certain props to <Canvas>
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
     return (
-      <div>
+      <VStack width="95%" height="75%" backgroundColor="#FFFFFF">
+        <div>
 
-        <br/>
+          <br/>
 
-        <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} ref={this.fileInRef} accept=".json"></input>
-        <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
-          value="Clear CityJSON Files"/>
-        <br/>
-        Uploaded File List:
-        <br/>
-        <ul>{filesList}</ul>
-        <br/>
-        This demos <code>react-three-fiber</code>, a library for using three.js and react together:
-        <br/>
-        <div style={{position:"relative",width:800,height:600}}>
-          <Canvas camera={{position:[0,0,10], fov:75, }} >
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
-            {objList}
-          </Canvas>
+          <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} ref={this.fileInRef} accept=".json"></input>
+          <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
+            value="Clear CityJSON Files"/>
+          <br/>
+          Uploaded File List:
+          <br/>
+          <ul>{filesList}</ul>
+          <br/>
+          This demos <code>react-three-fiber</code>, a library for using three.js and react together:
+          <br/>
+          <div style={{position:"relative",width:800,height:600}}>
+            <Canvas camera={{position:[0,0,10], fov:75, }} >
+              <ambientLight />
+              <pointLight position={[10, 10, 10]} />
+              <Box position={[-1.2, 0, 0]} />
+              <Box position={[1.2, 0, 0]} />
+              {objList}
+            </Canvas>
+          </div>
+
+
         </div>
-
-
-      </div>
+      </VStack>
     );
   }
 }
