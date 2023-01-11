@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import { PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 
-import { PointCloudObj } from '../3JS/pointCloud';
+import PointCloudObj from '../3JS/pointCloud';
 
 import CustomMesh from '../3JS/cityJSONLoader.js'
 import Box from '../3JS/Box';
+import Plane from '../3JS/Plane';
 import { VStack } from 'native-base';
 
 class VisualizationRoot extends React.Component {
@@ -123,15 +124,16 @@ class VisualizationRoot extends React.Component {
 
     //+ " (" + file.size + ")"
     //console.log(this.state.cityFilesMetaData)
-    const filesList = this.state.cityFilesMetaData.map((file) => 
-      <li>{file.name}</li>
+    const filesList = this.state.cityFilesMetaData.map((file,index) => 
+      <li key={file.name}>{file.name}</li>
     );
     
     //go through every uploaded file, add it to the canvas
-    const objList = this.state.cityFiles.map((file) =>
+    const objList = this.state.cityFiles.map((file,index) =>
       this.displayObjList(file)
     );
     
+    //camera={{position:[0,0,10], fov:75, }}
     //, lookAt:[0,0,1]
     //camera can be manipulated manually by passing certain props to <Canvas>
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
@@ -152,11 +154,14 @@ class VisualizationRoot extends React.Component {
           This demos <code>react-three-fiber</code>, a library for using three.js and react together:
           <br/>
           <div style={{position:"relative",width:800,height:600}}>
-            <Canvas camera={{position:[0,0,10], fov:75, }} >
+            <Canvas>
+              <PerspectiveCamera position={[0,0,10]} fov={75} makeDefault/>
+              <OrbitControls />
               <ambientLight />
               <pointLight position={[10, 10, 10]} />
               <Box position={[-1.2, 0, 0]} />
               <Box position={[1.2, 0, 0]} />
+              <Plane position={[0,0,0]} />
               {objList}
             </Canvas>
           </div>
