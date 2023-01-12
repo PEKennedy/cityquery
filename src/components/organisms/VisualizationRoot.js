@@ -11,6 +11,7 @@ import CustomMesh from '../3JS/cityJSONLoader.js'
 import Box from '../3JS/Box';
 import Plane from '../3JS/Plane';
 import { VStack } from 'native-base';
+import MultiLineObj from '../3JS/MultiLine';
 
 class VisualizationRoot extends React.Component {
   state = {
@@ -96,8 +97,16 @@ class VisualizationRoot extends React.Component {
     var object = cityFile.CityObjects[objectName];
     console.log(object);
 
-    if(object.geometry[0] != undefined && object.geometry[0].type == "MultiPoint"){
+    if(object.geometry[0] != undefined){ //invalid object
+      console.error(objectName+".geometry[0] was undefined");
+      return <mesh visible={false}></mesh>
+    }
+
+    if(object.geometry[0].type == "MultiPoint"){
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    }
+    if(object.geometry[0].type == "MultiLineString"){
+      return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
     }
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
