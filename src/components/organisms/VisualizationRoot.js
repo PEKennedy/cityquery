@@ -97,7 +97,7 @@ class VisualizationRoot extends React.Component {
     var object = cityFile.CityObjects[objectName];
     console.log(object);
 
-    if(object.geometry[0] != undefined){ //invalid object
+    if(object.geometry[0] == undefined){ //invalid object
       console.error(objectName+".geometry[0] was undefined");
       return <mesh visible={false}></mesh>
     }
