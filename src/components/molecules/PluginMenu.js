@@ -5,7 +5,7 @@ const style = {
   menuContainer: {
     height: 50,
     width: '100%',
-    backgroundColor: '#00F',
+    backgroundColor: '#0FF',
   },
   menuText: {
     fontSize: 20,
@@ -14,14 +14,14 @@ const style = {
   },
 };
 
-const SearchMenu = () => {
+const PluginMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.menuText}>
-        Search Menu
+        Plugin Menu
       </Text>
     </VStack>
   );
 };
 
-export default SearchMenu;
+export default PluginMenu;

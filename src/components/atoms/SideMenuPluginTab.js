@@ -15,14 +15,14 @@ const style = {
   },
 };
 
-const SideMenuTab = (props) => {
-  const { layout, setLayout } = props;
+const SideMenuPluginTab = (props) => {
+  const { setLayout } = props;
 
   return (
-    <Pressable style={style.link} onPress={() => setLayout(layout)} >
+    <Pressable style={style.link} onPress={() => setLayout('plugin')} >
       <AddIcon style={style.icon} />
     </Pressable>
   );
 };
 
-export default SideMenuTab;
+export default SideMenuPluginTab;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack, VStack, Text } from 'native-base';
+import { VStack, Text } from 'native-base';
 
 const style = {
   menuContainer: {
@@ -14,12 +14,11 @@ const style = {
   },
 };
 
-const FileMenu = (props) => {
-  const { prop } = props;
+const FileMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.menuText}>
-        File
+        File Menu
       </Text>
     </VStack>
   );

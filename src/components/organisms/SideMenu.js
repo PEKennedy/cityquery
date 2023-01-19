@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { HStack, VStack } from 'native-base';
-import SideMenuTab from '../molecules/SideMenuTab';
 import FileMenu from '../molecules/FileMenu';
 import SearchMenu from '../molecules/SearchMenu';
+import SideMenuPluginTab from '../atoms/SideMenuPluginTab';
+import PluginMenu from '../molecules/PluginMenu';
+import SideMenuFilterTab from '../atoms/SideMenuFilterTab';
 
 const style = {
   menuContainer: {
@@ -18,6 +20,7 @@ const style = {
     borderRightWidth: 1,
     padding: 20,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   listContainer: {
     width: '80%',
@@ -26,21 +29,14 @@ const style = {
   },
 };
 
-const tabs = [
-  {
-    layout: 'file',
-  },
-  {
-    layout: 'search',
-  },
-];
-
 const getActiveLayout = (layout) => {
   switch(layout) {
     case 'file':
       return <FileMenu />;
     case 'search':
       return <SearchMenu />;
+    case 'plugin':
+      return <PluginMenu />;
     default:
       return null;
   }
@@ -52,11 +48,11 @@ const SideMenu = () => {
   return (
     <HStack style={style.menuContainer}>
       <VStack style={style.tabsContainer} space={3}>
-        {tabs.map((tab) => (
-          <SideMenuTab layout={tab.layout} setLayout={setLayout} />
-        ))}
+        <SideMenuFilterTab setLayout={setLayout} />
+        <SideMenuPluginTab setLayout={setLayout} />
       </VStack>
-      <VStack style={style.listContainer}>
+      <VStack style={style.listContainer} space={3}>
+        <FileMenu />
         {getActiveLayout(layout)}
       </VStack>
     </HStack>
