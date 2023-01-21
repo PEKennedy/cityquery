@@ -12,6 +12,7 @@ import Box from '../3JS/Box';
 import Plane from '../3JS/Plane';
 import { VStack } from 'native-base';
 import MultiLineObj from '../3JS/MultiLine';
+import SurfaceObject from '../3JS/surface';
 
 class VisualizationRoot extends React.Component {
   state = {
@@ -39,7 +40,7 @@ class VisualizationRoot extends React.Component {
   handleFileChange(e) {
     if (e.target.files) {
       const file = e.target.files[0]
-      console.log(file)
+      //console.log(file)
 
       const fr = new FileReader();
 
@@ -70,7 +71,7 @@ class VisualizationRoot extends React.Component {
 
   //takes a file's contents, returns a list of objects as proper jsx types
   displayObjList(cityJSONFile){
-    console.log(cityJSONFile.CityObjects);
+    //console.log(cityJSONFile.CityObjects);
     const keys = Object.keys(cityJSONFile.CityObjects);
     var objs = keys.map((key)=>{
       return this.chooseObjectType(cityJSONFile,key);
@@ -92,10 +93,10 @@ class VisualizationRoot extends React.Component {
     //  return 'poly_terrain'
     //if(object is a heightmap terrain)
     //  return 'dem_terrain'
-    console.log(cityFile);
-    console.log(objectName);
+    //console.log(cityFile);
+    //console.log(objectName);
     var object = cityFile.CityObjects[objectName];
-    console.log(object);
+    //console.log(object);
 
     if(object.geometry[0] == undefined){ //invalid object
       console.error(objectName+".geometry[0] was undefined");
@@ -107,6 +108,9 @@ class VisualizationRoot extends React.Component {
     }
     if(object.geometry[0].type == "MultiLineString"){
       return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    }
+    if(object.geometry[0].type == "MultiSurface" || object.geometry[0].type == "CompositeSurface"){
+      return <SurfaceObject position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
     }
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
@@ -164,7 +168,7 @@ class VisualizationRoot extends React.Component {
           <br/>
           <div style={{position:"relative",width:800,height:600}}>
             <Canvas>
-              <PerspectiveCamera position={[0,0,10]} fov={75} makeDefault/>
+              <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault/>
               <OrbitControls />
               <ambientLight />
               <pointLight position={[10, 10, 10]} />
