@@ -136,7 +136,7 @@ class VisualizationRoot extends React.Component {
     //camera can be manipulated manually by passing certain props to <Canvas>
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
     return (
-      <VStack width="95%" height="75%" backgroundColor="#FFFFFF">
+      <VStack width="75%" height="100%" padding={5}>
         <div>
 
           <br/>
@@ -151,7 +151,7 @@ class VisualizationRoot extends React.Component {
           <br/>
           This demos <code>react-three-fiber</code>, a library for using three.js and react together:
           <br/>
-          <div style={{position:"relative",width:800,height:600}}>
+          <div style={{position:"relative",width:800,height:580}}>
             <Canvas camera={{position:[0,0,10], fov:75, }} >
               <ambientLight />
               <pointLight position={[10, 10, 10]} />
