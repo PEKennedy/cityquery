@@ -150,6 +150,7 @@ class VisualizationRoot extends React.Component {
     //, lookAt:[0,0,1]
     //camera can be manipulated manually by passing certain props to <Canvas>
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
+    //              <Box position={[1.2, 0, 0]} />
     return (
       <VStack width="95%" height="75%" backgroundColor="#FFFFFF">
         <div>
@@ -172,8 +173,8 @@ class VisualizationRoot extends React.Component {
               <OrbitControls />
               <ambientLight />
               <pointLight position={[10, 10, 10]} />
-              <Box position={[-1.2, 0, 0]} />
-              <Box position={[1.2, 0, 0]} />
+              <Box position={[0, 0, 0]} />
+
               <Plane position={[0,0,0]} />
               {objList}
             </Canvas>
