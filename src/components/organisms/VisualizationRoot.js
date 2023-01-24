@@ -152,7 +152,7 @@ class VisualizationRoot extends React.Component {
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
     //              <Box position={[1.2, 0, 0]} />
     return (
-      <VStack width="95%" height="75%" backgroundColor="#FFFFFF">
+      <VStack width="75%" height="100%" padding={5}>
         <div>
 
           <br/>
