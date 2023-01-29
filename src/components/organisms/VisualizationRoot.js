@@ -14,6 +14,111 @@ import { VStack } from 'native-base';
 import MultiLineObj from '../3JS/MultiLine';
 import SurfaceObject from '../3JS/surface';
 
+import LoadScript from '../3JS/pyScript';
+import { useEffect } from 'react';
+
+import test from '../3JS/test.py'
+
+//import { loadPyodide } from 'pyodide';
+
+//const { loadPyodide } = require("pyodide");
+/*async function hello_python() {
+  let pyodide = await loadPyodide();
+  return pyodide.runPythonAsync("1+1");
+}*/
+
+
+function RandomFuncComp(props){
+
+  const [script, setScript] = useState("print('loading')");
+  const [output, setOutput] = useState("(loading...)");
+
+  const runPy = code => {
+    window.pyodide.loadPackage([]).then(() => {
+      const output = window.pyodide.runPython(code);
+      setOutput(output);
+    })
+  }
+  useEffect(() => {
+
+  });
+  /*
+    window.languagePluginLoader.then(() => {
+      //runPy('print("1+1")')
+      fetch(test)
+        .then(src => src.text())
+        .then((src)=>runPy(src+"\nfunc()"))
+    })
+  */
+
+  const getParams = () =>{
+    //script+"\nfunc()"
+    window.languagePluginLoader.then(() => {
+      runPy(script+"\ngetParams()")
+    })
+  }  
+
+  const runPlugin = () =>{
+    window.languagePluginLoader.then(() => {
+      //JSON.stringify(
+      runPy(script+"\nmodifyCityJSON("+
+        JSON.stringify({"bla":"blabla","test":"fail"})+","+
+        JSON.stringify(["a",12.3,5])+")")
+    })
+  }
+
+  const handleScriptChange = (e) =>{
+    if (e.target.files) {
+      const file = e.target.files[0]
+      //console.log(file)
+
+      const fr = new FileReader();
+
+      fr.addEventListener("load",e=>{ //add an event listener for when the filereader has finished
+        //console.log(JSON.parse(fr.result));
+        setScript(fr.result)
+        console.log(fr.result);
+        },()=>{
+          //console.log(this.state.cityFiles);
+          this.clearFileInput(); //reset the file upload html component 
+        })
+      
+      fr.readAsText(file);
+    }
+
+  }
+
+  /*const clearCityFiles = (e) =>{
+    this.setState({
+      script:[],
+    },()=>{
+      //console.log(this.state.cityFiles);
+      this.clearFileInput();
+    })
+  }
+
+  const clearFileInput = () =>{
+    document.getElementById("FileIn").value = '';
+  }*/
+
+//
+  return (
+    <div>
+      <input type="file" id="pyFile" name="pyFile" accept=".py" onChange={handleScriptChange}></input>
+      <input type="button" id="runPy" name="runPy" onClick={runPlugin}
+            value="Run Python"/>
+      <p>
+        5 + 7 = {output}
+      </p>
+    </div>
+
+  );
+
+
+}
+
+
+
 class VisualizationRoot extends React.Component {
   state = {
     cityFilesMetaData: [],
@@ -29,8 +134,18 @@ class VisualizationRoot extends React.Component {
     this.chooseObjectType = this.chooseObjectType.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount(){
 
+
+    //OLD PYODIDE
+    /*async function hello_python() {
+      let pyodide = await loadPyodide();
+      return pyodide.runPythonAsync("1+1");
+    }
+    
+    hello_python().then((result) => {
+      console.log("Python says that 1+1 =", result);
+    });*/
   }
 
   clearFileInput(){
@@ -145,19 +260,22 @@ class VisualizationRoot extends React.Component {
     const objList = this.state.cityFiles.map((file,index) =>
       this.displayObjList(file)
     );
+
+    //<input type="button" id="x" name="x" onClick={print_something()}></input>
     
     //camera={{position:[0,0,10], fov:75, }}
     //, lookAt:[0,0,1]
     //camera can be manipulated manually by passing certain props to <Canvas>
     //or we can install react-three-drei for additional components such as <PerspectiveCamera makeDefault fov={} position={} />
     //              <Box position={[1.2, 0, 0]} />
+    //<RandomFuncComp/>
+    //TODO: make file inputs "multiple", change to iterate over them
     return (
       <VStack width="75%" height="100%" padding={5}>
         <div>
-
           <br/>
-
-          <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} ref={this.fileInRef} accept=".json"></input>
+          <RandomFuncComp/>
+          <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} accept=".json"></input>
           <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
             value="Clear CityJSON Files"/>
           <br/>
