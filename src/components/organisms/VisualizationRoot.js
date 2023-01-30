@@ -18,6 +18,7 @@ import LoadScript from '../3JS/pyScript';
 import { useEffect } from 'react';
 
 import test from '../3JS/test.py'
+import { async } from 'q';
 
 //import { loadPyodide } from 'pyodide';
 
@@ -31,40 +32,75 @@ import test from '../3JS/test.py'
 function RandomFuncComp(props){
 
   const [script, setScript] = useState("print('loading')");
-  const [output, setOutput] = useState("(loading...)");
+  const [params, setParams] = useState(undefined);
 
-  const runPy = code => {
-    window.pyodide.loadPackage([]).then(() => {
-      const output = window.pyodide.runPython(code);
-      setOutput(output);
+  function runPy(code){
+    return new Promise((resolve,reject)=>{
+      window.languagePluginLoader.then(() => {
+        window.pyodide.loadPackage([]).then(() => {
+          resolve(window.pyodide.runPython(code))
+        })
+      })
     })
   }
-  useEffect(() => {
 
-  });
   /*
-    window.languagePluginLoader.then(() => {
-      //runPy('print("1+1")')
-      fetch(test)
-        .then(src => src.text())
-        .then((src)=>runPy(src+"\nfunc()"))
-    })
+    TODO:
+    - Run getParams(), JSON.parse result, display appropriate inputs
+    - on "Run Python", collect params into an array, pass 
   */
-
-  const getParams = () =>{
-    //script+"\nfunc()"
-    window.languagePluginLoader.then(() => {
-      runPy(script+"\ngetParams()")
+  const tabs = () =>{
+    if(params == undefined){
+      return undefined
+    }
+    let keys = Object.keys(params)
+    //let vals = Object.values(params)
+    let tabList = [];
+    keys.forEach((paramName,index)=>{
+      let type = params[paramName]
+      if(type == "float"){
+        tabList.push(<>
+          <label for={paramName}>{paramName} </label>
+          <input type={"number"} name={paramName} id={paramName}></input>
+          <br/>
+        </>)
+      }
+      else if(type == "int"){
+        tabList.push(<>
+          <label for={paramName}>{paramName} </label>
+          <input type={"number"} name={paramName} id={paramName}></input>
+          <br/>
+        </>)
+      }
+      else if(type == "string"){
+        tabList.push(<>
+          <label for={paramName}>{paramName} </label>
+          <input type={"text"} name={paramName} id={paramName}></input>
+          <br/>
+        </>)
+      }
     })
-  }  
+    tabList.push(<></>);
+    return tabList;
+  }
+
+  const getParams = (script) =>{
+    runPy(script+"\ngetParams()").then((params) =>{
+      console.log(params);
+      setParams(JSON.parse(params))
+    })
+  }
 
   const runPlugin = () =>{
-    window.languagePluginLoader.then(() => {
-      //JSON.stringify(
-      runPy(script+"\nmodifyCityJSON("+
-        JSON.stringify({"bla":"blabla","test":"fail"})+","+
-        JSON.stringify(["a",12.3,5])+")")
-    })
+    runPy(script+
+      "\nmodifyCityJSON("+
+      JSON.stringify({"bla":"blabla","test":"fail"})+
+      ","+
+      JSON.stringify({"p1":12.5,"p2":3,"p3":"abc"})+
+      ")"
+    ).then((output)=>{
+      
+    });
   }
 
   const handleScriptChange = (e) =>{
@@ -75,11 +111,9 @@ function RandomFuncComp(props){
       const fr = new FileReader();
 
       fr.addEventListener("load",e=>{ //add an event listener for when the filereader has finished
-        //console.log(JSON.parse(fr.result));
         setScript(fr.result)
-        console.log(fr.result);
+        getParams(fr.result)
         },()=>{
-          //console.log(this.state.cityFiles);
           this.clearFileInput(); //reset the file upload html component 
         })
       
@@ -102,15 +136,18 @@ function RandomFuncComp(props){
   }*/
 
 //
+  let parameters = tabs()
   return (
     <div>
       <input type="file" id="pyFile" name="pyFile" accept=".py" onChange={handleScriptChange}></input>
+
+      <ul>
+        {parameters}
+      </ul>
       <input type="button" id="runPy" name="runPy" onClick={runPlugin}
             value="Run Python"/>
-      <p>
-        5 + 7 = {output}
-      </p>
     </div>
+
 
   );
 
