@@ -22,6 +22,8 @@ function runPy(code){
 
 
 function PluginList(props){
+    //props should have pass an object list?
+
     const [files, setFiles] = useState([]);
 
     const addFile = (file) =>{
@@ -108,15 +110,24 @@ function PluginParameters(props){
             setInitialized(true)
         }
     })
-    
+
     // return a dummy value until we get the parameters from the python file
     if(params == undefined){
         return <form></form>
     }
 
     let keys = Object.keys(params)
-
     let tabList = [];
+    
+    const onRun = () =>{
+        let values = keys.map((name,index)=>{
+
+        })
+        props.onRun()
+    }
+    
+
+    
     keys.forEach((paramName,index)=>{
         let type = params[paramName]
         if(type == "float"){
@@ -144,11 +155,11 @@ function PluginParameters(props){
     tabList.push(<></>);
 
     return(
-        <form onSubmit={props.onRun}>
+        <form >
             <ul>
                 {tabList}
             </ul>
-            <input key={"submit"} type="submit" id="runPy" name="runPy" value="Run Modification"/>
+            <input onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value="Run Modification"/>
         </form>
     );
 }
