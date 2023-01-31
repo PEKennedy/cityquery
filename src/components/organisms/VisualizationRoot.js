@@ -14,146 +14,9 @@ import { VStack } from 'native-base';
 import MultiLineObj from '../3JS/MultiLine';
 import SurfaceObject from '../3JS/surface';
 
-import LoadScript from '../3JS/pyScript';
-import { useEffect } from 'react';
+import { PluginList } from '../3JS/pyScript';
 
 import test from '../3JS/test.py'
-import { async } from 'q';
-
-//import { loadPyodide } from 'pyodide';
-
-//const { loadPyodide } = require("pyodide");
-/*async function hello_python() {
-  let pyodide = await loadPyodide();
-  return pyodide.runPythonAsync("1+1");
-}*/
-
-
-function RandomFuncComp(props){
-
-  const [script, setScript] = useState("print('loading')");
-  const [params, setParams] = useState(undefined);
-
-  function runPy(code){
-    return new Promise((resolve,reject)=>{
-      window.languagePluginLoader.then(() => {
-        window.pyodide.loadPackage([]).then(() => {
-          resolve(window.pyodide.runPython(code))
-        })
-      })
-    })
-  }
-
-  /*
-    TODO:
-    - Run getParams(), JSON.parse result, display appropriate inputs
-    - on "Run Python", collect params into an array, pass 
-  */
-  const tabs = () =>{
-    if(params == undefined){
-      return undefined
-    }
-    let keys = Object.keys(params)
-    //let vals = Object.values(params)
-    let tabList = [];
-    keys.forEach((paramName,index)=>{
-      let type = params[paramName]
-      if(type == "float"){
-        tabList.push(<>
-          <label for={paramName}>{paramName} </label>
-          <input type={"number"} name={paramName} id={paramName}></input>
-          <br/>
-        </>)
-      }
-      else if(type == "int"){
-        tabList.push(<>
-          <label for={paramName}>{paramName} </label>
-          <input type={"number"} name={paramName} id={paramName}></input>
-          <br/>
-        </>)
-      }
-      else if(type == "string"){
-        tabList.push(<>
-          <label for={paramName}>{paramName} </label>
-          <input type={"text"} name={paramName} id={paramName}></input>
-          <br/>
-        </>)
-      }
-    })
-    tabList.push(<></>);
-    return tabList;
-  }
-
-  const getParams = (script) =>{
-    runPy(script+"\ngetParams()").then((params) =>{
-      console.log(params);
-      setParams(JSON.parse(params))
-    })
-  }
-
-  const runPlugin = () =>{
-    runPy(script+
-      "\nmodifyCityJSON("+
-      JSON.stringify({"bla":"blabla","test":"fail"})+
-      ","+
-      JSON.stringify({"p1":12.5,"p2":3,"p3":"abc"})+
-      ")"
-    ).then((output)=>{
-      
-    });
-  }
-
-  const handleScriptChange = (e) =>{
-    if (e.target.files) {
-      const file = e.target.files[0]
-      //console.log(file)
-
-      const fr = new FileReader();
-
-      fr.addEventListener("load",e=>{ //add an event listener for when the filereader has finished
-        setScript(fr.result)
-        getParams(fr.result)
-        },()=>{
-          this.clearFileInput(); //reset the file upload html component 
-        })
-      
-      fr.readAsText(file);
-    }
-
-  }
-
-  /*const clearCityFiles = (e) =>{
-    this.setState({
-      script:[],
-    },()=>{
-      //console.log(this.state.cityFiles);
-      this.clearFileInput();
-    })
-  }
-
-  const clearFileInput = () =>{
-    document.getElementById("FileIn").value = '';
-  }*/
-
-//
-  let parameters = tabs()
-  return (
-    <div>
-      <input type="file" id="pyFile" name="pyFile" accept=".py" onChange={handleScriptChange}></input>
-
-      <ul>
-        {parameters}
-      </ul>
-      <input type="button" id="runPy" name="runPy" onClick={runPlugin}
-            value="Run Python"/>
-    </div>
-
-
-  );
-
-
-}
-
 
 
 class VisualizationRoot extends React.Component {
@@ -171,19 +34,6 @@ class VisualizationRoot extends React.Component {
     this.chooseObjectType = this.chooseObjectType.bind(this);
   }
 
-  async componentDidMount(){
-
-
-    //OLD PYODIDE
-    /*async function hello_python() {
-      let pyodide = await loadPyodide();
-      return pyodide.runPythonAsync("1+1");
-    }
-    
-    hello_python().then((result) => {
-      console.log("Python says that 1+1 =", result);
-    });*/
-  }
 
   clearFileInput(){
     document.getElementById("FileIn").value = '';
@@ -206,7 +56,7 @@ class VisualizationRoot extends React.Component {
           this.clearFileInput(); //reset the file upload html component 
         })
       });
-      fr.readAsText(file);
+      fr.readAsText(file); //After having set the event listener, we can now use this to parse the file
     }
   }
 
@@ -311,7 +161,7 @@ class VisualizationRoot extends React.Component {
       <VStack width="75%" height="100%" padding={5}>
         <div>
           <br/>
-          <RandomFuncComp/>
+          <PluginList/>
           <input type="file" id="FileIn" name="filename" onChange={this.handleFileChange} accept=".json"></input>
           <input type="button" id="clearCityFiles" name="clearCityFiles" onClick={this.clearCityFiles}
             value="Clear CityJSON Files"/>
