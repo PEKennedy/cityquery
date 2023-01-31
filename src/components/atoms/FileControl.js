@@ -21,7 +21,6 @@ function FileControl(props){
   
     const clearFileInput = () =>{
       document.getElementById(props.upId).value = '';
-      console.log(document.getElementById(props.upId))
     }
 
     const handleFileChange = (e) =>{
