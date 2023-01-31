@@ -26,7 +26,7 @@ function FileControl(props){
     const handleFileChange = (e) =>{
         if (e.target.files) {
             const file = e.target.files[0]
-        
+            setFileMetaData([...fileMetaData,file])
             const fr = new FileReader();
         
             //add an event listener for when the filereader has finished
@@ -40,7 +40,7 @@ function FileControl(props){
     
     }
 
-    const filesList = fileMetaData.map((file,index) => 
+    let filesList = fileMetaData.map((file,index) => 
       <li key={file.name}>{file.name}</li>
     );
 
@@ -55,3 +55,31 @@ function FileControl(props){
 }
 
 export default FileControl;
+
+/* changing the file input to "multiple" led to trouble getting the eventlistener to fire on every file selected
+        <input type="file" id={props.upId} name={props.upId} accept={props.fileType}
+         onChange={handleFileChange} multiple/>
+
+const handleFileChange = (e) =>{
+        const files = e.target.files
+        if (files[0]) {
+            //console.log(files)
+            //let x = Object.values(files)
+            //console.log(Object.values(files))
+            Object.values(files).forEach((file)=>{
+                console.log(file)
+                const fr = new FileReader();
+        
+                //add an event listener for when the filereader has finished
+                fr.addEventListener("load",e=>{ 
+                    //console.log(fr.result)
+                    props.addFile(fr.result)
+                    clearFileInput(); //reset the file upload html component, once we are done so more files can be uploaded
+                })
+                //After having set the event listener, we can now use this to parse the file
+                fr.readAsText(file); 
+            })
+        }
+    
+    }
+*/
