@@ -100,7 +100,7 @@ function PointCloudObj(props){
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef();
     // Subscribe this component to the render-loop, rotate the mesh every frame
-    useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+    //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
     if(props.cityFile == undefined){ //not loaded yet
     //if(props.object == undefined){
@@ -132,4 +132,4 @@ function PointCloudObj(props){
 
 }
 
-export { loadPointCloud, PointCloudObj };
+export default PointCloudObj;
