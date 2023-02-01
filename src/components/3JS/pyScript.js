@@ -70,7 +70,7 @@ function ModificationPlugin(props){
             ","+
             "MultiSurface"+ //TODO: this should be updated based on a selected obj
             ","+
-            JSON.stringify({"p1":12.5,"p2":3,"p3":"abc"})+
+            JSON.stringify(parameters)+
             ")"
         ).then((output)=>{
             
@@ -95,6 +95,7 @@ function PluginParameters(props){
     
     const [params, setParams] = useState(undefined);
     const [initialized, setInitialized] = useState(false)
+    const [inputs, setInputs] = useState({})
 
     const getParams = (script) =>{
         runPy(script+"\ngetParams()").then((params) =>{
@@ -118,41 +119,69 @@ function PluginParameters(props){
 
     let keys = Object.keys(params)
     let tabList = [];
+
     
     const onRun = () =>{
-        let values = keys.map((name,index)=>{
-
+        let x = inputs;
+        //assign default values for all unassigned parameters
+        keys.forEach((name) =>{
+            if(x[name] == undefined){
+                if(params[name] == "float" || params[name] == "int"){
+                    x[name] = 0.0
+                }
+                else{
+                    x[name] = ""
+                }
+            }
         })
-        props.onRun()
+        setInputs(x)
+        props.onRun(inputs)
     }
     
+    const handleChange = (e) => {
+        let x = inputs;
+
+
+        let val = e.target.value
+        if(e.target.step == 1){
+            val = parseInt(val)
+        }
+        else if(e.target.type == "number"){
+            //parse number
+            val = parseFloat(val)
+        }
+        x[e.target.name] = val
+        setInputs(x)
+    }
 
     
     keys.forEach((paramName,index)=>{
         let type = params[paramName]
+
         if(type == "float"){
-        tabList.push(<div key={paramName}>
-            <label htmlFor={paramName}>{paramName} </label>
-            <input type={"number"} name={paramName} id={paramName}></input>
-            <br/>
-        </div>)
+            tabList.push(<div key={paramName}>
+                <label htmlFor={paramName}>{paramName} </label>
+                <input type={"number"} name={paramName} id={paramName} onChange={handleChange}/>
+                <br/>
+            </div>)  
         }
         else if(type == "int"){
-        tabList.push(<div key={paramName}>
-            <label htmlFor={paramName}>{paramName} </label>
-            <input type={"number"} name={paramName} id={paramName}></input>
-            <br/>
-        </div>)
+            tabList.push(<div key={paramName}>
+                <label htmlFor={paramName}>{paramName} </label>
+                <input type={"number"} name={paramName} id={paramName} onChange={handleChange} step={"1"}/>
+                <br/>
+            </div>)
         }
         else if(type == "string"){
-        tabList.push(<div key={paramName}>
-            <label htmlFor={paramName}>{paramName} </label>
-            <input type={"text"} name={paramName} id={paramName}></input>
-            <br/>
-        </div>)
+            tabList.push(<div key={paramName}>
+                <label htmlFor={paramName}>{paramName} </label>
+                <input type={"text"} name={paramName} id={paramName} onChange={handleChange}/>
+                <br/>
+            </div>)
         }
     })
     tabList.push(<></>);
+
 
     return(
         <form >

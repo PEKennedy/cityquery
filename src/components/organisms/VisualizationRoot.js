@@ -22,17 +22,12 @@ class VisualizationRoot extends React.Component {
   constructor(props){
     super(props);
     this.clearCityFiles = this.clearCityFiles.bind(this);
-    this.clearFileInput = this.clearFileInput.bind(this);
     this.chooseObjectType = this.chooseObjectType.bind(this);
     this.addFile = this.addFile.bind(this);
   }
 
   addFile(file){
     this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
-  }
-
-  clearFileInput(){
-    document.getElementById("FileIn").value = '';
   }
 
   //clear all files from the canvas
@@ -107,8 +102,6 @@ class VisualizationRoot extends React.Component {
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
-          <br/>
-          This demos <code>react-three-fiber</code>, a library for using three.js and react together:
           <br/>
           <div style={{position:"relative",width:800,height:600}}>
             <Canvas>
