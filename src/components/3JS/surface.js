@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
-import { BufferAttribute, BufferGeometry, LineBasicMaterial, Uint32BufferAttribute, Vector3 } from 'three';
+import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, Uint32BufferAttribute, Vector3 } from 'three';
 import { Earcut } from 'three/src/extras/Earcut';
+import { Geometry } from 'three-stdlib';
 
 //applies scale **and translation in the future** to a vertex formatted as [x,y,z]
 function scale(vert, scale){
@@ -90,7 +91,6 @@ function SurfaceObject(props){
                 return end_index + new_ind;
             });
             end_index = new_surface_inds[new_surface_inds.length-1]+1;
-            //console.log(new_surface_inds)
             boundaries.push(new_surface_inds);
             //boundaries is the new [[exterior],[hole1],...] where the indices now correspond to verts found in boundary_verts
         });
@@ -106,17 +106,10 @@ function SurfaceObject(props){
             holes = null;
         }
 
-        //console.log(boundary_verts);
-        //console.log(holes);
-
         // ** There is an async problem around here, as removing the console logs between here
         // and the triangulate leads to failed faces
         // ** problem may be intermittent, as it doesn't affect anything now?
 
-
-        
-        //console.log(boundary_verts[0]);
-        //console.log(boundary_verts[0][0],boundary_verts[0][1],boundary_verts[0][2])
         let v1 = new Vector3(boundary_verts[0][0],boundary_verts[0][1],boundary_verts[0][2])
         let v2 = new Vector3(boundary_verts[1][0],boundary_verts[1][1],boundary_verts[1][2])
         let v3 = new Vector3(boundary_verts[2][0],boundary_verts[2][1],boundary_verts[2][2])
@@ -124,8 +117,6 @@ function SurfaceObject(props){
         // 2 verts crossed together should produce the normal
         let normal = v2.sub(v1).cross(v3.sub(v1)) // boundary_verts[0]
         let rot_axis = new Vector3(0,0,1).cross(normal);
-        //console.log(v1,v2);
-        //console.log(normal.normalize(),rot_axis.normalize());//normal
 
 
         //scale the vertex positions, and flatten the arrays
@@ -137,8 +128,6 @@ function SurfaceObject(props){
         //if the normal implies the vertices lie (almost) entirely along the z axis, rotate them
         //so the triangulation algorithm works correctly
         if(normal.z < 0.1 && normal.z > -0.1){ 
-            //console.log(flat_verts.length);
-            //console.log(flat_verts[0],flat_verts[1],flat_verts[2])
             for(let i=0;i<flat_verts.length;i+=3){
                 let v = new Vector3(flat_verts[i],flat_verts[i+1],flat_verts[i+2])
                 v.applyAxisAngle(rot_axis.normalize(),-Math.PI/2);
@@ -155,16 +144,15 @@ function SurfaceObject(props){
             }
         }
 
-
-
-
         //Convert to the object types 3js expects
         tris = new Uint32BufferAttribute(tris,1);
         const verts = new Float32Array(flat_verts);
-
-        //console.log(tris);
-        //console.log(verts);
+        
         //<bufferAttribute attach="attributes-normal" count={normals.length/3} array={normals} itemSize={3} />
+        let attrib = new BufferAttribute(verts,3)
+        let geo = new BufferGeometry()
+        geo.setAttribute('position',attrib)
+        let mesh = new Mesh()
 
         return <mesh {...props} ref={ref} key={verts.toString()}>
             <bufferGeometry index={tris} count={tris.length} onUpdate={self=>self.computeVertexNormals()}>
@@ -174,6 +162,7 @@ function SurfaceObject(props){
             <meshStandardMaterial color={'orange'} />
         </mesh>
     });
+    
 
     return (
         <group ref={groupRef}>
