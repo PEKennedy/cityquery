@@ -94,19 +94,23 @@ class VisualizationRoot extends React.Component {
   }
 
   select_test(){
-    this.select("twobuildings.city.json","Building_1")
+    this.select("twobuildings.city.json",["Building_1"])
   }
 
-  select(fileName, objName){
+  select(fileName, objNames, append=false){
     //return 0;
     let newSelected = this.state.selected;
     if(newSelected.fileName == undefined){
-      newSelected[fileName] = {"objects":[objName]}
+      newSelected[fileName] = {"objects":objNames}
+    }
+    else if(append){
+      newSelected[fileName]["objects"].push(objNames)
     }
     else{
-      newSelected[fileName]["objects"] = [objName]
+      newSelected[fileName]["objects"] = objNames
     }
     this.setState({selected:newSelected})
+    console.log(this.state.selected)
   }
 
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
@@ -149,6 +153,8 @@ class VisualizationRoot extends React.Component {
           <br/>
           Modification Plugins:
           <PluginList getSelected={this.getSelected} onResult={this.ModifyCityJSON}/>
+          Search Plugins:
+          <PluginList getSelected={()=>{return this.state.cityFiles}} onResult={this.select} pluginType={"search"}/>
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
