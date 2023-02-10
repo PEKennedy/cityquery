@@ -16,23 +16,26 @@ import FileControl from '../atoms/FileControl';
 
 class VisualizationRoot extends React.Component {
   state = {
-    cityFiles: [],
+    cityFiles: {},
+    selected:{}
   }
 
   constructor(props){
     super(props);
     this.clearCityFiles = this.clearCityFiles.bind(this);
-    this.clearFileInput = this.clearFileInput.bind(this);
     this.chooseObjectType = this.chooseObjectType.bind(this);
     this.addFile = this.addFile.bind(this);
+    this.ModifyCityJSON = this.ModifyCityJSON.bind(this);
+    this.select = this.select.bind(this);
+    this.select_test = this.select_test.bind(this);
+    this.getSelected = this.getSelected.bind(this);
   }
 
-  addFile(file){
-    this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
-  }
-
-  clearFileInput(){
-    document.getElementById("FileIn").value = '';
+  addFile(file, fileName){
+    //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
+    let newCityFiles = this.state.cityFiles
+    newCityFiles[fileName] = JSON.parse(file);
+    this.setState({ cityFiles: newCityFiles})
   }
 
   //clear all files from the canvas
@@ -90,10 +93,52 @@ class VisualizationRoot extends React.Component {
     //but with "attributes"."pointcloud-file".pointFile
   }
 
+  select_test(){
+    this.select("twobuildings.city.json","Building_1")
+  }
+
+  select(fileName, objName){
+    //return 0;
+    let newSelected = this.state.selected;
+    if(newSelected.fileName == undefined){
+      newSelected[fileName] = {"objects":[objName]}
+    }
+    else{
+      newSelected[fileName]["objects"] = [objName]
+    }
+    this.setState({selected:newSelected})
+  }
+
+  //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
+  //becomes in getSelected function:
+  // {"file.city.json":{"objects":[objName1,objName2], "file":this.state.cityFiles[fileName]}}
+  //we do this conversion process when needed so we don't have to store+update the entire cityFile again
+  // every time we want to do a conversion
+  //this could be simplified to adding a "objectsSelected" property to state.cityFiles though (and iterate through that)
+
+  //We list selected object names with a file to ensure the objects are unique, and so plugins can update
+  //all a file's objects at once. This also avoids asynchronisity issues that updating a file's 'vertices' might cause
+
+  getSelected(){
+    let selected = this.state.selected
+    let keys = Object.keys(selected)
+    keys.forEach((fileName)=>{
+      selected[fileName]["file"] = this.state.cityFiles[fileName]
+    })
+    return selected;
+  }
+
+  ModifyCityJSON(fileName, output){
+    this.state.cityFiles[fileName] = output;
+    console.log(this.state.cityFiles)
+  }
+
   render(){
 
     //go through every uploaded file, add it to the canvas
-    const objList = this.state.cityFiles.map((file,index) =>{
+    //this.state.cityFiles
+    const objList = Object.values(this.state.cityFiles).map((file,index) =>{
+      console.log(file)
       return this.displayObjList(file)
     });
 
@@ -102,13 +147,13 @@ class VisualizationRoot extends React.Component {
       <VStack width="75%" height="100%" padding={5}>
         <div>
           <br/>
-          Plugin Upload List:
-          <PluginList/>
+          Modification Plugins:
+          <PluginList getSelected={this.getSelected} onResult={this.ModifyCityJSON}/>
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
-          <br/>
-          This demos <code>react-three-fiber</code>, a library for using three.js and react together:
+          <input type={"button"} onClick={this.select_test} value={"Select Building_1"} />
+          
           <br/>
           <div style={{position:"relative",width:800,height:600}}>
             <Canvas>
