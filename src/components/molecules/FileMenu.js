@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { VStack, Text } from 'native-base';
+import FileControl from '../atoms/FileControl';
+import { FileMenuContext } from '../../constants/context';
 
 const style = {
   menuContainer: {
-    height: 50,
     width: '100%',
-    backgroundColor: '#0F0',
+    borderBottomWidth: 1,
   },
   menuText: {
     fontSize: 20,
@@ -15,11 +16,12 @@ const style = {
 };
 
 const FileMenu = () => {
+  const { addFile, clearCityFiles } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
-      <Text style={style.menuText}>
-        File Menu
-      </Text>
+      CityJSON Upload List:
+      <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
+        clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles} />
     </VStack>
   );
 };
