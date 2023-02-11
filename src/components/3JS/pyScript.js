@@ -41,9 +41,18 @@ function PluginList(props){
         setFiles([])
     }
 
-    const objList = files.map((file,index) =>
-        <ModificationPlugin script={file} key={index}  getSelected={props.getSelected} onResult={props.onResult} />
-    );
+    let objList = []
+    if(props.pluginType == "search"){
+        objList = files.map((file,index) =>
+            <SearchPlugin script={file} key={index} getSelected={props.getSelected} onResult={props.onResult} />
+        );
+    }
+    else{
+        objList = files.map((file,index) =>
+            <ModificationPlugin script={file} key={index}  getSelected={props.getSelected} onResult={props.onResult} />
+        );
+    }
+
 
     return(
         <div>
@@ -95,8 +104,36 @@ function ModificationPlugin(props){
   
 }
 
+//{"file.city.json":
 function SearchPlugin(props){
 
+    const runPlugin = (parameters) =>{
+        console.log(parameters)
+
+        let files = props.getSelected()
+        console.log(files)
+        let fileNames = Object.keys(files)
+
+        fileNames.forEach((fileName)=>{
+            let file = files[fileName];
+            runPy(props.script+
+                "\nsearchCityJSON("+
+                JSON.stringify(file)+
+                "," +
+                JSON.stringify(parameters)+
+                ")"
+            ).then((output)=>{
+                props.onResult(fileName,JSON.parse(output)) //file_name
+            });
+        })
+    }
+  
+    return( 
+        <>
+            <PluginParameters script={props.script} onRun={runPlugin}/>
+            <br/>
+        </>
+    );
 }
 
 //TODO: The ids for the "run" button might need to be made unique

@@ -12,10 +12,9 @@ import MultiLineObj from '../3JS/MultiLine';
 import SurfaceObject from '../3JS/surface';
 
 import { PluginList } from '../3JS/pyScript';
-import FileControl from '../atoms/FileControl';
 
 const VisualizationRoot = (props) => {
-  const { cityFiles, getSelected, ModifyCityJSON, select_test } = props;
+  const { cityFiles, getSelected, ModifyCityJSON, select_test, select } = props;
   //takes a file's contents, returns a list of objects as proper jsx types
   const displayObjList = (cityJSONFile) => {
     //console.log(cityJSONFile.CityObjects);
@@ -77,13 +76,14 @@ const VisualizationRoot = (props) => {
       <div>
         <br/>
         Modification Plugins:
-        <PluginList getSelected={getSelected} onResult={ModifyCityJSON}/>
+        <PluginList getSelected={getSelected} onResult={ModifyCityJSON} />
         <input type={"button"} onClick={select_test} value={"Select Building_1"} />
-        
+        Search Plugins:
+        <PluginList getSelected={()=>{return cityFiles}} onResult={select} pluginType={"search"} />
         <br/>
         <div style={{position:"relative",width:800,height:600}}>
           <Canvas>
-            <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault/>
+            <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault />
             <OrbitControls />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />

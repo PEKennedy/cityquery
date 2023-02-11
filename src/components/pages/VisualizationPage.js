@@ -94,7 +94,7 @@ const VisualizationPage = () => {
         <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
         <HStack style={style.innerContainer}>
           <SideMenu />
-          <VisualizationRoot cityFiles selected getSelected ModifyCityJSON select_test />
+          <VisualizationRoot cityFiles selected getSelected ModifyCityJSON select_test select />
         </HStack>
       </VStack>
     </FileMenuContext.Provider>
