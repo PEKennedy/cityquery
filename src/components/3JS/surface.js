@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
-import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, Uint32BufferAttribute, Vector3 } from 'three';
+import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, MeshStandardMaterial, Uint32BufferAttribute, Vector3 } from 'three';
 import { Earcut } from 'three/src/extras/Earcut';
 import { Geometry } from 'three-stdlib';
-
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 //applies scale **and translation in the future** to a vertex formatted as [x,y,z]
 function scale(vert, scale){
     return [vert[0]*scale[0],vert[1]*scale[1],vert[2]*scale[2]];
@@ -25,9 +25,17 @@ function SurfaceObject(props){
     //var CityObjects = props.CityObjects;
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef()
-    const groupRef = useRef()
     // Subscribe this component to the render-loop, rotate the mesh every frame
     //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+
+    //call dispose on cleanup (useEffect will call any returned function when the component unmounts)
+    useEffect(()=>{
+        return function cleanup(){
+            if(combined_geo){
+                combined_geo.dispose()
+            }
+        }
+    })
 
     if(props.cityFile == undefined){ //not loaded yet
         return (<mesh ref={ref} visible={false}></mesh>);
@@ -148,27 +156,24 @@ function SurfaceObject(props){
         tris = new Uint32BufferAttribute(tris,1);
         const verts = new Float32Array(flat_verts);
         
-        //<bufferAttribute attach="attributes-normal" count={normals.length/3} array={normals} itemSize={3} />
-        let attrib = new BufferAttribute(verts,3)
         let geo = new BufferGeometry()
-        geo.setAttribute('position',attrib)
-        let mesh = new Mesh()
-
-        return <mesh {...props} ref={ref} key={verts.toString()}>
-            <bufferGeometry index={tris} count={tris.length} onUpdate={self=>self.computeVertexNormals()}>
-                <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
-                
-            </bufferGeometry>
-            <meshStandardMaterial color={'orange'} />
-        </mesh>
+        geo.setIndex(tris);
+        geo.setAttribute('position',new BufferAttribute(verts,3))
+        
+        return geo
     });
-    
+
+    let combined_geo = BufferGeometryUtils.mergeBufferGeometries(surface_meshes)
+    combined_geo.computeVertexNormals()
+    combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
 
     return (
-        <group ref={groupRef}>
-            {surface_meshes}
-        </group>
-      )
+        <mesh {...props} ref={ref}>
+            <primitive object={combined_geo} />
+            <meshStandardMaterial color={'orange'} />
+        </mesh>
+    )
+
 }
 
 export default SurfaceObject;
