@@ -11,7 +11,7 @@ import PointCloudObj from '../3JS/pointCloud';
 import MultiLineObj from '../3JS/MultiLine';
 import SurfaceObject from '../3JS/surface';
 
-import { PluginList } from '../3JS/pyScript';
+import { ModificationPluginList, SearchPluginList } from '../3JS/pyScript';
 import FileControl from '../atoms/FileControl';
 
 class VisualizationRoot extends React.Component {
@@ -152,9 +152,9 @@ class VisualizationRoot extends React.Component {
         <div>
           <br/>
           Modification Plugins:
-          <PluginList getSelected={this.getSelected} onResult={this.ModifyCityJSON}/>
+          <ModificationPluginList getSelected={this.getSelected} onResult={this.ModifyCityJSON} />
           Search Plugins:
-          <PluginList getSelected={()=>{return this.state.cityFiles}} onResult={this.select} pluginType={"search"}/>
+          <SearchPluginList getSelected={()=>{return this.state.cityFiles}} onResult={this.select}/>
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
