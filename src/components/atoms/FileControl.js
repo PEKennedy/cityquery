@@ -31,7 +31,7 @@ function FileControl(props){
         
             //add an event listener for when the filereader has finished
             fr.addEventListener("load",e=>{ 
-                props.addFile(fr.result)
+                props.addFile(fr.result, file.name)
                 clearFileInput(); //reset the file upload html component, once we are done
             })
             //After having set the event listener, we can now use this to parse the file
