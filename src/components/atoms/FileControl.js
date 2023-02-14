@@ -40,9 +40,12 @@ function FileControl(props){
     
     }
 
-    let filesList = fileMetaData.map((file,index) => 
-      <li key={file.name}>{file.name}</li>
-    );
+    let filesList = []
+    if(fileMetaData && fileMetaData.length > 0){
+        fileMetaData.map((file,index) => 
+            <li key={file.name}>{file.name}</li>
+        );
+    } 
 
     return <div>
         <input type="file" id={props.upId} name={props.upId} accept={props.fileType} onChange={handleFileChange}></input>

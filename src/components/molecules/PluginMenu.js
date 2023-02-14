@@ -1,6 +1,6 @@
 import React from 'react';
 import { VStack } from 'native-base';
-import { PluginList } from '../3JS/pyScript';
+import { ModificationPluginList, SearchPluginList } from '../3JS/pyScript';
 import { useContext } from 'react';
 import { FileMenuContext } from '../../constants/context';
 
@@ -21,10 +21,10 @@ const PluginMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       Modification Plugins:
-      <PluginList getSelected={getSelected} onResult={ModifyCityJSON} />
+      <ModificationPluginList getSelected={getSelected} onResult={ModifyCityJSON} />
       <input type={"button"} onClick={select_test} value={"Select Building_1"} />
       Search Plugins:
-      <PluginList getSelected={()=>{return cityFiles}} onResult={select} pluginType={"search"} />
+      <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select} />
     </VStack>
   );
 };
