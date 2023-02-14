@@ -27,9 +27,15 @@ async function parseLASFile(File){
         }
     }
 
+    return PRArray;
+
     
 }
 
+/*
+Parses and creates the header object of a LAS file to be used in the parsing of other LAS components
+@params File - The LAS file
+*/
 function createHeader(File){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,4));
@@ -76,7 +82,10 @@ function createHeader(File){
     this.NumOfPR = parseFloat(fr.result);
     
 }
-
+/*
+Parses and returns the x y and z value of a specific point record in the LAS file
+@Params File - the LAS file being parsed, header - the parsed header of the LAS file
+*/
 function createPRReg(File,header){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,8));
