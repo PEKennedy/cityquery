@@ -1,7 +1,7 @@
 import React from 'react';
 import { VStack } from 'native-base';
 
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 
 import Box from '../3JS/Box';
@@ -11,10 +11,8 @@ import PointCloudObj from '../3JS/pointCloud';
 import MultiLineObj from '../3JS/MultiLine';
 import SurfaceObject from '../3JS/surface';
 
-import { PluginList } from '../3JS/pyScript';
-
 const VisualizationRoot = (props) => {
-  const { cityFiles, getSelected, ModifyCityJSON, select_test, select } = props;
+  const { cityFiles } = props;
   //takes a file's contents, returns a list of objects as proper jsx types
   const displayObjList = (cityJSONFile) => {
     //console.log(cityJSONFile.CityObjects);
@@ -75,20 +73,13 @@ const VisualizationRoot = (props) => {
     <VStack width="75%" height="100%" padding={5}>
       <div>
         <br/>
-        Modification Plugins:
-        <PluginList getSelected={getSelected} onResult={ModifyCityJSON} />
-        <input type={"button"} onClick={select_test} value={"Select Building_1"} />
-        Search Plugins:
-        <PluginList getSelected={()=>{return cityFiles}} onResult={select} pluginType={"search"} />
-        <br/>
-        <div style={{position:"relative",width:800,height:600}}>
+        <div style={{position:"relative",width:800,height:550}}>
           <Canvas>
             <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault />
             <OrbitControls />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             <Box position={[0, 0, 0]} />
-
             <Plane position={[0,0,0]} />
             {objList}
           </Canvas>

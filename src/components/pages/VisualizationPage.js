@@ -84,7 +84,7 @@ const VisualizationPage = () => {
     console.log(cityFiles);
   }
 
-  const fileMenuContext = { addFile, clearCityFiles };
+  const fileMenuContext = { cityFiles, addFile, clearCityFiles, getSelected, ModifyCityJSON, select_test, select };
   console.log(cityFiles);
 
   return (
