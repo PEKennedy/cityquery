@@ -5,6 +5,7 @@ import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, MeshStandardM
 import { Earcut } from 'three/src/extras/Earcut';
 import { Geometry } from 'three-stdlib';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { colours } from '../../constants/colours';
 //applies scale **and translation in the future** to a vertex formatted as [x,y,z]
 function scale(vert, scale){
     return [vert[0]*scale[0],vert[1]*scale[1],vert[2]*scale[2]];
