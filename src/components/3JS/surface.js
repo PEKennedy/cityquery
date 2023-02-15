@@ -6,10 +6,14 @@ import { Earcut } from 'three/src/extras/Earcut';
 import { Geometry } from 'three-stdlib';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { colours } from '../../constants/colours';
-import {VertexColors} from 'three'
+//import {VertexColors} from 'three/src/materials/'
 //applies scale **and translation in the future** to a vertex formatted as [x,y,z]
 function scale(vert, scale){
     return [vert[0]*scale[0],vert[1]*scale[1],vert[2]*scale[2]];
+}
+
+function transform(vert,scale,translate){
+    return [vert[0]*scale[0]+translate[0],vert[1]*scale[1]+translate[1],vert[2]*scale[2]+translate[2]];
 }
 
 //to be displayed correctly, triangle indices must specify vertices in ccw order
@@ -20,6 +24,26 @@ function reverseWindingOrder(tris){
         tris_out.push(tris[i+2],tris[i+1],tris[i]);
     }
     return tris_out;
+}
+
+function getColour(semantics,surface_index){
+    let surface_type_ind = semantics.values[surface_index];
+    let surface_type = semantics.surfaces[surface_type_ind].type;
+    console.log(surface_type)
+    let surface_colour = colours.semantics.primary[surface_type];
+    if(surface_colour == undefined) surface_colour = colours.default;
+    return surface_colour;
+}
+
+function colourVerts(semantics,surface_index,numVerts){
+    let surface_colour = getColour(semantics,surface_index);
+    let vertex_colours = [];
+    for(let i=0;i<numVerts;i++){
+        vertex_colours.push(surface_colour[0], surface_colour[1], surface_colour[2])
+    }
+    
+    vertex_colours = new Float32Array(vertex_colours)
+    return vertex_colours
 }
 
 //test funnction for getting and displaying a cityjson mesh (not working)
@@ -49,6 +73,7 @@ function SurfaceObject(props){
     var object = props.cityFile.CityObjects[props.object];
     console.log(object);
 
+    let semantics = object.geometry[0].semantics;
     var surfaces = object.geometry[0].boundaries;
 
     let obj_scale = props.cityFile.transform.scale;
@@ -90,6 +115,7 @@ function SurfaceObject(props){
 
         let end_index = 0;
 
+
         
         //A boundary is going to be the list of exterior verts, then each list of interior verts
         surface.forEach(boundary=>{
@@ -116,10 +142,6 @@ function SurfaceObject(props){
             holes = null;
         }
 
-        // ** There is an async problem around here, as removing the console logs between here
-        // and the triangulate leads to failed faces
-        // ** problem may be intermittent, as it doesn't affect anything now?
-
         let v1 = new Vector3(boundary_verts[0][0],boundary_verts[0][1],boundary_verts[0][2])
         let v2 = new Vector3(boundary_verts[1][0],boundary_verts[1][1],boundary_verts[1][2])
         let v3 = new Vector3(boundary_verts[2][0],boundary_verts[2][1],boundary_verts[2][2])
@@ -127,7 +149,6 @@ function SurfaceObject(props){
         // 2 verts crossed together should produce the normal
         let normal = v2.sub(v1).cross(v3.sub(v1)) // boundary_verts[0]
         let rot_axis = new Vector3(0,0,1).cross(normal);
-
 
         //scale the vertex positions, and flatten the arrays
         let flat_verts = boundary_verts.map(vert=>scale(vert,obj_scale)).flat(3);
@@ -149,7 +170,6 @@ function SurfaceObject(props){
             tris = Earcut.triangulate(flat_verts,holes,3);
             //if the triangles are facing away from the camera, flip the triangles to face outwards correctly
             if(normal.z < 0){
-                //console.log("reverse windings")
                 tris = reverseWindingOrder(tris);
             }
         }
@@ -157,13 +177,13 @@ function SurfaceObject(props){
         //Convert to the object types 3js expects
         tris = new Uint32BufferAttribute(tris,1);
         const verts = new Float32Array(flat_verts);
-        
+        let colours = colourVerts(semantics,index,boundary_verts.length)
+
         let geo = new BufferGeometry()
         geo.setIndex(tris);
         geo.setAttribute('position',new BufferAttribute(verts,3))
-      
-        //geo
-    
+        geo.setAttribute('color',new BufferAttribute(colours,3))
+
         return geo
     });
 
@@ -171,12 +191,10 @@ function SurfaceObject(props){
     combined_geo.computeVertexNormals()
     combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
 
-    //combined_geo.
-
     return (
         <mesh {...props} ref={ref}>
             <primitive object={combined_geo} />
-            <meshStandardMaterial color={'orange'} vertexColors={ VertexColors}/>
+            <meshStandardMaterial  vertexColors={true}/>
         </mesh>
     )
 

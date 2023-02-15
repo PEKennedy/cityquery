@@ -3,48 +3,62 @@ Defines the default colours for different "semantics" objects within a cityjson 
 TODO: Potentially support extension types?
 */
 
+const common = {
+    "red":[1,0,0],
+    "orange":[1,0.25,0],
+    "yellow":[0.5,0.5,0],
+    "yellow-green":[0.5,1,0],
+    "green":[0,1,0],
+    "turquoise":[0,0.5,0.5],
+    "blue":[0,0,1],
+    "purple":[0.5,0,0.5],
+    "black":[0,0,0],
+    "grey":[0.5,0.5,0.5],
+    "white":[1,1,1]
+}
+
 export const colours = {
     semantics:{
         primary:{
-            "RoofSurface": [255,0,0],
-            "GroundSurface": [255,0,0],
-            "WallSurface": [255,0,0],
-            "ClosureSurface": [255,0,0],
-            "OuterCeilingSurface": [255,0,0],
-            "OuterFloorSurface": [255,0,0],
-            "Window": [255,0,0],
-            "Door": [255,0,0],
-            "InteriorWallSurface": [255,0,0],
-            "CeilingSurface": [255,0,0],
-            "FloorSurface": [255,0,0],
-            "WaterSurface": [255,0,0],
-            "WaterGroundSurface": [255,0,0],
-            "WaterClosureSurface": [255,0,0],
-            "TrafficArea": [255,0,0],
-            "AuxiliaryTrafficArea": [255,0,0],
-            "TransportationMarking": [255,0,0],
-            "TransportationHole": [255,0,0]
+            "RoofSurface":          common['red'],
+            "GroundSurface":        common['grey'],
+            "WallSurface":          common['orange'],
+            "ClosureSurface":       common['grey'],
+            "OuterCeilingSurface":  common['grey'],
+            "OuterFloorSurface":    common['grey'],
+            "Window":               common['grey'],
+            "Door":                 common['grey'],
+            "InteriorWallSurface":  common['grey'],
+            "CeilingSurface":       common['grey'],
+            "FloorSurface":         common['grey'],
+            "WaterSurface":         common['blue'],
+            "WaterGroundSurface":   common['blue'],
+            "WaterClosureSurface":  common['blue'],
+            "TrafficArea":          common['grey'],
+            "AuxiliaryTrafficArea": common['grey'],
+            "TransportationMarking":common['grey'],
+            "TransportationHole":   common['grey']
         },
         selected:{
-            "RoofSurface": [255,0,0],
-            "GroundSurface": [255,0,0],
-            "WallSurface": [255,0,0],
-            "ClosureSurface": [255,0,0],
-            "OuterCeilingSurface": [255,0,0],
-            "OuterFloorSurface": [255,0,0],
-            "Window": [255,0,0],
-            "Door": [255,0,0],
-            "InteriorWallSurface": [255,0,0],
-            "CeilingSurface": [255,0,0],
-            "FloorSurface": [255,0,0],
-            "WaterSurface": [255,0,0],
-            "WaterGroundSurface": [255,0,0],
-            "WaterClosureSurface": [255,0,0],
-            "TrafficArea": [255,0,0],
-            "AuxiliaryTrafficArea": [255,0,0],
-            "TransportationMarking": [255,0,0],
-            "TransportationHole": [255,0,0]
+            "RoofSurface":          common['red'],
+            "GroundSurface":        common['grey'],
+            "WallSurface":          common['orange'],
+            "ClosureSurface":       common['grey'],
+            "OuterCeilingSurface":  common['grey'],
+            "OuterFloorSurface":    common['grey'],
+            "Window":               common['grey'],
+            "Door":                 common['grey'],
+            "InteriorWallSurface":  common['grey'],
+            "CeilingSurface":       common['grey'],
+            "FloorSurface":         common['grey'],
+            "WaterSurface":         common['blue'],
+            "WaterGroundSurface":   common['blue'],
+            "WaterClosureSurface":  common['blue'],
+            "TrafficArea":          common['grey'],
+            "AuxiliaryTrafficArea": common['grey'],
+            "TransportationMarking":common['grey'],
+            "TransportationHole":   common['grey']
         }
     },
-    default: [100,100,100]
+    default: [0.5,0.7,0.7]
 };
