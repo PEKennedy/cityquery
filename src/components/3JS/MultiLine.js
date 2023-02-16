@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry, LineBasicMaterial } from 'three';
-import {scale, transform, reverseWindingOrder, colourVerts} from './3dUtils'
+import {transform, colourVerts} from './3dUtils'
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function MultiLineObj(props){
@@ -24,19 +24,29 @@ function MultiLineObj(props){
     console.log(object);
 
     var line_segments = object.geometry[0].boundaries;
+    let semantics = object.geometry[0].semantics;
+    let obj_transform = props.cityFile.transform;
 
     const lines = line_segments.map((segment, index) =>{
         var verts_filtered = [];
+        let colours = []
         segment.forEach((index)=>{
             verts_filtered.push(props.cityFile.vertices[index]);
         })
-        const verts = new Float32Array(verts_filtered.flat(2));
-        
+        colours.push(...colourVerts(semantics,index,segment.length));
+        const verts = new Float32Array(
+            verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
+        );
+        colours = new Float32Array(colours)
+
+        // color={'orange'}
+
         return <line {...props} ref={ref} key={verts.toString()}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
+                <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
             </bufferGeometry>
-            <lineBasicMaterial color={'orange'}/>
+            <lineBasicMaterial vertexColors={true}/>
         </line>
     });
 

@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import {scale, transform, reverseWindingOrder, colourVerts} from './3dUtils'
+import {transform, colourVerts} from './3dUtils'
 
 //Loads a pointcloud from a cityjson file which directly contains the point data
 /**
@@ -28,7 +28,7 @@ function loadCityJsonPointCloud(cityJSONFile,objName){
     let semantics = obj.geometry[0].semantics;
     var vert_inds = obj.geometry[0].boundaries;
     var verts = cityJSONFile.vertices;
-    let obj_scale = cityJSONFile.transform.scale;
+    let obj_transform = cityJSONFile.transform;
 
     var verts_filtered = [];
     let colours = []
@@ -39,7 +39,7 @@ function loadCityJsonPointCloud(cityJSONFile,objName){
     })
     colours = new Float32Array(colours);
     const vertices = new Float32Array(
-        verts_filtered.map((v)=>scale(v,obj_scale)).flat(2)
+        verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
     );
     return [vertices,colours];
 }
@@ -61,7 +61,6 @@ function PointCloudObj(props){
     console.log(props.object);
 
     let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.object);
-    console.log(colours)
     //color={0xFFFFFF}
 
     if(verts == undefined){

@@ -39,8 +39,7 @@ function SurfaceObject(props){
     let semantics = object.geometry[0].semantics;
     var surfaces = object.geometry[0].boundaries;
 
-    let obj_scale = props.cityFile.transform.scale;
-    let obj_translate = props.cityFile.transform.translate;
+    let obj_transform = props.cityFile.transform
     let all_verts = props.cityFile.vertices;
 
     const surface_meshes = surfaces.map((surface, index) =>{
@@ -104,18 +103,23 @@ function SurfaceObject(props){
             holes = null;
         }
 
-        let v1 = new Vector3(boundary_verts[0][0],boundary_verts[0][1],boundary_verts[0][2])
-        let v2 = new Vector3(boundary_verts[1][0],boundary_verts[1][1],boundary_verts[1][2])
-        let v3 = new Vector3(boundary_verts[2][0],boundary_verts[2][1],boundary_verts[2][2])
+        //scale the vertex positions, and flatten the arrays
+        //TODO: scale(...) should be transform(...). 
+        //But this sends the building off into the distance due to the large translation
+        let flat_verts = boundary_verts.map(vert=>transform(vert,obj_transform))
+
+        let v1 = new Vector3(flat_verts[0][0],flat_verts[0][1],flat_verts[0][2])
+        let v2 = new Vector3(flat_verts[1][0],flat_verts[1][1],flat_verts[1][2])
+        let v3 = new Vector3(flat_verts[2][0],flat_verts[2][1],flat_verts[2][2])
+
+        flat_verts = flat_verts.flat(3);
+
         //Since by the cityjson spec, a surface is all along the same plane,
         // 2 verts crossed together should produce the normal
         let normal = v2.sub(v1).cross(v3.sub(v1)) // boundary_verts[0]
         let rot_axis = new Vector3(0,0,1).cross(normal);
 
-        //scale the vertex positions, and flatten the arrays
-        //TODO: scale(...) should be transform(vert,obj_scale,,obj_translate). 
-        //But this sends the building off 
-        let flat_verts = boundary_verts.map(vert=>scale(vert,obj_scale)).flat(3);
+
 
         let tris = [];
 
@@ -125,7 +129,7 @@ function SurfaceObject(props){
         if(normal.z < 0.1 && normal.z > -0.1){ 
             for(let i=0;i<flat_verts.length;i+=3){
                 let v = new Vector3(flat_verts[i],flat_verts[i+1],flat_verts[i+2])
-                v.applyAxisAngle(rot_axis.normalize(),-Math.PI/2);
+                v.applyAxisAngle(rot_axis.normalize(),Math.PI/2);
                 rotated_flat.push(v.x,v.y,v.z);
             }
             tris = Earcut.triangulate(rotated_flat,holes,3);
@@ -133,7 +137,7 @@ function SurfaceObject(props){
         else{
             tris = Earcut.triangulate(flat_verts,holes,3);
             //if the triangles are facing away from the camera, flip the triangles to face outwards correctly
-            if(normal.z < 0){
+            if(normal.z > 0){
                 tris = reverseWindingOrder(tris);
             }
         }
