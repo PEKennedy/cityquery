@@ -3,10 +3,10 @@ import { useState } from "react"
 /**
  * Presents a file upload button which can always accept more files, and a clear button.
  * Keeps track of a list of uploaded files, and their metadata.
- * Upon a file being uploaded and read, the passed in setFile will be called to add the 
+ * Upon a file being uploaded and read, the passed in setFile will be called to add the
  * read file to the parent's file list (FileList only keeps track of the metadata)
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns JSX for a file input and the resulting fileList
  */
 function FileControl(props){
@@ -18,7 +18,7 @@ function FileControl(props){
         setFileMetaData([]);
         clearFileInput();
     }
-  
+
     const clearFileInput = () =>{
       document.getElementById(props.upId).value = '';
     }
@@ -28,19 +28,19 @@ function FileControl(props){
             const file = e.target.files[0]
             setFileMetaData([...fileMetaData,file])
             const fr = new FileReader();
-        
+
             //add an event listener for when the filereader has finished
-            fr.addEventListener("load",e=>{ 
+            fr.addEventListener("load",e=>{
                 props.addFile(fr.result)
                 clearFileInput(); //reset the file upload html component, once we are done
             })
             //After having set the event listener, we can now use this to parse the file
-            fr.readAsText(file); 
+            fr.readAsText(file);
         }
-    
+
     }
 
-    let filesList = fileMetaData.map((file,index) => 
+    let filesList = fileMetaData.map((file,index) =>
       <li key={file.name}>{file.name}</li>
     );
 
@@ -69,17 +69,17 @@ const handleFileChange = (e) =>{
             Object.values(files).forEach((file)=>{
                 console.log(file)
                 const fr = new FileReader();
-        
+
                 //add an event listener for when the filereader has finished
-                fr.addEventListener("load",e=>{ 
+                fr.addEventListener("load",e=>{
                     //console.log(fr.result)
                     props.addFile(fr.result)
                     clearFileInput(); //reset the file upload html component, once we are done so more files can be uploaded
                 })
                 //After having set the event listener, we can now use this to parse the file
-                fr.readAsText(file); 
+                fr.readAsText(file);
             })
         }
-    
+
     }
 */

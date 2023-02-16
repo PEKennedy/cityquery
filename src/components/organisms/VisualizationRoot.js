@@ -86,7 +86,7 @@ class VisualizationRoot extends React.Component {
 
     //Some notes:
     //- cityJSON files with external PointClouds always specify an extension you could check for in the file
-    //- For an 'external' pointcloud, we can also check for an object with no geometry, 
+    //- For an 'external' pointcloud, we can also check for an object with no geometry,
     //but with "attributes"."pointcloud-file".pointFile
   }
 
@@ -107,6 +107,8 @@ class VisualizationRoot extends React.Component {
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
+
+
           <br/>
           This demos <code>react-three-fiber</code>, a library for using three.js and react together:
           <br/>

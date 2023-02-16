@@ -1,5 +1,6 @@
 import React from 'react';
-import { VStack, Text } from 'native-base';
+import { VStack, Text,HStack } from 'native-base';
+import FileControl from '../atoms/FileControl';
 
 const style = {
   menuContainer: {
@@ -15,12 +16,36 @@ const style = {
 };
 
 const FileMenu = () => {
+
+
   return (
+
+
     <VStack style={style.menuContainer}>
       <Text style={style.menuText}>
         File Menu
       </Text>
+      CityJSON Upload List:
+      <FileControl upId={"cityUpload"} clearId={"cityClear"}  fileType={".json"}
+            clearText={"Clear CityJSON Files"}  />
+
+
+      <HStack style={style.innerContainer}>
+
+
+      </HStack>
+
+
+
     </VStack>
+
+
+
+
+
+
+
+
   );
 };
 
