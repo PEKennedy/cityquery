@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry, LineBasicMaterial } from 'three';
+import {scale, transform, reverseWindingOrder, colourVerts} from './3dUtils'
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function MultiLineObj(props){

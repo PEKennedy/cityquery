@@ -5,46 +5,9 @@ import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, MeshStandardM
 import { Earcut } from 'three/src/extras/Earcut';
 import { Geometry } from 'three-stdlib';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
-import { colours } from '../../constants/colours';
+import {scale, transform, reverseWindingOrder, colourVerts} from './3dUtils'
 //import {VertexColors} from 'three/src/materials/'
-//applies scale **and translation in the future** to a vertex formatted as [x,y,z]
-function scale(vert, scale){
-    return [vert[0]*scale[0],vert[1]*scale[1],vert[2]*scale[2]];
-}
 
-function transform(vert,scale,translate){
-    return [vert[0]*scale[0]+translate[0],vert[1]*scale[1]+translate[1],vert[2]*scale[2]+translate[2]];
-}
-
-//to be displayed correctly, triangle indices must specify vertices in ccw order
-//this reverses the order in case a series of tris needs to be flipped for this reason
-function reverseWindingOrder(tris){
-    let tris_out = [];
-    for(let i=0;i<tris.length;i+=3){
-        tris_out.push(tris[i+2],tris[i+1],tris[i]);
-    }
-    return tris_out;
-}
-
-function getColour(semantics,surface_index){
-    let surface_type_ind = semantics.values[surface_index];
-    let surface_type = semantics.surfaces[surface_type_ind].type;
-    console.log(surface_type)
-    let surface_colour = colours.semantics.primary[surface_type];
-    if(surface_colour == undefined) surface_colour = colours.default;
-    return surface_colour;
-}
-
-function colourVerts(semantics,surface_index,numVerts){
-    let surface_colour = getColour(semantics,surface_index);
-    let vertex_colours = [];
-    for(let i=0;i<numVerts;i++){
-        vertex_colours.push(surface_colour[0], surface_colour[1], surface_colour[2])
-    }
-    
-    vertex_colours = new Float32Array(vertex_colours)
-    return vertex_colours
-}
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function SurfaceObject(props){
@@ -77,6 +40,7 @@ function SurfaceObject(props){
     var surfaces = object.geometry[0].boundaries;
 
     let obj_scale = props.cityFile.transform.scale;
+    let obj_translate = props.cityFile.transform.translate;
     let all_verts = props.cityFile.vertices;
 
     const surface_meshes = surfaces.map((surface, index) =>{
@@ -114,8 +78,6 @@ function SurfaceObject(props){
         let holes = [];
 
         let end_index = 0;
-
-
         
         //A boundary is going to be the list of exterior verts, then each list of interior verts
         surface.forEach(boundary=>{
@@ -151,6 +113,8 @@ function SurfaceObject(props){
         let rot_axis = new Vector3(0,0,1).cross(normal);
 
         //scale the vertex positions, and flatten the arrays
+        //TODO: scale(...) should be transform(vert,obj_scale,,obj_translate). 
+        //But this sends the building off 
         let flat_verts = boundary_verts.map(vert=>scale(vert,obj_scale)).flat(3);
 
         let tris = [];
@@ -177,7 +141,7 @@ function SurfaceObject(props){
         //Convert to the object types 3js expects
         tris = new Uint32BufferAttribute(tris,1);
         const verts = new Float32Array(flat_verts);
-        let colours = colourVerts(semantics,index,boundary_verts.length)
+        let colours = new Float32Array(colourVerts(semantics,index,boundary_verts.length))
 
         let geo = new BufferGeometry()
         geo.setIndex(tris);
