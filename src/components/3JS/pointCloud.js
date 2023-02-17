@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { BufferAttribute, BufferGeometry } from 'three';
 
-import {transform, colourVerts} from './3dUtils'
+import {transform, colourVerts, getSelectedTint} from './3dUtils'
 
 //Loads a pointcloud from a cityjson file which directly contains the point data
 /**
@@ -57,22 +57,24 @@ function PointCloudObj(props){
         return (<points ref={ref} visible={false}></points>);
     }
 
+    let tint = getSelectedTint(props.selected)
+
     console.log(props.cityFile);
     console.log(props.object);
 
     let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.object);
-    //color={0xFFFFFF}
 
     if(verts == undefined){
         return (<points ref={ref} visible={false}></points>);
     }
+
     return (
         <points {...props} ref={ref}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
                 <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
             </bufferGeometry>
-            <pointsMaterial color={0xFFFFFF} size={0.25} vertexColors={true}/>
+            <pointsMaterial color={tint} size={0.25} vertexColors={!props.selected}/>
         </points>
     );
     

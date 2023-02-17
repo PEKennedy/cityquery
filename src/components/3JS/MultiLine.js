@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry, LineBasicMaterial } from 'three';
-import {transform, colourVerts} from './3dUtils'
+import {transform, colourVerts, getSelectedTint} from './3dUtils'
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function MultiLineObj(props){
@@ -39,14 +39,14 @@ function MultiLineObj(props){
         );
         colours = new Float32Array(colours)
 
-        // color={'orange'}
+        let tint = getSelectedTint(props.selected)
 
         return <line {...props} ref={ref} key={verts.toString()}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
                 <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
             </bufferGeometry>
-            <lineBasicMaterial vertexColors={true}/>
+            <lineBasicMaterial vertexColors={!props.selected} color={tint}/>
         </line>
     });
 

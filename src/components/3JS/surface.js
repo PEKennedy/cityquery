@@ -5,9 +5,7 @@ import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, MeshStandardM
 import { Earcut } from 'three/src/extras/Earcut';
 import { Geometry } from 'three-stdlib';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
-import {scale, transform, reverseWindingOrder, colourVerts} from './3dUtils'
-//import {VertexColors} from 'three/src/materials/'
-
+import {transform, reverseWindingOrder, colourVerts, getSelectedTint} from './3dUtils'
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function SurfaceObject(props){
@@ -104,7 +102,6 @@ function SurfaceObject(props){
         }
 
         //scale the vertex positions, and flatten the arrays
-        //TODO: scale(...) should be transform(...). 
         //But this sends the building off into the distance due to the large translation
         let flat_verts = boundary_verts.map(vert=>transform(vert,obj_transform))
 
@@ -159,10 +156,12 @@ function SurfaceObject(props){
     combined_geo.computeVertexNormals()
     combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
 
+    let tint = getSelectedTint(props.selected)
+
     return (
         <mesh {...props} ref={ref}>
             <primitive object={combined_geo} />
-            <meshStandardMaterial  vertexColors={true}/>
+            <meshStandardMaterial vertexColors={!props.selected} color={tint}/>
         </mesh>
     )
 

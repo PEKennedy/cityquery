@@ -46,11 +46,11 @@ class VisualizationRoot extends React.Component {
   }
 
   //takes a file's contents, returns a list of objects as proper jsx types
-  displayObjList(cityJSONFile){
+  displayObjList(cityJSONFile,fileName){
     //console.log(cityJSONFile.CityObjects);
-    const keys = Object.keys(cityJSONFile.CityObjects);
-    var objs = keys.map((key)=>{
-      return this.chooseObjectType(cityJSONFile,key);
+    const objNames = Object.keys(cityJSONFile.CityObjects);
+    var objs = objNames.map((name)=>{
+      return this.chooseObjectType(cityJSONFile,name,fileName);
     });
 
     return (
@@ -62,7 +62,7 @@ class VisualizationRoot extends React.Component {
 
   //given a file (need a file as it contains the both object and the vertices) and an object name,
   //gives the proper jsx for display
-  chooseObjectType(cityFile,objectName){
+  chooseObjectType(cityFile,objectName,fileName){
 
     var object = cityFile.CityObjects[objectName];
 
@@ -71,14 +71,23 @@ class VisualizationRoot extends React.Component {
       return <mesh visible={false}></mesh>
     }
 
-    if(object.geometry[0].type == "MultiPoint"){
-      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    let type = object.geometry[0].type;
+
+    let is_selected = false
+
+    if(this.state.selected[fileName]){
+      let fileObjs = this.state.selected[fileName]["objects"]
+      is_selected = fileObjs.find((name)=>{return name == objectName}) != undefined;
     }
-    if(object.geometry[0].type == "MultiLineString"){
-      return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    
+    if(type == "MultiPoint"){
+      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
     }
-    if(object.geometry[0].type == "MultiSurface" || object.geometry[0].type == "CompositeSurface"){
-      return <SurfaceObject position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    if(type == "MultiLineString"){
+      return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
+    }
+    if(type == "MultiSurface" || type == "CompositeSurface"){
+      return <SurfaceObject position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
     }
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
@@ -137,9 +146,10 @@ class VisualizationRoot extends React.Component {
 
     //go through every uploaded file, add it to the canvas
     //this.state.cityFiles
-    const objList = Object.values(this.state.cityFiles).map((file,index) =>{
+    const objList = Object.keys(this.state.cityFiles).map((fileName,index) =>{
+      let file = this.state.cityFiles[fileName]
       console.log(file)
-      return this.displayObjList(file)
+      return this.displayObjList(file,fileName)
     });
 
     //TODO: make file inputs "multiple", change to iterate over them

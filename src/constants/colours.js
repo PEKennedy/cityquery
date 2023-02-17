@@ -39,10 +39,10 @@ export const colours = {
             "TransportationMarking":common['grey'],
             "TransportationHole":   common['grey']
         },
-        selected:{
-            "RoofSurface":          common['red'],
+        secondary:{
+            "RoofSurface":          common['grey'],
             "GroundSurface":        common['grey'],
-            "WallSurface":          common['orange'],
+            "WallSurface":          common['grey'],
             "ClosureSurface":       common['grey'],
             "OuterCeilingSurface":  common['grey'],
             "OuterFloorSurface":    common['grey'],
@@ -60,5 +60,6 @@ export const colours = {
             "TransportationHole":   common['grey']
         }
     },
-    default: [0.5,0.7,0.7]
+    selected: [1,0.2,0.2],
+    default: [0.7,0.7,0.7]
 };

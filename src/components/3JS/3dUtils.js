@@ -32,7 +32,9 @@ function getColour(semantics,surface_index){
     let surface_type_ind = semantics.values[surface_index];
     let surface_type = semantics.surfaces[surface_type_ind].type;
     //console.log(surface_type)
-    let surface_colour = colours.semantics.primary[surface_type];
+    let surface_colour = [];
+
+    surface_colour = colours.semantics.primary[surface_type];
     if(surface_colour == undefined) surface_colour = colours.default;
     return surface_colour;
 }
@@ -46,4 +48,12 @@ function colourVerts(semantics,surface_index,numVerts){
     return vertex_colours
 }
 
-export {scale, transform, reverseWindingOrder, colourVerts}
+function getSelectedTint(selected){
+    let tint = 0xFFFFFF //default to white
+    if(selected){
+        tint = colours.selected //if selected, change the tint
+    }
+    return tint
+}
+
+export {transform, reverseWindingOrder, colourVerts, getSelectedTint}
