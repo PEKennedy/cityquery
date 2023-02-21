@@ -1,13 +1,18 @@
-"""from browser import window, document, alert
+import json
 
-document <= "BRYTHON"
+def getParams():
+    return json.dumps({
+        "p1":"float",
+        "p2":"int",
+        "success":"string",
+    })
 
-def print_something():
-    print("Tada!")
+def modifyCityJSON(cityjsonFile, objectNames, paramVals):
+    verts = cityjsonFile["vertices"]
+    for objName in objectNames:
+        obj = cityjsonFile["CityObjects"][objName]
 
-window.print_something = print_something"""
+        obj['test'] = paramVals['success']
 
-def func():
-    return 5+7
-
-#func()
+        cityjsonFile["CityObjects"][objName] = obj
+    return json.dumps(cityjsonFile)
