@@ -1,14 +1,18 @@
 import React from 'react';
 import { VStack, Text } from 'native-base';
+import { strings } from '../../constants/strings';
 
 const style = {
   menuContainer: {
-    height: 50,
     width: '100%',
-    backgroundColor: '#00F',
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 500,
+    color: '#000',
   },
   menuText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 500,
     color: '#000',
   },
@@ -17,8 +21,8 @@ const style = {
 const SearchMenu = () => {
   return (
     <VStack style={style.menuContainer}>
-      <Text style={style.menuText}>
-        Search Menu
+      <Text style={style.titleText}>
+        {strings.searchMenu}
       </Text>
     </VStack>
   );

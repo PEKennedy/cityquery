@@ -1,16 +1,21 @@
 import React from 'react';
-import { VStack } from 'native-base';
+import { Text, VStack } from 'native-base';
 import { ModificationPluginList, SearchPluginList } from '../3JS/pyScript';
 import { useContext } from 'react';
 import { FileMenuContext } from '../../constants/context';
+import { strings } from '../../constants/strings';
 
 const style = {
   menuContainer: {
-    height: '100%',
     width: '100%',
   },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 500,
+    color: '#000',
+  },
   menuText: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 500,
     color: '#000',
   },
@@ -20,9 +25,16 @@ const PluginMenu = () => {
   const { cityFiles, getSelected, select_test, select, ModifyCityJSON } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
-      Modification Plugins:
+      <Text style={style.titleText}>
+        {strings.pluginMenu}
+      </Text>
+      <Text style={style.menuText}>
+        {strings.modificationPlugins}
+      </Text>
       <ModificationPluginList getSelected={getSelected} onResult={ModifyCityJSON} />
-      Search Plugins:
+      <Text style={style.menuText}>
+        {strings.searchPlugins}
+      </Text>
       <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select}/>
       <input type={"button"} onClick={() => select_test} value={"Select Building_1"} />
     </VStack>

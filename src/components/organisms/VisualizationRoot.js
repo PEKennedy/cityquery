@@ -69,7 +69,7 @@ const VisualizationRoot = (props) => {
       <VStack width="75%" height="100%" padding={5}>
         <div>
           <br/>
-          <div style={{position:"relative",width:800,height:600}}>
+          <div style={{position:"relative",width:"100%",height:"650px"}}>
             <Canvas>
               <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault/>
               <OrbitControls />
