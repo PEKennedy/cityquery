@@ -5,7 +5,8 @@ import { strings } from '../../constants/strings';
 import ToolBar from '../organisms/ToolBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
-import { FileMenuContext } from '../../constants/context';
+import { FileMenuContext, PluginMenuContext } from '../../constants/context';
+import { cloneDeep } from 'lodash';
 
 const style = {
   pageContainer: {
@@ -34,7 +35,7 @@ const VisualizationPage = () => {
 
   const addFile = (file, fileName) => {
     //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
-    let newCityFiles = cityFiles
+    let newCityFiles = cloneDeep(cityFiles);
     newCityFiles[fileName] = JSON.parse(file);
     setCityFiles(newCityFiles);
   }
@@ -88,19 +89,21 @@ const VisualizationPage = () => {
     console.log(cityFiles)
   }
 
-  const fileMenuContext = { cityFiles, addFile, clearCityFiles, getSelected, ModifyCityJSON, select_test, select };
-  console.log(cityFiles);
+  const fileMenuContext = { addFile, clearCityFiles, getSelected, ModifyCityJSON, select_test, select };
+  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select };
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
-      <VStack style={style.pageContainer}>
-        <ToolBar />
-        <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
-        <HStack style={style.innerContainer}>
-          <SideMenu />
-          <VisualizationRoot cityFiles selected getSelected ModifyCityJSON select_test select />
-        </HStack>
-      </VStack>
+      <PluginMenuContext.Provider value={pluginMenuContext}>
+        <VStack style={style.pageContainer}>
+          <ToolBar />
+          <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
+          <HStack style={style.innerContainer}>
+            <SideMenu />
+            <VisualizationRoot cityFiles={cityFiles} />
+          </HStack>
+        </VStack>
+      </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
   );
 };

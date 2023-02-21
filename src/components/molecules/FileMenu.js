@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { VStack, Text } from 'native-base';
+import { VStack, Text, Checkbox, HStack } from 'native-base';
 import FileControl from '../atoms/FileControl';
 import { FileMenuContext } from '../../constants/context';
 import { strings } from '../../constants/strings';
@@ -25,9 +25,12 @@ const FileMenu = () => {
   const { addFile, clearCityFiles } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
-      <Text style={style.titleText}>
-        {strings.fileMenu}
-      </Text>
+      <HStack>
+        <Checkbox />
+        <Text style={style.titleText}>
+          {strings.fileMenu}
+        </Text>
+      </HStack>
       <Text style={style.menuText}>
         {strings.uploadList}
       </Text>
