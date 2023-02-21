@@ -48,16 +48,20 @@ const VisualizationPage = () => {
     select("twobuildings.city.json","Building_1")
   }
   
-  const select = (fileName, objName) => {
+  const select = (fileName, objNames, append=false) => {
     //return 0;
     let newSelected = selected;
     if(newSelected.fileName == undefined){
-      newSelected[fileName] = {"objects":[objName]}
+      newSelected[fileName] = {"objects":objNames}
+    }
+    else if(append){
+      newSelected[fileName]["objects"].push(objNames)
     }
     else{
-      newSelected[fileName]["objects"] = [objName]
+      newSelected[fileName]["objects"] = objNames
     }
-    setSelected(newSelected);
+    setSelected(newSelected)
+    console.log(selected)
   }
   
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
@@ -71,17 +75,17 @@ const VisualizationPage = () => {
   //all a file's objects at once. This also avoids asynchronisity issues that updating a file's 'vertices' might cause
   
   const getSelected = () => {
-    let selected = selected
-    let keys = Object.keys(selected)
+    let newSelected = selected
+    let keys = Object.keys(newSelected)
     keys.forEach((fileName)=>{
       selected[fileName]["file"] = cityFiles[fileName]
     })
     return selected;
   }
-  
+
   const ModifyCityJSON = (fileName, output) => {
     cityFiles[fileName] = output;
-    console.log(cityFiles);
+    console.log(cityFiles)
   }
 
   const fileMenuContext = { cityFiles, addFile, clearCityFiles, getSelected, ModifyCityJSON, select_test, select };
