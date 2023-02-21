@@ -89,7 +89,7 @@ const VisualizationPage = () => {
     console.log(cityFiles)
   }
 
-  const fileMenuContext = { addFile, clearCityFiles, getSelected, ModifyCityJSON, select_test, select };
+  const fileMenuContext = { addFile, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select };
 
   return (

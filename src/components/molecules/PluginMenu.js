@@ -2,8 +2,9 @@ import React from 'react';
 import { Text, VStack } from 'native-base';
 import { ModificationPluginList, SearchPluginList } from '../3JS/pyScript';
 import { useContext } from 'react';
-import { FileMenuContext } from '../../constants/context';
+
 import { strings } from '../../constants/strings';
+import { PluginMenuContext } from '../../constants/context';
 
 const style = {
   menuContainer: {
@@ -22,7 +23,7 @@ const style = {
 };
 
 const PluginMenu = () => {
-  const { cityFiles, getSelected, select_test, select, ModifyCityJSON } = useContext(FileMenuContext);
+  const { cityFiles, getSelected, ModifyCityJSON, select_test, select } = useContext(PluginMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
