@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react"
 import FileControl from "../atoms/FileControl"
 
+const style = {
+    listStyle: {
+        listStylePosition: 'inside',
+        listStyleType: 'none',
+        padding: 0,
+    },
+    buttonStyle: {
+        marginTop: 10,
+    },
+};
+
 /**
  * Checks for if the python library pyodide is loaded
  * Then asynchronously calls pyodide to run the supplied python code string
@@ -44,7 +55,7 @@ function ModificationPluginList(props){
         <div>
             <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
                 clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
-            <ul>
+            <ul style={style.listStyle}>
                 {objList}
             </ul>
         </div>
@@ -78,7 +89,7 @@ function SearchPluginList(props){
         <div>
             <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
                 clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
-            <ul>
+            <ul style={style.listStyle}>
                 {objList}
             </ul>
         </div>
@@ -258,11 +269,11 @@ function PluginParameters(props){
 
 
     return(
-        <form >
-            <ul>
+        <form paddingLeft={0} width="100%'">
+            <ul style={style.listStyle}>
                 {tabList}
             </ul>
-            <input onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value={props.runText || "Run"}/>
+            <input style={style.buttonStyle} onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value={props.runText || "Run"}/>
         </form>
     );
 }

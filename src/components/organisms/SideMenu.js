@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HStack, VStack } from 'native-base';
+import { HStack, ScrollView, VStack } from 'native-base';
 import FileMenu from '../molecules/FileMenu';
 import SearchMenu from '../molecules/SearchMenu';
 import SideMenuPluginTab from '../atoms/SideMenuPluginTab';
@@ -25,7 +25,7 @@ const style = {
   listContainer: {
     width: '80%',
     height: '100%',
-    padding: 20,
+    padding: 10,
   },
 };
 
@@ -51,10 +51,12 @@ const SideMenu = () => {
         <SideMenuFilterTab setLayout={setLayout} />
         <SideMenuPluginTab setLayout={setLayout} />
       </VStack>
-      <VStack style={style.listContainer} space={3}>
-        <FileMenu />
-        {getActiveLayout(layout)}
-      </VStack>
+      <ScrollView height={500}>
+        <VStack style={style.listContainer} space={1}>
+          <FileMenu />
+          {getActiveLayout(layout)}
+        </VStack>
+      </ScrollView>
     </HStack>
   );
 };
