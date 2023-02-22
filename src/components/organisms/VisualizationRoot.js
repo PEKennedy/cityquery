@@ -59,7 +59,7 @@ const VisualizationRoot = (props) => {
 
   //TODO: make file inputs "multiple", change to iterate over them
   return (
-    <VStack width="75%" height={500} padding={5}>
+    <VStack width="75%" height="100%" padding={5}>
       <Canvas>
         <PerspectiveCamera position={[0,5,10]} fov={75} makeDefault/>
         <OrbitControls />
