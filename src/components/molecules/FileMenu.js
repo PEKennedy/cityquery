@@ -7,7 +7,6 @@ import { strings } from '../../constants/strings';
 const style = {
   menuContainer: {
     width: '100%',
-    borderBottomWidth: 1,
   },
   titleText: {
     fontSize: 24,

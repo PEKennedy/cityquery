@@ -3,8 +3,8 @@ import { Pressable, AddIcon } from 'native-base';
 
 const style = {
   link: {
-    height: 50,
-    width: 50,
+    height: '3vw',
+    width: '3vw',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
