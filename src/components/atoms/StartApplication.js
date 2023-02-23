@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable } from 'native-base';
+import { Pressable, Text } from 'native-base';
 import { strings } from '../../constants/strings';
 import { useNavigate } from 'react-router-native';
 
@@ -13,14 +13,16 @@ const style = {
     borderColor: '#ffffff',
     borderRadius: 10,
     backgroundColor: '#d2303b',
-    fontSize: 24,
-    fontWeight: 500,
-    color: '#ffffff',
     hover: {
       bg: '#b1303b',
     },
   },
-}
+  text: {
+    fontSize: 24,
+    fontWeight: 500,
+    color: '#FFFFFF',
+  },
+};
 
 const StartApplication = () => {
   const navigate = useNavigate();
@@ -40,7 +42,9 @@ const StartApplication = () => {
       color={style.button.color}
       _hover={style.button.hover}
     >
-      {strings.startApplication}
+      <Text style={style.text}>
+        {strings.startApplication}
+      </Text>
     </Pressable>
   );
 };

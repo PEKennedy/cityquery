@@ -1,8 +1,16 @@
-import { useEffect } from "react"
-import { useState } from "react"
-
+import { useEffect, useState } from "react"
 import FileControl from "../atoms/FileControl"
 
+const style = {
+    listStyle: {
+        listStylePosition: 'inside',
+        listStyleType: 'none',
+        padding: 0,
+    },
+    buttonStyle: {
+        marginTop: 10,
+    },
+};
 
 /**
  * Checks for if the python library pyodide is loaded
@@ -20,8 +28,6 @@ function runPy(code){
     })
 }
 
-//TODO: Select between SearchPlugin and ModificationPlugin
-
 /**
  * Creates a FileControl for python plugins, and for each uploaded plugin creates a <ModificationPlugin> element
  * @param {*} props Methods getSelected and onResult for <ModificationPlugin> to call
@@ -29,7 +35,7 @@ function runPy(code){
  * onResult will be called when a plugin is finished with each file. It will be passed fileName,pluginOutput
  * @returns {JSX} A <div> containing a FileControl and list of <ModificationPlugin>
  */
-function PluginList(props){
+function ModificationPluginList(props){
     //props should have pass an object list?
 
     const [files, setFiles] = useState([]);
@@ -41,7 +47,7 @@ function PluginList(props){
         setFiles([])
     }
 
-    const objList = files.map((file,index) =>
+    let objList = files.map((file,index) =>
         <ModificationPlugin script={file} key={index}  getSelected={props.getSelected} onResult={props.onResult} />
     );
 
@@ -49,12 +55,48 @@ function PluginList(props){
         <div>
             <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
                 clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
-            <ul>
+            <ul style={style.listStyle}>
                 {objList}
             </ul>
         </div>
     );
 }
+
+/**
+ * Creates a FileControl for python plugins, and for each uploaded plugin creates a <SearchPlugin> element
+ * @param {*} props Methods getSelected and onResult for <SearchPlugin> to call
+ * getSelected should return an object containing the selected city objects as seen in VisualizationRoot
+ * onResult will be called when a plugin is finished with each file. It will be passed fileName,pluginOutput
+ * @returns {JSX} A <div> containing a FileControl and list of <SearchPlugin>
+ */
+function SearchPluginList(props){
+    //props should have pass an object list?
+
+    const [files, setFiles] = useState([]);
+
+    const addFile = (file) =>{
+        setFiles([...files, file])
+    }
+    const clearFiles = () =>{
+        setFiles([])
+    }
+
+    let objList = files.map((file,index) =>
+        <SearchPlugin script={file} key={index} getSelected={props.getSelected} onResult={props.onResult} />
+    );
+
+    return(
+        <div>
+            <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
+                clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
+            <ul style={style.listStyle}>
+                {objList}
+            </ul>
+        </div>
+    );
+}
+
+
 
 /**
  * A handler which will run "modifyCityJSON(file,objectsSelected,parameters)" in the uploaded python code
@@ -88,7 +130,7 @@ function ModificationPlugin(props){
   
     return( 
         <>
-            <PluginParameters script={props.script} onRun={runPlugin}/>
+            <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Modification"}/>
             <br/>
         </>
     );
@@ -97,10 +139,36 @@ function ModificationPlugin(props){
 
 function SearchPlugin(props){
 
+    const runPlugin = (parameters) =>{
+        console.log(parameters)
+
+        let files = props.getSelected()
+        console.log(files)
+        let fileNames = Object.keys(files)
+
+        fileNames.forEach((fileName)=>{
+            let file = files[fileName];
+            runPy(props.script+
+                "\nsearchCityJSON("+
+                JSON.stringify(file)+
+                "," +
+                JSON.stringify(parameters)+
+                ")"
+            ).then((output)=>{
+                props.onResult(fileName,JSON.parse(output)) //file_name
+            });
+        })
+    }
+  
+    return( 
+        <>
+            <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Search"}/>
+            <br/>
+        </>
+    );
 }
 
 //TODO: The ids for the "run" button might need to be made unique
-//TODO: maybe move the "run" button's text to a prop
 
 /**
  * Represents the parameters for a python plugin. Uses useEffect to run "getParams()" from the uploaded python
@@ -201,18 +269,14 @@ function PluginParameters(props){
 
 
     return(
-        <form >
-            <ul>
+        <form paddingLeft={0} width="100%'">
+            <ul style={style.listStyle}>
                 {tabList}
             </ul>
-            <input onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value="Run"/>
+            <input style={style.buttonStyle} onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value={props.runText || "Run"}/>
         </form>
     );
 }
-    
 
 
-
-
-
-  export {PluginList, ModificationPlugin, SearchPlugin} //, SearchPlugin, PluginList
+  export { ModificationPluginList, SearchPluginList }
