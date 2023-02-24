@@ -18,6 +18,7 @@ const FileControl = (props) => {
     const clearFilesFunction = (e) => {
         clearFiles();
         setFileMetaData([]);
+        setFilesList([]);
         clearFileInput();
     }
   
