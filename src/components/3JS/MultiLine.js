@@ -41,7 +41,7 @@ function MultiLineObj(props){
 
         let tint = getSelectedTint(props.selected)
 
-        return <line {...props} ref={ref} key={verts.toString()}>
+        return <line {...props} ref={ref} key={verts.toString()} onClick={props.makeSelected}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
                 <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 

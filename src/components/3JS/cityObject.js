@@ -3,23 +3,29 @@ import PointCloudObj from './pointCloud';
 import MultiLineObj from './MultiLine';
 import SurfaceObject from './surface';
 
+import { useContext } from 'react';
+import { PluginMenuContext } from '../../constants/context';
+
 //given a file (need a file as it contains the both object and the vertices) and an object name,
 //gives the proper jsx for display
-const chooseDisplayType = (cityFile, objectName, geometry, is_selected) => {
+const chooseDisplayType = (cityFile, objectName, geometry, is_selected, fileName, makeSelected) => {
 
     let type = geometry.type;
       
     if(type == "MultiPoint"){
-      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
+      return <PointCloudObj fileName={fileName} cityFile={cityFile}
+       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
     }
     if(type == "MultiLineString"){
-      return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
+      return <MultiLineObj fileName={fileName} cityFile={cityFile}
+       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
     }
     if(type == "MultiSurface" || type == "CompositeSurface"){
-      return <SurfaceObject position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
+      return <SurfaceObject fileName={fileName} cityFile={cityFile}
+       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
     }
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
-      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+      return <PointCloudObj cityFile={cityFile} object={objectName}/>;
     }*/
   
     //default
@@ -32,9 +38,31 @@ const chooseDisplayType = (cityFile, objectName, geometry, is_selected) => {
   }
   
 
-const CityObjectDisplay = (cityFile, objectName,fileName,selected) => {
+const CityObjectDisplay = (props) => {
+    let cityFile = props.cityFile
+    let objectName = props.objectName
+    let fileName = props.fileName
+    let selected = props.selected
+
+    console.log(cityFile)
     let object = cityFile.CityObjects[objectName];
     let geometries = [];
+
+    const { select, deSelect } = useContext(PluginMenuContext);
+    const clickSelection = (e,value) =>{
+        e.stopPropagation();
+
+        if(e.shiftKey){
+            if(is_selected) deSelect(fileName,[objectName]);
+            else            select(fileName,[objectName],true);
+        }
+        else if(e.ctrlKey){
+            //deSelect(fileName,[objectName])
+        }
+        else{
+            select(fileName,[objectName],false)
+        }
+    }
 
     //check if the object is selected
     let is_selected = false
@@ -45,7 +73,7 @@ const CityObjectDisplay = (cityFile, objectName,fileName,selected) => {
 
     //for each geometry, choose a display type
     object.geometry.forEach((geometry,index)=>{
-        geometries.push(chooseDisplayType(cityFile, objectName, geometry, is_selected))
+        geometries.push(chooseDisplayType(cityFile, objectName, geometry, is_selected, fileName, clickSelection))
     })
 
     //if there are multiple geometries, create a group

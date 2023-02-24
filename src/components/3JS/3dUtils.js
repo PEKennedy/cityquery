@@ -1,5 +1,8 @@
 import { colours } from '../../constants/colours';
 
+import { useContext } from 'react';
+import { PluginMenuContext } from '../../constants/context';
+
 //applies scale to a vertex formatted as [x,y,z]
 function scale(vert, transform){
     let scale = transform.scale;

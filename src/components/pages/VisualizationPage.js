@@ -44,6 +44,7 @@ const VisualizationPage = () => {
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
+    clearSelect();
   }
   
   const select_test = () => {
@@ -51,9 +52,10 @@ const VisualizationPage = () => {
   }
   
   const select = (fileName, objNames, append=false) => {
-    //return 0;
+
     let newSelected = cloneDeep(selected);
-    if(newSelected.fileName == undefined){
+
+    if(newSelected[fileName] == undefined){
       newSelected[fileName] = {"objects":objNames}
     }
     else if(append){
@@ -63,6 +65,28 @@ const VisualizationPage = () => {
       newSelected[fileName]["objects"] = objNames
     }
     setSelected(newSelected)
+  }
+
+  const deSelect = (fileName, objNames) => {
+    console.log("Deselect")
+    let newSelected = cloneDeep(selected);
+    if(newSelected[fileName]){
+      objNames.forEach((name,index)=>{
+        console.log(name)
+        let indexForRemoving = newSelected[fileName]["objects"].findIndex((val)=>{return val==name})
+        console.log(indexForRemoving)
+        newSelected[fileName]["objects"].splice(indexForRemoving,1);
+      })
+      if(newSelected[fileName]["objects"].length == 0){ //if no more selected objects
+        delete newSelected[fileName]
+      }
+      setSelected(newSelected)
+    }
+  }
+
+  const clearSelect = () =>{
+    console.log("Clear all selections")
+    setSelected({});
   }
   
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
@@ -89,7 +113,7 @@ const VisualizationPage = () => {
   }
 
   const fileMenuContext = { addFile, clearCityFiles };
-  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select };
+  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>

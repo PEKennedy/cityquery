@@ -69,7 +69,7 @@ function PointCloudObj(props){
     }
 
     return (
-        <points {...props} ref={ref}>
+        <points {...props} ref={ref} onClick={props.makeSelected}>
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
                 <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 

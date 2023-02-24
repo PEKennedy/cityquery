@@ -7,12 +7,8 @@ import { Geometry } from 'three-stdlib';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {transform, reverseWindingOrder, colourVerts, getSelectedTint} from './3dUtils'
 
-import { useContext } from 'react';
-import { PluginMenuContext } from '../../constants/context';
-
 //test funnction for getting and displaying a cityjson mesh (not working)
 function SurfaceObject(props){
-    const { cityFiles, getSelected, ModifyCityJSON, select_test, select } = useContext(PluginMenuContext);
     //var CityObjects = props.CityObjects;
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef()
@@ -32,6 +28,7 @@ function SurfaceObject(props){
         return (<mesh ref={ref} visible={false}></mesh>);
     }
     
+
     //console.log(props.cityFile);
     //console.log(props.object);
 
@@ -163,12 +160,11 @@ function SurfaceObject(props){
     let tint = getSelectedTint(props.selected)
 
     return (
-        <mesh {...props} ref={ref} >
+        <mesh {...props} ref={ref} onClick={props.makeSelected}>
             <primitive object={combined_geo} />
             <meshStandardMaterial vertexColors={!props.selected} color={tint}/>
         </mesh>
     )
-        //onClick={select()}
 }
 
 export default SurfaceObject;
