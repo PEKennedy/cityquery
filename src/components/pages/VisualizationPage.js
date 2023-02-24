@@ -32,7 +32,7 @@ const style = {
 
 const VisualizationPage = () => {
   const [cityFiles, setCityFiles] = useState({});
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState({});
 
   const addFile = (file, fileName) => {
     //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
@@ -47,12 +47,12 @@ const VisualizationPage = () => {
   }
   
   const select_test = () => {
-    select("twobuildings.city.json","Building_1")
+    select("twobuildings.city.json",["Building_1"])
   }
   
   const select = (fileName, objNames, append=false) => {
     //return 0;
-    let newSelected = selected;
+    let newSelected = cloneDeep(selected);
     if(newSelected.fileName == undefined){
       newSelected[fileName] = {"objects":objNames}
     }
@@ -63,7 +63,6 @@ const VisualizationPage = () => {
       newSelected[fileName]["objects"] = objNames
     }
     setSelected(newSelected)
-    console.log(selected)
   }
   
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
@@ -77,7 +76,7 @@ const VisualizationPage = () => {
   //all a file's objects at once. This also avoids asynchronisity issues that updating a file's 'vertices' might cause
   
   const getSelected = () => {
-    let newSelected = selected
+    let newSelected = cloneDeep(selected)
     let keys = Object.keys(newSelected)
     keys.forEach((fileName)=>{
       selected[fileName]["file"] = cityFiles[fileName]
@@ -87,7 +86,6 @@ const VisualizationPage = () => {
 
   const ModifyCityJSON = (fileName, output) => {
     cityFiles[fileName] = output;
-    console.log(cityFiles)
   }
 
   const fileMenuContext = { addFile, clearCityFiles };
@@ -101,7 +99,7 @@ const VisualizationPage = () => {
           <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
           <HStack style={style.innerContainer}>
             <SideMenu />
-            <VisualizationRoot cityFiles={cityFiles} />
+            <VisualizationRoot cityFiles={cityFiles} selected={selected} />
           </HStack>
         </VStack>
       </PluginMenuContext.Provider>

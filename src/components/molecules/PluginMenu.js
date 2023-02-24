@@ -37,7 +37,9 @@ const PluginMenu = () => {
         {strings.searchPlugins}
       </Text>
       <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select}/>
-      <input type={"button"} onClick={() => select_test} value={"Select Building_1"} />
+      <input type={"button"} onClick={() => {
+        select_test()
+        }} value={"Select Building_1"} />
     </VStack>
   );
 };
