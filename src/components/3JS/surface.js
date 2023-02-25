@@ -29,14 +29,8 @@ function SurfaceObject(props){
     }
     
 
-    //console.log(props.cityFile);
-    //console.log(props.object);
-
-    var object = props.cityFile.CityObjects[props.object];
-    console.log(object);
-
-    let semantics = object.geometry[0].semantics;
-    var surfaces = object.geometry[0].boundaries;
+    let semantics = props.geometry.semantics;
+    var surfaces = props.geometry.boundaries;
 
     let obj_transform = props.cityFile.transform
     let all_verts = props.cityFile.vertices;

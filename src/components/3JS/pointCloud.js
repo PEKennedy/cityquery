@@ -11,22 +11,10 @@ import {transform, colourVerts, getSelectedTint} from './3dUtils'
  * @param {*} objName 
  * @returns 
  */
-function loadCityJsonPointCloud(cityJSONFile,objName){
-    if(cityJSONFile.CityObjects == undefined){
-        console.log("provided cityJSON file did not contain \"CityObjects\"")
-        return;
-    }
-    var obj = cityJSONFile.CityObjects[objName];
-    
-    if(obj == undefined){
-        console.error("specified CityJSON object ("+objName+") was not contained in the provided file")
-        return;
-    }
+function loadCityJsonPointCloud(cityJSONFile,geometry){
 
-    
-    //console.log(obj);
-    let semantics = obj.geometry[0].semantics;
-    var vert_inds = obj.geometry[0].boundaries;
+    let semantics = geometry.semantics;
+    var vert_inds = geometry.boundaries;
     var verts = cityJSONFile.vertices;
     let obj_transform = cityJSONFile.transform;
 
@@ -53,16 +41,12 @@ function PointCloudObj(props){
     //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
     if(props.cityFile == undefined){ //not loaded yet
-        //console.log("pt cloud not defined yet")
         return (<points ref={ref} visible={false}></points>);
     }
 
     let tint = getSelectedTint(props.selected)
 
-    console.log(props.cityFile);
-    console.log(props.object);
-
-    let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.object);
+    let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.geometry);
 
     if(verts == undefined){
         return (<points ref={ref} visible={false}></points>);

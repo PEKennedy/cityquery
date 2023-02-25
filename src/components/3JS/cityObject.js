@@ -4,25 +4,34 @@ import MultiLineObj from './MultiLine';
 import SurfaceObject from './surface';
 
 import { useContext } from 'react';
-import { PluginMenuContext } from '../../constants/context';
+import { SelectionContext } from '../../constants/context';
 
 //given a file (need a file as it contains the both object and the vertices) and an object name,
 //gives the proper jsx for display
 const chooseDisplayType = (cityFile, objectName, geometry, is_selected, fileName, makeSelected) => {
 
+    if(cityFile.CityObjects == undefined){
+        console.error("provided cityJSON file did not contain \"CityObjects\"")
+        return;
+    }
+    if(cityFile.CityObjects[objectName] == undefined){
+        console.error("specified CityJSON object ("+objectName+") was not contained in the provided file")
+        return;
+    }
+
     let type = geometry.type;
       
     if(type == "MultiPoint"){
-      return <PointCloudObj fileName={fileName} cityFile={cityFile}
-       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
+      return <PointCloudObj fileName={fileName} cityFile={cityFile} geometry={geometry}
+       selected={is_selected} makeSelected={makeSelected}/>;
     }
     if(type == "MultiLineString"){
-      return <MultiLineObj fileName={fileName} cityFile={cityFile}
-       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
+      return <MultiLineObj fileName={fileName} cityFile={cityFile} geometry={geometry}
+       selected={is_selected} makeSelected={makeSelected}/>;
     }
     if(type == "MultiSurface" || type == "CompositeSurface"){
-      return <SurfaceObject fileName={fileName} cityFile={cityFile}
-       object={objectName} selected={is_selected} makeSelected={makeSelected}/>;
+      return <SurfaceObject fileName={fileName} cityFile={cityFile} geometry={geometry}
+       selected={is_selected} makeSelected={makeSelected}/>;
     }
     /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
       return <PointCloudObj cityFile={cityFile} object={objectName}/>;
@@ -42,13 +51,12 @@ const CityObjectDisplay = (props) => {
     let cityFile = props.cityFile
     let objectName = props.objectName
     let fileName = props.fileName
-    let selected = props.selected
 
     console.log(cityFile)
     let object = cityFile.CityObjects[objectName];
     let geometries = [];
 
-    const { select, deSelect } = useContext(PluginMenuContext);
+    const {selected, select, deSelect } = useContext(SelectionContext);
     const clickSelection = (e,value) =>{
         e.stopPropagation();
 

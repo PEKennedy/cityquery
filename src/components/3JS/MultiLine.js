@@ -18,13 +18,10 @@ function MultiLineObj(props){
     }
     
     console.log(props.cityFile);
-    console.log(props.object);
 
-    var object = props.cityFile.CityObjects[props.object];
-    console.log(object);
 
-    var line_segments = object.geometry[0].boundaries;
-    let semantics = object.geometry[0].semantics;
+    var line_segments = props.geometry.boundaries;
+    let semantics = props.geometry.semantics;
     let obj_transform = props.cityFile.transform;
 
     const lines = line_segments.map((segment, index) =>{

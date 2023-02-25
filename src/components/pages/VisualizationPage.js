@@ -5,7 +5,7 @@ import { strings } from '../../constants/strings';
 import ToolBar from '../organisms/ToolBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
-import { FileMenuContext, PluginMenuContext } from '../../constants/context';
+import { FileMenuContext, PluginMenuContext, SelectionContext } from '../../constants/context';
 import { cloneDeep } from 'lodash';
 
 const style = {
@@ -99,13 +99,15 @@ const VisualizationPage = () => {
   //We list selected object names with a file to ensure the objects are unique, and so plugins can update
   //all a file's objects at once. This also avoids asynchronisity issues that updating a file's 'vertices' might cause
   
+
+  //Get the selected state with the corresponding cityFile
   const getSelected = () => {
     let newSelected = cloneDeep(selected)
     let keys = Object.keys(newSelected)
     keys.forEach((fileName)=>{
-      selected[fileName]["file"] = cityFiles[fileName]
+      newSelected[fileName]["file"] = cityFiles[fileName]
     })
-    return selected;
+    return newSelected;
   }
 
   const ModifyCityJSON = (fileName, output) => {
@@ -114,18 +116,21 @@ const VisualizationPage = () => {
 
   const fileMenuContext = { addFile, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
+  const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
-        <VStack style={style.pageContainer}>
-          <ToolBar />
-          <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
-          <HStack style={style.innerContainer}>
-            <SideMenu />
-            <VisualizationRoot cityFiles={cityFiles} selected={selected} />
-          </HStack>
-        </VStack>
+        <SelectionContext.Provider value={selectionContext}>
+          <VStack style={style.pageContainer}>
+            <ToolBar />
+            <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
+            <HStack style={style.innerContainer}>
+              <SideMenu />
+              <VisualizationRoot cityFiles={cityFiles} selected={selected} />
+            </HStack>
+          </VStack>
+        </SelectionContext.Provider>
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
   );
