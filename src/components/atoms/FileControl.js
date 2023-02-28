@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react"
 
 /**
@@ -9,21 +10,22 @@ import { useState } from "react"
  * @param {*} props
  * @returns JSX for a file input and the resulting fileList
  */
-function FileControl(props){
-
+const FileControl = (props) => {
+    const { upId, clearId, fileType, clearText, addFile, clearFiles } = props;
     const [fileMetaData, setFileMetaData] = useState([]);
+    const [filesList, setFilesList] = useState([]);
 
-    const clearFiles = (e) =>{
-        props.clearFiles();
+    const clearFilesFunction = (e) => {
+        clearFiles();
         setFileMetaData([]);
         clearFileInput();
     }
 
-    const clearFileInput = () =>{
+    const clearFileInput = () => {
       document.getElementById(props.upId).value = '';
     }
 
-    const handleFileChange = (e) =>{
+    const handleFileChange = (e) => {
         if (e.target.files) {
             const file = e.target.files[0]
             setFileMetaData([...fileMetaData,file])
@@ -31,7 +33,7 @@ function FileControl(props){
 
             //add an event listener for when the filereader has finished
             fr.addEventListener("load",e=>{
-                props.addFile(fr.result, file.name)
+                addFile(fr.result, file.name)
                 clearFileInput(); //reset the file upload html component, once we are done
             })
             //After having set the event listener, we can now use this to parse the file
@@ -40,46 +42,24 @@ function FileControl(props){
 
     }
 
-    let filesList = fileMetaData.map((file,index) =>
-      <li key={file.name}>{file.name}</li>
-    );
+    useEffect(() => {
+        if(fileMetaData && fileMetaData.length > 0){
+            setFilesList(fileMetaData.map((file,index) =>
+                <li key={file.name}>{file.name}</li>
+            ))
+        }
+    }, [fileMetaData])
 
     return <div>
-        <input type="file" id={props.upId} name={props.upId} accept={props.fileType} onChange={handleFileChange}></input>
-        <input type="button" id={props.clearId} name={props.clearId} onClick={clearFiles}
-            value={props.clearText}/>
-        <ul>
-            {filesList}
-        </ul>
+        <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
+        <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction}
+            value={clearText}/>
+        <div height="500px">
+            <ul>
+                {filesList}
+            </ul>
+        </div>
     </div>
 }
 
 export default FileControl;
-
-/* changing the file input to "multiple" led to trouble getting the eventlistener to fire on every file selected
-        <input type="file" id={props.upId} name={props.upId} accept={props.fileType}
-         onChange={handleFileChange} multiple/>
-
-const handleFileChange = (e) =>{
-        const files = e.target.files
-        if (files[0]) {
-            //console.log(files)
-            //let x = Object.values(files)
-            //console.log(Object.values(files))
-            Object.values(files).forEach((file)=>{
-                console.log(file)
-                const fr = new FileReader();
-
-                //add an event listener for when the filereader has finished
-                fr.addEventListener("load",e=>{
-                    //console.log(fr.result)
-                    props.addFile(fr.result)
-                    clearFileInput(); //reset the file upload html component, once we are done so more files can be uploaded
-                })
-                //After having set the event listener, we can now use this to parse the file
-                fr.readAsText(file);
-            })
-        }
-
-    }
-*/

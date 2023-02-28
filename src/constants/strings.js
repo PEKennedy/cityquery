@@ -3,6 +3,12 @@ export const strings = {
 	startApplication: 'Start Application',
   home: "Home",
   visualization: "Visualization Page",
+  modificationPlugins: "Modification Plugins:",
+  searchPlugins: "Search Plugins:",
+  uploadList: "CityJSON Upload List:",
+  fileMenu: "File Menu",
+  pluginMenu: "Plugin Menu",
+  searchMenu: "Search Menu",
   routes: {
     landingPage: '/',
     homePage: '/home',
