@@ -19,7 +19,7 @@ class VisualizationRoot extends React.Component {
   state = {
     cityFiles: {},
     selected:{}
-  };
+  }
 
   constructor(props){
     super(props);
