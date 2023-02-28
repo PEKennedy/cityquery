@@ -8,3 +8,4 @@ export const PluginMenuContext = React.createContext({});
 
 
 export const SelectionContext = React.createContext({});
+export const MaterialsContext = React.createContext({});

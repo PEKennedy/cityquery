@@ -151,12 +151,13 @@ function SurfaceObject(props){
     combined_geo.computeVertexNormals()
     combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
 
-    let tint = getSelectedTint(props.selected)
-
+    //let tint = getSelectedTint(props.selected)
+    //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
     return (
         <mesh {...props} ref={ref} onClick={props.makeSelected}>
             <primitive object={combined_geo} />
-            <meshStandardMaterial vertexColors={!props.selected} color={tint}/>
+            {props.children}
+            
         </mesh>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { HStack, VStack } from 'native-base';
 import PageTitle from '../atoms/PageTitle';
 import { strings } from '../../constants/strings';
@@ -30,7 +30,7 @@ const style = {
   },
 };
 
-const VisualizationPage = () => {
+const VisualizationPage = memo(() => {
   const [cityFiles, setCityFiles] = useState({});
   const [selected, setSelected] = useState({});
 
@@ -134,6 +134,6 @@ const VisualizationPage = () => {
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
   );
-};
+});
 
 export default VisualizationPage;

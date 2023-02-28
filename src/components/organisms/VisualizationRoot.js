@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import { VStack } from 'native-base';
 
 import { Canvas, invalidate } from '@react-three/fiber'
@@ -7,8 +7,11 @@ import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
 import Box from '../3JS/Box';
 
+import { getSelectedTint } from '../3JS/3dUtils';
+
 import { useContext } from 'react';
-import { SelectionContext } from '../../constants/context';
+import { SelectionContext, MaterialsContext } from '../../constants/context';
+import { MeshStandardMaterial } from 'three';
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
@@ -28,12 +31,19 @@ const displayObjList = (cityJSONFile,fileName) => {
 
 
 
-const VisualizationRoot = (props) => {
+const VisualizationRoot = memo((props) => {
   const cityFiles = props.cityFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
+  console.log("render root")
 
+  //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
+  let selectedTint = getSelectedTint(true)
+  let unselectedTint = getSelectedTint(false)
+  const standMatSelected = new MeshStandardMaterial({color:selectedTint, vertexColors:false})
+  const standMatUnSelected = new MeshStandardMaterial({color:unselectedTint, vertexColors:true})
+  const materialsContext = {standMatSelected, standMatUnSelected}
 
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
@@ -67,19 +77,21 @@ const VisualizationRoot = (props) => {
 
   //TODO: make file inputs "multiple", change to iterate over them
   return (
-    <VStack width="75%" height="100%" padding={5}>
-      <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
-      <Canvas onPointerMissed={clearSelect} frameloop="demand">
-        <PerspectiveCamera ref={cameraRef} position={[0,5,10]} fov={75} makeDefault/>
-        <OrbitControls />
-        <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        <Box position={[0, 0, 0]} />
-        <Plane position={[0,0,0]} />
-        { objList}
-      </Canvas>
-    </VStack>
+    <MaterialsContext.Provider value={materialsContext}>
+      <VStack width="75%" height="100%" padding={5}>
+        <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
+        <Canvas onPointerMissed={clearSelect} frameloop="demand">
+          <PerspectiveCamera ref={cameraRef} position={[0,5,10]} fov={75} makeDefault/>
+          <OrbitControls />
+          <ambientLight />
+          <pointLight position={[10, 10, 10]} />
+          <Box position={[0, 0, 0]} />
+          <Plane position={[0,0,0]} />
+          { objList}
+        </Canvas>
+      </VStack>
+    </MaterialsContext.Provider>
   );
-}
+})
 
 export default VisualizationRoot;
