@@ -9,11 +9,9 @@ import { SelectionContext, MaterialsContext } from '../../constants/context';
 
   
 
-const CityObjectDisplay = memo((props) => {
-    let cityFile = props.cityFile
-    let objectName = props.objectName
-    let fileName = props.fileName
-
+const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
+ 
+    
     //console.log(cityFile)
     let object = cityFile.CityObjects[objectName];
     let geometries = [];
@@ -62,25 +60,26 @@ const CityObjectDisplay = memo((props) => {
         
         if(type == "MultiPoint"){
         return <PointCloudObj fileName={fileName} cityFile={cityFile} geometry={geometry}
-        selected={is_selected} makeSelected={makeSelected}>
+        selected={is_selected} makeSelected={makeSelected}/>
 
-                </PointCloudObj>;
+                //</PointCloudObj>;
         }
         if(type == "MultiLineString"){
         return <MultiLineObj fileName={fileName} cityFile={cityFile} geometry={geometry}
-        selected={is_selected} makeSelected={makeSelected}>
+        selected={is_selected} makeSelected={makeSelected}/>
             
-                </MultiLineObj>;
+                //</MultiLineObj>;
         }
         if(type == "MultiSurface" || type == "CompositeSurface"){ //selected={is_selected}
-            let material = is_selected ? standMatSelected : standMatUnSelected
+            //let material = is_selected ? standMatSelected : standMatUnSelected
 
 
         return <SurfaceObject fileName={fileName} cityFile={cityFile} geometry={geometry}
                         makeSelected={makeSelected}>
-                    <meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
+                    
                 </SurfaceObject>;
         }
+        //<meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
         //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
         //<primitive object={material}/>
         /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
@@ -95,7 +94,6 @@ const CityObjectDisplay = memo((props) => {
         //- For an 'external' pointcloud, we can also check for an object with no geometry, 
         //but with "attributes"."pointcloud-file".pointFile
     }
-
 
     //for each geometry, choose a display type
     object.geometry.forEach((geometry,index)=>{
@@ -114,6 +112,6 @@ const CityObjectDisplay = memo((props) => {
     else{ //0 geometries, don't return anything
         return <></>
     }
-  });
+  };
 
   export default CityObjectDisplay;

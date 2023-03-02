@@ -19,19 +19,15 @@ const displayObjList = (cityJSONFile,fileName) => {
   const objNames = Object.keys(cityJSONFile.CityObjects);
   var objs = objNames.map((name)=>{
     return <CityObjectDisplay cityFile={cityJSONFile} objectName={name}
-     fileName={fileName} />
+     fileName={fileName} key={fileName.concat(name)}/>
   });
 
-  return (
-    <>
-      {objs}
-    </>
-  );
+  return objs;
 }
 
 
 
-const VisualizationRoot = memo((props) => {
+const VisualizationRoot = (props) => {
   const cityFiles = props.cityFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
@@ -41,9 +37,9 @@ const VisualizationRoot = memo((props) => {
   //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
   let selectedTint = getSelectedTint(true)
   let unselectedTint = getSelectedTint(false)
-  const standMatSelected = new MeshStandardMaterial({color:selectedTint, vertexColors:false})
-  const standMatUnSelected = new MeshStandardMaterial({color:unselectedTint, vertexColors:true})
-  const materialsContext = {standMatSelected, standMatUnSelected}
+  //const standMatSelected = new MeshStandardMaterial({color:selectedTint, vertexColors:false})
+  //const standMatUnSelected = new MeshStandardMaterial({color:unselectedTint, vertexColors:true})
+  //const materialsContext = {standMatSelected, standMatUnSelected}
 
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
@@ -70,14 +66,18 @@ const VisualizationRoot = memo((props) => {
     invalidate()
   }
 
-  const objList = Object.keys(cityFiles).map((fileName,index) =>{
+  let objList = [];
+
+  Object.keys(cityFiles).forEach((fileName,index) =>{
     let file = cityFiles[fileName]
-    return displayObjList(file,fileName)
+    objList.push(...displayObjList(file,fileName))
   });
+
+  console.log(objList)
 
   //TODO: make file inputs "multiple", change to iterate over them
   return (
-    <MaterialsContext.Provider value={materialsContext}>
+    //<MaterialsContext.Provider value={materialsContext}>
       <VStack width="75%" height="100%" padding={5}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} frameloop="demand">
@@ -87,11 +87,11 @@ const VisualizationRoot = memo((props) => {
           <pointLight position={[10, 10, 10]} />
           <Box position={[0, 0, 0]} />
           <Plane position={[0,0,0]} />
-          { objList}
+          {objList}
         </Canvas>
       </VStack>
-    </MaterialsContext.Provider>
+    //</MaterialsContext.Provider>
   );
-})
+};
 
 export default VisualizationRoot;

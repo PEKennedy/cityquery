@@ -30,7 +30,7 @@ const style = {
   },
 };
 
-const VisualizationPage = memo(() => {
+const VisualizationPage = () => {
   const [cityFiles, setCityFiles] = useState({});
   const [selected, setSelected] = useState({});
 
@@ -119,6 +119,7 @@ const VisualizationPage = memo(() => {
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
 
   return (
+  <React.StrictMode>
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
         <SelectionContext.Provider value={selectionContext}>
@@ -133,7 +134,8 @@ const VisualizationPage = memo(() => {
         </SelectionContext.Provider>
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
+    </React.StrictMode>
   );
-});
+};
 
 export default VisualizationPage;
