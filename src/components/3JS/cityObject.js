@@ -3,21 +3,17 @@ import PointCloudObj from './pointCloud';
 import MultiLineObj from './MultiLine';
 import SurfaceObject from './surface';
 
-import { memo, useContext } from 'react';
-import { SelectionContext, MaterialsContext } from '../../constants/context';
+import { useContext } from 'react';
+import { SelectionContext } from '../../constants/context';
 
-
-  
 
 const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
  
-    
     //console.log(cityFile)
     let object = cityFile.CityObjects[objectName];
     let geometries = [];
 
     const {selected, select, deSelect } = useContext(SelectionContext);
-    const {standMatSelected, standMatUnSelected} = useContext(MaterialsContext)
     const clickSelection = (e,value) =>{
         e.stopPropagation();
 
@@ -54,7 +50,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
             return;
         }
         let geometry = cityFile.CityObjects[objectName].geometry[geoIndex];
-        console.log(geometry)
+        //console.log(geometry)
         
 
         let type = geometry.type;
@@ -62,27 +58,16 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         if(type == "MultiPoint"){
             return <PointCloudObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
                 objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
-
-                //</PointCloudObj>;
         }
         if(type == "MultiLineString"){
-            return <MultiLineObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
+            return <MultiLineObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
                 objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
-            
-                //</MultiLineObj>;
         }
         if(type == "MultiSurface" || type == "CompositeSurface"){ //selected={is_selected}
-            let material = is_selected ? standMatSelected : standMatUnSelected
-            console.log(material)
-
-            return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} selected={is_selected}
-                objName={objectName} makeSelected={makeSelected} mata={standMatSelected} matb={standMatUnSelected}>
-                
-            </SurfaceObject>;
+            return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
         }
-        //<meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
-        //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
-        //<primitive object={material}/>
+
         /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
         return <PointCloudObj cityFile={cityFile} object={objectName}/>;
         }*/

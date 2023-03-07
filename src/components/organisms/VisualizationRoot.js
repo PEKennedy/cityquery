@@ -7,11 +7,11 @@ import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
 import Box from '../3JS/Box';
 
-import { getSelectedTint } from '../3JS/3dUtils';
+import { colourFloatToHex } from '../3JS/3dUtils';
 
 import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
-import { MeshStandardMaterial } from 'three';
+import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
 import { colours } from '../../constants/colours';
 
 //takes a file's contents, returns a list of objects as proper jsx types
@@ -35,12 +35,16 @@ const VisualizationRoot = (props) => {
   const cameraRef = useRef();
   console.log("render root")
 
-  //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
-  const standMatSelected = new MeshStandardMaterial({color:colours.selected, vertexColors:false})
-
+  const selected_colour = colourFloatToHex(colours.selected)
+  const standMatSelected = new MeshStandardMaterial({color:selected_colour, vertexColors:false})
   const standMatUnSelected = new MeshStandardMaterial({color:0xFFFFFF, vertexColors:true})
+  const pointMatSelected = new PointsMaterial({color:selected_colour, vertexColors:false, size:0.25})
+  const pointMatUnSelected = new PointsMaterial({color:0xFFFFFF, vertexColors:true, size:0.25})
+  const lineMatSelected = new LineBasicMaterial({color:selected_colour, vertexColors:false, linewidth:1})
+  const lineMatUnSelected = new LineBasicMaterial({color:0xFFFFFF, vertexColors:true, linewidth:1})
 
-  const materialsContext = {standMatSelected, standMatUnSelected}
+  const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected, 
+    lineMatSelected, lineMatUnSelected}
 
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
@@ -74,7 +78,7 @@ const VisualizationRoot = (props) => {
     objList.push(...displayObjList(file,fileName))
   });
 
-  console.log(objList)
+  //console.log(objList)
 
   //TODO: make file inputs "multiple", change to iterate over them
   return (

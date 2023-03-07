@@ -1,9 +1,6 @@
 import { colours } from '../../constants/colours';
 
-import { useContext } from 'react';
-import { PluginMenuContext } from '../../constants/context';
-
-import { BufferAttribute, BufferGeometry, LineBasicMaterial, Mesh, MeshStandardMaterial, Uint32BufferAttribute, Vector3 } from 'three';
+import { BufferAttribute, BufferGeometry, Uint32BufferAttribute, Vector3 } from 'three';
 import { Earcut } from 'three/src/extras/Earcut';
 
 
@@ -180,4 +177,8 @@ function getSelectedTint(selected){
     return tint
 }
 
-export {transform, reverseWindingOrder, colourVerts, getSelectedTint, generateSurface}
+function colourFloatToHex(colour){
+    return Math.round(colour[0]*0xFF0000 + colour[1]*0x00FF00 + colour[2]*0x0000FF);
+}
+
+export {transform, reverseWindingOrder, colourVerts, getSelectedTint, generateSurface, colourFloatToHex}
