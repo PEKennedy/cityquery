@@ -17,11 +17,11 @@ function MultiLineObj(props){
         return (<line ref={ref} visible={false}></line>);
     }
     
-    console.log(props.cityFile);
+    //console.log(props.cityFile);
+    let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
 
-
-    var line_segments = props.geometry.boundaries;
-    let semantics = props.geometry.semantics;
+    var line_segments = geometry.boundaries;
+    let semantics = geometry.semantics;
     let obj_transform = props.cityFile.transform;
 
     const lines = line_segments.map((segment, index) =>{

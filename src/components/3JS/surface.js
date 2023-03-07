@@ -19,25 +19,43 @@ function SurfaceObject(props){
     //call dispose on cleanup (useEffect will call any returned function when the component unmounts)
     useEffect(()=>{
         return function cleanup(){
-            if(combined_geo.dispose){
-                combined_geo.dispose()
+            if(mesh_geometry.dispose){
+                mesh_geometry.dispose()
             }
         }
     })
 
 
-    
-    let semantics = props.geometry.semantics;
-    var surfaces = props.geometry.boundaries;
+    let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
+    let semantics = geometry.semantics;
+    var surfaces = geometry.boundaries;
 
-    let obj_transform = props.cityFile.transform
+    let obj_transform = props.cityFile.transform;
     let all_verts = props.cityFile.vertices;
 
-    let combined_geo = {};
+    //let combined_geo = {};
     //let surface_meshes = {};
-
+    let mat = props.selected ? props.mata : props.matb
     //use memoization to ensure the geometry is only rebuilt if it actually changes
+
+    const mesh_geometry = useMemo(()=>{
+        let surface_meshes = surfaces.map((surface, index) =>{
+            return generateSurface(surface,semantics,index,obj_transform,all_verts,false);
+        });
+        let combined_geo = BufferGeometryUtils.mergeBufferGeometries(surface_meshes)
+        combined_geo.computeVertexNormals()
+        combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
+        return combined_geo
+    },[geometry,obj_transform,all_verts])
+
     const surfaceMesh = useMemo(()=>{
+        console.log(props.selected)
+        return <mesh {...props} ref={ref} onClick={props.makeSelected} material={mat}>
+            <primitive object={mesh_geometry} />
+        </mesh>
+    },[mesh_geometry, mat])
+
+    /*const surfaceMesh = useMemo(()=>{
         if(props.cityFile == undefined){ //not loaded yet
             return (<mesh ref={ref} visible={false}></mesh>);
         }
@@ -50,16 +68,18 @@ function SurfaceObject(props){
         combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
         //let tint = getSelectedTint(props.selected)
         //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
-
+        //<meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
+        //let material = props.is_selected ? 
+        console.log(props.selected)
         return (
-            <mesh {...props} ref={ref} onClick={props.makeSelected}>
+            <mesh {...props} ref={ref} onClick={props.makeSelected} material={mat}>
                 <primitive object={combined_geo} />
                 {props.children}
-                <meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
+                
             </mesh>
         )
-    },
-    [props.geometry,obj_transform,all_verts]) //dependencies
+    },//,props.selected
+    [geometry,obj_transform,all_verts,props.selected]) //dependencies*/
 
     return surfaceMesh;
 

@@ -43,7 +43,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
 
     //given a file (need a file as it contains the both object and the vertices) and an object name,
     //gives the proper jsx for display
-    const chooseDisplayType = (cityFile, objectName, geometry, is_selected, fileName, makeSelected) => {
+    const chooseDisplayType = (cityFile, objectName, geoIndex, is_selected, fileName, makeSelected) => {
 
         if(cityFile.CityObjects == undefined){
             console.error("provided cityJSON file did not contain \"CityObjects\"")
@@ -53,31 +53,32 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
             console.error("specified CityJSON object ("+objectName+") was not contained in the provided file")
             return;
         }
-
+        let geometry = cityFile.CityObjects[objectName].geometry[geoIndex];
+        console.log(geometry)
         
 
         let type = geometry.type;
         
         if(type == "MultiPoint"){
-        return <PointCloudObj fileName={fileName} cityFile={cityFile} geometry={geometry}
-        selected={is_selected} makeSelected={makeSelected}/>
+            return <PointCloudObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
 
                 //</PointCloudObj>;
         }
         if(type == "MultiLineString"){
-        return <MultiLineObj fileName={fileName} cityFile={cityFile} geometry={geometry}
-        selected={is_selected} makeSelected={makeSelected}/>
+            return <MultiLineObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
             
                 //</MultiLineObj>;
         }
         if(type == "MultiSurface" || type == "CompositeSurface"){ //selected={is_selected}
-            //let material = is_selected ? standMatSelected : standMatUnSelected
+            let material = is_selected ? standMatSelected : standMatUnSelected
+            console.log(material)
 
-
-        return <SurfaceObject fileName={fileName} cityFile={cityFile} geometry={geometry}
-                        makeSelected={makeSelected}>
-                    
-                </SurfaceObject>;
+            return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} selected={is_selected}
+                objName={objectName} makeSelected={makeSelected} mata={standMatSelected} matb={standMatUnSelected}>
+                
+            </SurfaceObject>;
         }
         //<meshStandardMaterial vertexColors={true} color={0xFFFFFF}/>
         //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
@@ -97,7 +98,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
 
     //for each geometry, choose a display type
     object.geometry.forEach((geometry,index)=>{
-        geometries.push(chooseDisplayType(cityFile, objectName, geometry, is_selected, fileName, clickSelection))
+        geometries.push(chooseDisplayType(cityFile, objectName, index, is_selected, fileName, clickSelection))
     })
 
     //if there are multiple geometries, create a group

@@ -12,6 +12,7 @@ import { getSelectedTint } from '../3JS/3dUtils';
 import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial } from 'three';
+import { colours } from '../../constants/colours';
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
@@ -35,11 +36,11 @@ const VisualizationRoot = (props) => {
   console.log("render root")
 
   //<meshStandardMaterial vertexColors={!props.selected} color={tint}/>
-  let selectedTint = getSelectedTint(true)
-  let unselectedTint = getSelectedTint(false)
-  //const standMatSelected = new MeshStandardMaterial({color:selectedTint, vertexColors:false})
-  //const standMatUnSelected = new MeshStandardMaterial({color:unselectedTint, vertexColors:true})
-  //const materialsContext = {standMatSelected, standMatUnSelected}
+  const standMatSelected = new MeshStandardMaterial({color:colours.selected, vertexColors:false})
+
+  const standMatUnSelected = new MeshStandardMaterial({color:0xFFFFFF, vertexColors:true})
+
+  const materialsContext = {standMatSelected, standMatUnSelected}
 
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
@@ -77,7 +78,7 @@ const VisualizationRoot = (props) => {
 
   //TODO: make file inputs "multiple", change to iterate over them
   return (
-    //<MaterialsContext.Provider value={materialsContext}>
+    <MaterialsContext.Provider value={materialsContext}>
       <VStack width="75%" height="100%" padding={5}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} frameloop="demand">
@@ -90,7 +91,7 @@ const VisualizationRoot = (props) => {
           {objList}
         </Canvas>
       </VStack>
-    //</MaterialsContext.Provider>
+    </MaterialsContext.Provider>
   );
 };
 

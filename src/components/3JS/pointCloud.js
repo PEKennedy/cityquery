@@ -13,6 +13,7 @@ import {transform, colourVerts, getSelectedTint} from './3dUtils'
  */
 function loadCityJsonPointCloud(cityJSONFile,geometry){
 
+    
     let semantics = geometry.semantics;
     var vert_inds = geometry.boundaries;
     var verts = cityJSONFile.vertices;
@@ -46,7 +47,9 @@ function PointCloudObj(props){
 
     let tint = getSelectedTint(props.selected)
 
-    let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.geometry);
+    let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
+
+    let [verts, colours] = loadCityJsonPointCloud(props.cityFile,geometry);
 
     if(verts == undefined){
         return (<points ref={ref} visible={false}></points>);
