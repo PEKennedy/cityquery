@@ -1,7 +1,8 @@
-import Box from './Box';
 import PointCloudObj from './pointCloud';
 import MultiLineObj from './MultiLine';
 import SurfaceObject from './surface';
+import SolidObj from './Solid';
+import MultiSolidObj from './MultiSolid';
 
 import { useContext } from 'react';
 import { SelectionContext } from '../../constants/context';
@@ -50,9 +51,6 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
             return;
         }
         let geometry = cityFile.CityObjects[objectName].geometry[geoIndex];
-        //console.log(geometry)
-        
-
         let type = geometry.type;
         
         if(type == "MultiPoint"){
@@ -63,8 +61,18 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
             return <MultiLineObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
                 objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
         }
-        if(type == "MultiSurface" || type == "CompositeSurface"){ //selected={is_selected}
+        if(type == "MultiSurface" || type == "CompositeSurface"){
             return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+        }
+        if(type == "Solid"){
+            console.log("Solid")
+            return <SolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+        }
+        if(type == "MultiSolid" || type == "CompositeSolid"){
+            console.log("MultiSolid")
+            return <MultiSolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
                 objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
         }
 
@@ -73,7 +81,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         }*/
     
         //default
-        return <Box position={[-2.4, 0, 0]}/>
+        return <></>
     
         //Some notes:
         //- cityJSON files with external PointClouds always specify an extension you could check for in the file

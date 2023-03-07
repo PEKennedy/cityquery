@@ -119,7 +119,6 @@ const VisualizationPage = () => {
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
 
   return (
-  <React.StrictMode>
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
         <SelectionContext.Provider value={selectionContext}>
@@ -134,7 +133,6 @@ const VisualizationPage = () => {
         </SelectionContext.Provider>
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
-    </React.StrictMode>
   );
 };
 

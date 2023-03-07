@@ -2,7 +2,7 @@ import { colours } from '../../constants/colours';
 
 import { BufferAttribute, BufferGeometry, Uint32BufferAttribute, Vector3 } from 'three';
 import { Earcut } from 'three/src/extras/Earcut';
-
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 //applies scale to a vertex formatted as [x,y,z]
 function scale(vert, transform){
@@ -145,6 +145,21 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     return geo
 }
 
+function generateCombinedSurfaces(surfaces,semantics,obj_transform,all_verts,invert=false){
+    let surface_meshes = surfaces.map((surface, index) =>{
+        return generateSurface(surface,semantics,index,obj_transform,all_verts,invert);
+    });
+    return surface_meshes;
+}
+
+function mergeSurface(surfaces){
+    let combined_geo = BufferGeometryUtils.mergeBufferGeometries(surfaces)
+    combined_geo.computeVertexNormals()
+    combined_geo = BufferGeometryUtils.mergeVertices(combined_geo)
+    return combined_geo;
+}
+
+
 function getColour(semantics,surface_index){
     if(semantics == undefined){
         let surface_colour = colours.default;
@@ -181,4 +196,4 @@ function colourFloatToHex(colour){
     return Math.round(colour[0]*0xFF0000 + colour[1]*0x00FF00 + colour[2]*0x0000FF);
 }
 
-export {transform, reverseWindingOrder, colourVerts, getSelectedTint, generateSurface, colourFloatToHex}
+export {transform, reverseWindingOrder, colourVerts, getSelectedTint, generateCombinedSurfaces, mergeSurface, colourFloatToHex}

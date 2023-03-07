@@ -6,7 +6,7 @@ import { MaterialsContext } from '../../constants/context';
 
 
 //test funnction for getting and displaying a cityjson mesh (not working)
-function SurfaceObject(props){
+function MultiSolidObj(props){
 
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef()
@@ -22,7 +22,7 @@ function SurfaceObject(props){
 
     let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
     let semantics = geometry.semantics;
-    var surfaces = geometry.boundaries;
+    var multiSolid = geometry.boundaries;
 
     let obj_transform = props.cityFile.transform;
     let all_verts = props.cityFile.vertices;
@@ -32,17 +32,24 @@ function SurfaceObject(props){
 
     //use memoization to ensure the geometry is only rebuilt if it actually changes
     const mesh_geometry = useMemo(()=>{
-        return  mergeSurface(generateCombinedSurfaces(surfaces,semantics,obj_transform,all_verts));
+        let solids = multiSolid.map((solid,solidInd)=>{
+            return solid.map((shell,index)=>{
+                let invert = index != 0;
+                return generateCombinedSurfaces(shell,semantics,obj_transform,all_verts,invert);
+            })
+        })
+
+        return mergeSurface(solids.flat(2));
     },[geometry,obj_transform,all_verts])
 
     //only rerender the mesh if the material or geometry changes
-    const surfaceMesh = useMemo(()=>{
+    const MultiSolidMesh = useMemo(()=>{
         return <mesh {...props} ref={ref} onClick={props.makeSelected} material={mat}>
             <primitive object={mesh_geometry} />
         </mesh>
     },[mesh_geometry, mat])
 
-    return surfaceMesh;
+    return MultiSolidMesh;
 }
 
-export default SurfaceObject;
+export default MultiSolidObj;
