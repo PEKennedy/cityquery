@@ -33,10 +33,10 @@ function SolidObj(props){
     //use memoization to ensure the geometry is only rebuilt if it actually changes
     const mesh_geometry = useMemo(()=>{
         let shells = solid.map((shell,index)=>{
-            let invert = index != 0;
-            return generateCombinedSurfaces(shell,semantics,obj_transform,all_verts,invert);
+            //let invert = index != 0; //no inverts needed in cityjson it seems
+            return generateCombinedSurfaces(shell,semantics,obj_transform,all_verts,false);
         })
-        return mergeSurface(...shells);
+        return mergeSurface(shells.flat(1));
     },[geometry,obj_transform,all_verts])
 
     //only rerender the mesh if the material or geometry changes

@@ -11,7 +11,7 @@ import { colourFloatToHex } from '../3JS/3dUtils';
 
 import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
-import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
+import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial, BackSide } from 'three';
 import { colours } from '../../constants/colours';
 
 //takes a file's contents, returns a list of objects as proper jsx types
@@ -35,6 +35,7 @@ const VisualizationRoot = (props) => {
   const cameraRef = useRef();
   console.log("render root")
 
+  //if a transparent material was wanted: , transparent:true, opacity:0.75, side:BackSide
   const selected_colour = colourFloatToHex(colours.selected)
   const standMatSelected = new MeshStandardMaterial({color:selected_colour, vertexColors:false})
   const standMatUnSelected = new MeshStandardMaterial({color:0xFFFFFF, vertexColors:true})

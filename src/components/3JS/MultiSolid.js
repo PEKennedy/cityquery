@@ -34,8 +34,8 @@ function MultiSolidObj(props){
     const mesh_geometry = useMemo(()=>{
         let solids = multiSolid.map((solid,solidInd)=>{
             return solid.map((shell,index)=>{
-                let invert = index != 0;
-                return generateCombinedSurfaces(shell,semantics,obj_transform,all_verts,invert);
+                //let invert = index != 0; //no inverts needed in cityjson it seems
+                return generateCombinedSurfaces(shell,semantics,obj_transform,all_verts,false);
             })
         })
 

@@ -66,12 +66,10 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
                 objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
         }
         if(type == "Solid"){
-            console.log("Solid")
             return <SolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
                 objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
         }
         if(type == "MultiSolid" || type == "CompositeSolid"){
-            console.log("MultiSolid")
             return <MultiSolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
                 objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
         }
