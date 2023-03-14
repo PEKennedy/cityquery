@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { HStack, VStack } from 'native-base';
 import PageTitle from '../atoms/PageTitle';
 import { strings } from '../../constants/strings';
 import ToolBar from '../organisms/ToolBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
-import { FileMenuContext, PluginMenuContext } from '../../constants/context';
+import { FileMenuContext, PluginMenuContext, SelectionContext } from '../../constants/context';
 import { cloneDeep } from 'lodash';
 
 const style = {
@@ -44,6 +44,7 @@ const VisualizationPage = () => {
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
+    clearSelect();
   }
   
   const select_test = () => {
@@ -51,9 +52,10 @@ const VisualizationPage = () => {
   }
   
   const select = (fileName, objNames, append=false) => {
-    //return 0;
+
     let newSelected = cloneDeep(selected);
-    if(newSelected.fileName == undefined){
+
+    if(newSelected[fileName] == undefined){
       newSelected[fileName] = {"objects":objNames}
     }
     else if(append){
@@ -63,6 +65,28 @@ const VisualizationPage = () => {
       newSelected[fileName]["objects"] = objNames
     }
     setSelected(newSelected)
+  }
+
+  const deSelect = (fileName, objNames) => {
+    console.log("Deselect")
+    let newSelected = cloneDeep(selected);
+    if(newSelected[fileName]){
+      objNames.forEach((name,index)=>{
+        console.log(name)
+        let indexForRemoving = newSelected[fileName]["objects"].findIndex((val)=>{return val==name})
+        console.log(indexForRemoving)
+        newSelected[fileName]["objects"].splice(indexForRemoving,1);
+      })
+      if(newSelected[fileName]["objects"].length == 0){ //if no more selected objects
+        delete newSelected[fileName]
+      }
+      setSelected(newSelected)
+    }
+  }
+
+  const clearSelect = () =>{
+    console.log("Clear all selections")
+    setSelected({});
   }
   
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
@@ -75,13 +99,15 @@ const VisualizationPage = () => {
   //We list selected object names with a file to ensure the objects are unique, and so plugins can update
   //all a file's objects at once. This also avoids asynchronisity issues that updating a file's 'vertices' might cause
   
+
+  //Get the selected state with the corresponding cityFile
   const getSelected = () => {
     let newSelected = cloneDeep(selected)
     let keys = Object.keys(newSelected)
     keys.forEach((fileName)=>{
-      selected[fileName]["file"] = cityFiles[fileName]
+      newSelected[fileName]["file"] = cityFiles[fileName]
     })
-    return selected;
+    return newSelected;
   }
 
   const ModifyCityJSON = (fileName, output) => {
@@ -89,19 +115,22 @@ const VisualizationPage = () => {
   }
 
   const fileMenuContext = { addFile, clearCityFiles };
-  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select };
+  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
+  const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
-        <VStack style={style.pageContainer}>
-          <ToolBar />
-          <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
-          <HStack style={style.innerContainer}>
-            <SideMenu />
-            <VisualizationRoot cityFiles={cityFiles} selected={selected} />
-          </HStack>
-        </VStack>
+        <SelectionContext.Provider value={selectionContext}>
+          <VStack style={style.pageContainer}>
+            <ToolBar />
+            <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
+            <HStack style={style.innerContainer}>
+              <SideMenu />
+              <VisualizationRoot cityFiles={cityFiles} selected={selected} />
+            </HStack>
+          </VStack>
+        </SelectionContext.Provider>
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
   );

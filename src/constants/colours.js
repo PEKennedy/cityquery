@@ -60,6 +60,6 @@ export const colours = {
             "TransportationHole":   common['grey']
         }
     },
-    selected: [1,0.2,0.2],
+    selected: [1,0.25,0.25],
     default: [0.7,0.7,0.7]
 };

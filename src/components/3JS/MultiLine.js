@@ -1,60 +1,60 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useMemo } from 'react'
+import { transform, colourVerts } from './3dUtils'
 
-import { Canvas, useFrame } from '@react-three/fiber'
-import { BufferAttribute, BufferGeometry, LineBasicMaterial } from 'three';
-import {transform, colourVerts, getSelectedTint} from './3dUtils'
+import { useContext } from 'react';
+import { MaterialsContext } from '../../constants/context';
 
 //test funnction for getting and displaying a cityjson mesh (not working)
 function MultiLineObj(props){
-    //var CityObjects = props.CityObjects;
+
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef()
     const groupRef = useRef()
-    // Subscribe this component to the render-loop, rotate the mesh every frame
-    //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
-    if(props.cityFile == undefined){ //not loaded yet
-        return (<line ref={ref} visible={false}></line>);
-    }
-    
-    console.log(props.cityFile);
-    console.log(props.object);
+    const { lineMatSelected, lineMatUnSelected } = useContext(MaterialsContext);
+    let mat = props.selected ? lineMatSelected : lineMatUnSelected;
 
-    var object = props.cityFile.CityObjects[props.object];
-    console.log(object);
+    let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
 
-    var line_segments = object.geometry[0].boundaries;
-    let semantics = object.geometry[0].semantics;
+    var line_segments = geometry.boundaries;
+    let semantics = geometry.semantics;
     let obj_transform = props.cityFile.transform;
+    let all_verts = props.cityFile.vertices;
 
-    const lines = line_segments.map((segment, index) =>{
-        var verts_filtered = [];
-        let colours = []
-        segment.forEach((index)=>{
-            verts_filtered.push(props.cityFile.vertices[index]);
-        })
-        colours.push(...colourVerts(semantics,index,segment.length));
-        const verts = new Float32Array(
-            verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
-        );
-        colours = new Float32Array(colours)
-
-        let tint = getSelectedTint(props.selected)
-
-        return <line {...props} ref={ref} key={verts.toString()}>
-            <bufferGeometry>
+    const lineGeometries = useMemo(()=>{
+        return line_segments.map((segment, index) =>{
+            var verts_filtered = [];
+            
+            segment.forEach((index)=>{
+                verts_filtered.push(all_verts[index]);
+            })
+            const verts = new Float32Array(
+                verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
+            );
+    
+            let colours = []
+            colours.push(...colourVerts(semantics,index,segment.length));
+            colours = new Float32Array(colours)
+    
+            return <bufferGeometry>
                 <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
                 <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
-            </bufferGeometry>
-            <lineBasicMaterial vertexColors={!props.selected} color={tint}/>
-        </line>
-    });
+            </bufferGeometry> 
+        });
+    },[geometry,obj_transform,all_verts])
 
-    return (
-        <group ref={groupRef}>
+    const linesGroup = useMemo(()=>{
+        let lines = lineGeometries.map((geo,index)=>{
+            return <line {...props} ref={ref} key={index} onClick={props.makeSelected} material={mat}>
+                {geo}
+            </line>
+        })
+        return <group ref={groupRef}>
             {lines}
         </group>
-      )
+    },[lineGeometries,props.selected])
+
+    return linesGroup;
 }
 
 export default MultiLineObj;
