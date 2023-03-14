@@ -2,7 +2,7 @@ import React, { memo, useRef } from 'react';
 import { VStack } from 'native-base';
 
 import { Canvas, invalidate } from '@react-three/fiber'
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
+import { PerspectiveCamera, OrbitControls, CameraControls } from '@react-three/drei';
 import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
 import Box from '../3JS/Box';
@@ -33,6 +33,7 @@ const VisualizationRoot = (props) => {
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
+  const x = useRef();
   console.log("render root")
 
   //if a transparent material was wanted: , transparent:true, opacity:0.75, side:BackSide
@@ -49,7 +50,7 @@ const VisualizationRoot = (props) => {
 
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
-    let selected = getSelected()
+    /*let selected = getSelected()
     let keys = Object.keys(selected)
 
     let average_position = [0,0,0]
@@ -64,11 +65,12 @@ const VisualizationRoot = (props) => {
     if(count == 0) return;
     average_position[0] /= count;
     average_position[1] /= count;
-    average_position[2] /= count;
+    average_position[2] /= count;*/
 
-    cameraRef.current.position.x = average_position[0]
+    /*cameraRef.current.position.x = average_position[0]
     cameraRef.current.position.y = average_position[1]
-    cameraRef.current.position.z = average_position[2]
+    cameraRef.current.position.z = average_position[2]*/
+    cameraRef.current?.fitToBox(x.current,true)//meshRef.current,true
     invalidate()
   }
 
@@ -80,18 +82,19 @@ const VisualizationRoot = (props) => {
   });
 
   //console.log(objList)
-
+  //PerspectiveCamera
   //TODO: make file inputs "multiple", change to iterate over them
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="75%" height="100%" padding={5}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} frameloop="demand">
-          <PerspectiveCamera ref={cameraRef} position={[0,5,10]} fov={75} makeDefault/>
+          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault/>
           <OrbitControls />
+          <CameraControls ref={cameraRef}/>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
-          <Box position={[0, 0, 0]} />
+          <Box position={[0, 0, 0]} ref={x}/>
           <Plane position={[0,0,0]} />
           {objList}
         </Canvas>
