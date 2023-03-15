@@ -22,6 +22,10 @@ export const toolBarData = [
     link: strings.routes.homePage,
   },
   {
+    label: 'Visualization',
+    link: strings.routes.visualizationPage,
+  },
+  {
     label: 'Exit',
     link: strings.routes.landingPage,
   },
