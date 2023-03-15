@@ -23,7 +23,7 @@ const style = {
 };
 
 const PluginMenu = () => {
-  const { cityFiles, getSelected, ModifyCityJSON, select_test, select } = useContext(PluginMenuContext);
+  const { getSelected, ModifyCityJSON, select_test } = useContext(PluginMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
@@ -33,10 +33,6 @@ const PluginMenu = () => {
         {strings.modificationPlugins}
       </Text>
       <ModificationPluginList getSelected={getSelected} onResult={ModifyCityJSON} />
-      <Text style={style.menuText}>
-        {strings.searchPlugins}
-      </Text>
-      <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select}/>
       <input type={"button"} onClick={() => {
         select_test()
         }} value={"Select Building_1"} />

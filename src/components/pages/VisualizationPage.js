@@ -1,11 +1,9 @@
 import React, { memo, useState } from 'react';
 import { HStack, VStack } from 'native-base';
-import PageTitle from '../atoms/PageTitle';
-import { strings } from '../../constants/strings';
 import ToolBar from '../organisms/ToolBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
-import { FileMenuContext, PluginMenuContext, SelectionContext } from '../../constants/context';
+import { FileMenuContext, PluginMenuContext, SearchMenuContext, SelectionContext } from '../../constants/context';
 import { cloneDeep } from 'lodash';
 
 const style = {
@@ -18,15 +16,10 @@ const style = {
   },
   innerContainer: {
     width: '100%',
-    height: 500,
+    height: '85%',
     backgroundColor: '#FFF',
     borderRadius: 8,
-  },
-  visualizationTitle: {
-    fontSize: 48,
-    fontWeight: 500,
-    color: '#ffffff',
-    marginBottom: 20,
+    marginTop: 20,
   },
 };
 
@@ -116,21 +109,23 @@ const VisualizationPage = () => {
 
   const fileMenuContext = { addFile, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
+  const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
-        <SelectionContext.Provider value={selectionContext}>
-          <VStack style={style.pageContainer}>
-            <ToolBar />
-            <PageTitle title={strings.visualization} titleStyle={style.visualizationTitle} />
-            <HStack style={style.innerContainer}>
-              <SideMenu />
-              <VisualizationRoot cityFiles={cityFiles} selected={selected} />
-            </HStack>
-          </VStack>
-        </SelectionContext.Provider>
+        <SearchMenuContext.Provider value={searchMenuContext}>
+          <SelectionContext.Provider value={selectionContext}>
+            <VStack style={style.pageContainer}>
+              <ToolBar />
+              <HStack style={style.innerContainer}>
+                <SideMenu />
+                <VisualizationRoot cityFiles={cityFiles} selected={selected} />
+              </HStack>
+            </VStack>
+          </SelectionContext.Provider>
+        </SearchMenuContext.Provider>
       </PluginMenuContext.Provider>
     </FileMenuContext.Provider>
   );
