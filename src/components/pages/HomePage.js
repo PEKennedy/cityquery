@@ -2,7 +2,7 @@ import React from 'react';
 import { VStack } from 'native-base';
 import PageTitle from '../atoms/PageTitle';
 import { strings } from '../../constants/strings';
-import ToolBar from '../organisms/ToolBar';
+import NavBar from '../organisms/NavBar';
 
 const style = {
   pageContainer: {
@@ -10,6 +10,7 @@ const style = {
     width: '100vw',
     backgroundColor: '#d2303b',
     alignItems: 'center',
+    padding: 20,
   },
   homeTitle: {
     fontSize: 48,
@@ -22,7 +23,7 @@ const style = {
 const HomePage = () => {
   return (
     <VStack style={style.pageContainer}>
-      <ToolBar />
+      <NavBar selected="Home" />
       <PageTitle titleStyle={style.homeTitle} title={strings.home} />
     </VStack>
   );

@@ -16,7 +16,7 @@ export const strings = {
   },
 };
 
-export const toolBarData = [
+export const navBarData = [
   {
     label: 'Home',
     link: strings.routes.homePage,
