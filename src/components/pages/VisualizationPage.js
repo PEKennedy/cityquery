@@ -16,7 +16,7 @@ const style = {
   },
   innerContainer: {
     width: '100%',
-    height: 500,
+    height: '85%',
     backgroundColor: '#FFF',
     borderRadius: 8,
     marginTop: 20,
