@@ -88,6 +88,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
     }
 
     //for each geometry, choose a display type
+    if(object.geometry == undefined) return <></>;
     object.geometry.forEach((geometry,index)=>{
         geometries.push(chooseDisplayType(cityFile, objectName, index, is_selected, fileName, clickSelection))
     })

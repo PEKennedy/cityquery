@@ -23,7 +23,7 @@ const style = {
   },
 };
 
-const VisualizationPage = () => {
+const CityQueryPage = () => {
   const [cityFiles, setCityFiles] = useState({});
   const [selected, setSelected] = useState({});
 
@@ -118,7 +118,7 @@ const VisualizationPage = () => {
         <SearchMenuContext.Provider value={searchMenuContext}>
           <SelectionContext.Provider value={selectionContext}>
             <VStack style={style.pageContainer}>
-              <NavBar selected="Visualization" />
+              <NavBar selected="CityQuery" />
               <HStack style={style.innerContainer}>
                 <SideMenu />
                 <VisualizationRoot cityFiles={cityFiles} selected={selected} />
@@ -131,4 +131,4 @@ const VisualizationPage = () => {
   );
 };
 
-export default VisualizationPage;
+export default CityQueryPage;

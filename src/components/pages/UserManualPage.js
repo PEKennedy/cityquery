@@ -12,7 +12,7 @@ const style = {
     alignItems: 'center',
     padding: 20,
   },
-  homeTitle: {
+  userManualTitle: {
     fontSize: 48,
     fontWeight: 500,
     color: '#ffffff',
@@ -20,13 +20,13 @@ const style = {
   },
 };
 
-const HomePage = () => {
+const UserManualPage = () => {
   return (
     <VStack style={style.pageContainer}>
-      <NavBar selected="Home" />
-      <PageTitle titleStyle={style.homeTitle} title={strings.home} />
+      <NavBar selected="User Manual" />
+      <PageTitle titleStyle={style.userManualTitle} title={strings.userManual} />
     </VStack>
   );
 };
 
-export default HomePage;
+export default UserManualPage;
