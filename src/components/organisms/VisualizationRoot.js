@@ -94,8 +94,6 @@ const VisualizationRoot = (props) => {
           <CameraControls ref={cameraRef}/>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
-          <Box position={[0, 0, 0]} ref={x}/>
-          <Plane position={[0,0,0]} />
           {objList}
         </Canvas>
       </VStack>
