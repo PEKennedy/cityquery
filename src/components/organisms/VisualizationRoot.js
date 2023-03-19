@@ -84,6 +84,10 @@ class VisualizationRoot extends React.Component {
       return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
     }*/
 
+    /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
+      return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
+    }*/
+
     //default
     return <Box position={[-2.4, 0, 0]}/>
 
@@ -152,6 +156,9 @@ class VisualizationRoot extends React.Component {
           CityJSON Upload List:
           <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
                 clearText={"Clear CityJSON Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
+          LAS Upload List:
+          <FileControl upId={"lasUpload"} clearId={"lasClear"} fileType={".las"}
+                clearText={"Clear las Files"} addFile={this.addFile} clearFiles={this.clearCityFiles}/>
           <input type={"button"} onClick={this.select_test} value={"Select Building_1"} />
           
           <br/>
