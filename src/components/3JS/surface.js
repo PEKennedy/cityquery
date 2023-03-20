@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 
 import { generateCombinedSurfaces, mergeSurface } from './3dUtils'
 import { useContext } from 'react';
@@ -6,10 +6,10 @@ import { MaterialsContext } from '../../constants/context';
 
 
 //test funnction for getting and displaying a cityjson mesh (not working)
-function SurfaceObject(props){
+const SurfaceObject = forwardRef((props,ref)=>{
 
     // This reference gives us direct access to the THREE.Mesh object
-    const ref = useRef()
+    //const ref = useRef()
 
     //call dispose on cleanup (useEffect will call any returned function when the component unmounts)
     useEffect(()=>{
@@ -43,6 +43,6 @@ function SurfaceObject(props){
     },[mesh_geometry, mat])
 
     return surfaceMesh;
-}
+});
 
 export default SurfaceObject;

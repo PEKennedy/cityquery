@@ -1,6 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { VStack } from 'native-base';
 
+//import { Box3, DoubleSide } from 'three';
 import { Canvas, invalidate } from '@react-three/fiber'
 import { PerspectiveCamera, OrbitControls, CameraControls } from '@react-three/drei';
 import Plane from '../3JS/Plane';
@@ -9,7 +10,7 @@ import Box from '../3JS/Box';
 
 import { colourFloatToHex } from '../3JS/3dUtils';
 
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial, BackSide } from 'three';
 import { colours } from '../../constants/colours';
@@ -33,7 +34,8 @@ const VisualizationRoot = (props) => {
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
-  const x = useRef();
+  const xyz = useRef();
+  let xRef2 = useRef();
   console.log("render root")
 
   //if a transparent material was wanted: , transparent:true, opacity:0.75, side:BackSide
@@ -48,14 +50,15 @@ const VisualizationRoot = (props) => {
   const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected, 
     lineMatSelected, lineMatUnSelected}
 
+
   const centerCamera = () =>{ //TODO: Doesn't work?
     console.log("Center Camera")
-    /*let selected = getSelected()
+    let selected = getSelected()
     let keys = Object.keys(selected)
 
     let average_position = [0,0,0]
     let count = 0
-    keys.forEach((fileName)=>{
+    /*keys.forEach((fileName)=>{
       let fileTranslation = selected[fileName]["file"]["transform"]["translate"]
       average_position[0] += fileTranslation[0]
       average_position[1] += fileTranslation[1]
@@ -70,7 +73,8 @@ const VisualizationRoot = (props) => {
     /*cameraRef.current.position.x = average_position[0]
     cameraRef.current.position.y = average_position[1]
     cameraRef.current.position.z = average_position[2]*/
-    cameraRef.current?.fitToBox(x.current,true)//meshRef.current,true
+    console.log(xRef2.current)
+    cameraRef.current?.fitToBox(xRef2.current,true)//meshRef.current,true
     invalidate()
   }
 
@@ -80,6 +84,14 @@ const VisualizationRoot = (props) => {
     let file = cityFiles[fileName]
     objList.push(...displayObjList(file,fileName))
   });
+
+  const xRef = useCallback(ref=>{
+    if(ref !== undefined){
+      console.log(xRef.current)
+    }
+  })
+
+  
 
   //console.log(objList)
   //PerspectiveCamera
@@ -94,7 +106,7 @@ const VisualizationRoot = (props) => {
           <CameraControls ref={cameraRef}/>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
-          <Box position={[0, 0, 0]} ref={x}/>
+          <Box position={[0, 0, 0]} ref={xRef2}/>
           <Plane position={[0,0,0]} />
           {objList}
         </Canvas>

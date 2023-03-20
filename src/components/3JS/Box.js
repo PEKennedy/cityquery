@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, forwardRef} from 'react';
 import { useFrame } from '@react-three/fiber';
 
-const Box = (props) => {
-  const ref = useRef()
+const Box = forwardRef((props,ref) => {
+  //const ref = useRef()
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false)
   const [clicked, click] = useState(false)
@@ -21,11 +21,6 @@ const Box = (props) => {
         <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
   );
-};
+});
 
 export default Box;
-
-//<CustomMesh position={[1.7,0,0]} />
-//In another file I have a cityJSON test I'm working on
-
-//<CustomMesh position={[5,0,0]}/>

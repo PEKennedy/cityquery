@@ -4,11 +4,11 @@ import SurfaceObject from './surface';
 import SolidObj from './Solid';
 import MultiSolidObj from './MultiSolid';
 
-import { useContext } from 'react';
+import { useContext, forwardRef } from 'react';
 import { SelectionContext } from '../../constants/context';
 
 
-const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
+const CityObjectDisplay = forwardRef(({cityFile,objectName,fileName},ref) => {
  
     //console.log(cityFile)
     let object = cityFile.CityObjects[objectName];
@@ -55,23 +55,23 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         
         if(type == "MultiPoint"){
             return <PointCloudObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
-                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} ref={ref}/>
         }
         if(type == "MultiLineString"){
             return <MultiLineObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} ref={ref}/>
         }
         if(type == "MultiSurface" || type == "CompositeSurface"){
             return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} ref={ref}/>;
         }
         if(type == "Solid"){
             return <SolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} ref={ref}/>;
         }
         if(type == "MultiSolid" || type == "CompositeSolid"){
             return <MultiSolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected} ref={ref}/>;
         }
 
         /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
@@ -87,6 +87,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         //but with "attributes"."pointcloud-file".pointFile
     }
 
+    if(object.geometry == undefined) return <></>;
     //for each geometry, choose a display type
     object.geometry.forEach((geometry,index)=>{
         geometries.push(chooseDisplayType(cityFile, objectName, index, is_selected, fileName, clickSelection))
@@ -104,6 +105,6 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
     else{ //0 geometries, don't return anything
         return <></>
     }
-  };
+  });
 
   export default CityObjectDisplay;
