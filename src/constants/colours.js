@@ -14,15 +14,16 @@ const common = {
     "purple":[0.5,0,0.5],
     "black":[0,0,0],
     "grey":[0.5,0.5,0.5],
-    "white":[1,1,1]
+    "white":[1,1,1],
+    "brown":[0.4,0.2,0.1]
 }
 
 export const colours = {
     semantics:{
         primary:{
-            "RoofSurface":          common['red'],
+            "RoofSurface":          common['black'],
             "GroundSurface":        common['grey'],
-            "WallSurface":          common['orange'],
+            "WallSurface":          common['brown'],
             "ClosureSurface":       common['grey'],
             "OuterCeilingSurface":  common['grey'],
             "OuterFloorSurface":    common['grey'],
@@ -60,6 +61,6 @@ export const colours = {
             "TransportationHole":   common['grey']
         }
     },
-    selected: [1,0.2,0.2],
+    selected: [1,0.25,0.25],
     default: [0.7,0.7,0.7]
 };

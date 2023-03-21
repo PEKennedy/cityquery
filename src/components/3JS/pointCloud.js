@@ -1,34 +1,22 @@
 
-import React, { useRef, useState } from 'react'
-import { BufferAttribute, BufferGeometry } from 'three';
+import React, { useMemo, useRef, useState } from 'react'
 
-import {transform, colourVerts, getSelectedTint} from './3dUtils'
+import  {transform, colourVerts } from './3dUtils'
+
+import { useContext } from 'react';
+import { MaterialsContext } from '../../constants/context';
 
 //Loads a pointcloud from a cityjson file which directly contains the point data
 /**
  * 
- * @param {*} cityJSONFile 
- * @param {*} objName 
+ * @param {*} verts 
+ * @param {*} obj_transform 
+ * @param {*} geometry 
  * @returns 
  */
-function loadCityJsonPointCloud(cityJSONFile,objName){
-    if(cityJSONFile.CityObjects == undefined){
-        console.log("provided cityJSON file did not contain \"CityObjects\"")
-        return;
-    }
-    var obj = cityJSONFile.CityObjects[objName];
-    
-    if(obj == undefined){
-        console.error("specified CityJSON object ("+objName+") was not contained in the provided file")
-        return;
-    }
-
-    
-    //console.log(obj);
-    let semantics = obj.geometry[0].semantics;
-    var vert_inds = obj.geometry[0].boundaries;
-    var verts = cityJSONFile.vertices;
-    let obj_transform = cityJSONFile.transform;
+function loadCityJsonPointCloud(verts,obj_transform,geometry){
+    let semantics = geometry.semantics;
+    var vert_inds = geometry.boundaries;
 
     var verts_filtered = [];
     let colours = []
@@ -41,7 +29,10 @@ function loadCityJsonPointCloud(cityJSONFile,objName){
     const vertices = new Float32Array(
         verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
     );
-    return [vertices,colours];
+    return <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={vertices.length / 3} array={vertices} itemSize={3} />
+        <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
+    </bufferGeometry>
 }
 
 //The visual representation of a pointcloud
@@ -49,36 +40,26 @@ function PointCloudObj(props){
 
     // This reference gives us direct access to the THREE.Mesh object
     const ref = useRef();
-    // Subscribe this component to the render-loop, rotate the mesh every frame
-    //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
 
-    if(props.cityFile == undefined){ //not loaded yet
-        //console.log("pt cloud not defined yet")
-        return (<points ref={ref} visible={false}></points>);
-    }
+    const { pointMatSelected, pointMatUnSelected } = useContext(MaterialsContext);
+    let mat = props.selected ? pointMatSelected : pointMatUnSelected;
 
-    let tint = getSelectedTint(props.selected)
+    let geometry = props.cityFile.CityObjects[props.objName].geometry[props.geoIndex];
 
-    console.log(props.cityFile);
-    console.log(props.object);
+    var verts = props.cityFile.vertices;
+    let obj_transform = props.cityFile.transform;
 
-    let [verts, colours] = loadCityJsonPointCloud(props.cityFile,props.object);
+    const pointGeometry = useMemo(()=>{
+        return loadCityJsonPointCloud(verts,obj_transform,geometry);
+    },[verts,obj_transform,geometry])
 
-    if(verts == undefined){
-        return (<points ref={ref} visible={false}></points>);
-    }
-
-    return (
-        <points {...props} ref={ref}>
-            <bufferGeometry>
-                <bufferAttribute attach="attributes-position" count={verts.length / 3} array={verts} itemSize={3} />
-                <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 
-            </bufferGeometry>
-            <pointsMaterial color={tint} size={0.25} vertexColors={!props.selected}/>
+    const points = useMemo(()=>{
+        return <points {...props} ref={ref} onClick={props.makeSelected} material={mat}>
+            {pointGeometry}
         </points>
-    );
-    
+    },[pointGeometry,props.selected])
 
+    return points;
 }
 
 export default PointCloudObj;
