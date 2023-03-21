@@ -241,18 +241,13 @@ function binToText(binary){
 
 /**
  * Loads a list of the  from the specified external LAS file 
- * @param file the file that is to be loaded and parsed
+ * @param file the file that is to be loaded and parsed (expectes raw file)
  * @returns vertex position list
  */
 async function loadExternalLASPointCloud(file){
-    var attribs = cityJSONObj.attributes["pointcloud-file"];
-    var fileType = attribs.mimeType;
-    var uri = attribs.pointFile;
 
-    console.log(fileType);
-    console.log(uri);
 
-    if(!fileType.includes(".las")){
+    if(!file.type.includes(".las")){
         console.error("Attempted to load an external pointcloud file which was not .las");
         return;
     }
