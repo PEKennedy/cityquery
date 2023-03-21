@@ -7,58 +7,14 @@ import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
 import Box from '../3JS/Box';
 
-<<<<<<< HEAD
-import PointCloudObj from '../3JS/pointCloud';
-import MultiLineObj from '../3JS/MultiLine';
-import SurfaceObject from '../3JS/surface';
 
-//given a file (need a file as it contains the both object and the vertices) and an object name,
-//gives the proper jsx for display
-const chooseObjectType = (cityFile, objectName,fileName,selected) => {
-  console.log(objectName)
-  var object = cityFile.CityObjects[objectName];
-  if(object.geometry[0] == undefined){ //invalid object
-    console.error(objectName+".geometry[0] was undefined");
-    return <mesh visible={false}></mesh>
-  }
-  let type = object.geometry[0].type;
-
-  let is_selected = false
-
-  if(selected[fileName]){
-    let fileObjs = selected[fileName]["objects"]
-    is_selected = fileObjs.find((name)=>{return name == objectName}) != undefined;
-  }
-
-  if(type == "MultiPoint"){
-    return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
-  }
-  if(type == "MultiLineString"){
-    return <MultiLineObj position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
-  }
-  if(type == "MultiSurface" || type == "CompositeSurface"){
-    return <SurfaceObject position={[5, 0, 0]} cityFile={cityFile} object={objectName} selected={is_selected}/>;
-  }
-  /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
-    return <PointCloudObj position={[5, 0, 0]} cityFile={cityFile} object={objectName}/>;
-  }*/
-
-  //default
-  return <Box position={[-2.4, 0, 0]}/>
-
-  //Some notes:
-  //- cityJSON files with external PointClouds always specify an extension you could check for in the file
-  //- For an 'external' pointcloud, we can also check for an object with no geometry,
-  //but with "attributes"."pointcloud-file".pointFile
-}
-=======
 import { colourFloatToHex } from '../3JS/3dUtils';
 
 import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial, BackSide } from 'three';
 import { colours } from '../../constants/colours';
->>>>>>> origin/master
+
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
@@ -91,7 +47,7 @@ const VisualizationRoot = (props) => {
   const lineMatSelected = new LineBasicMaterial({color:selected_colour, vertexColors:false, linewidth:1})
   const lineMatUnSelected = new LineBasicMaterial({color:0xFFFFFF, vertexColors:true, linewidth:1})
 
-  const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected, 
+  const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected,
     lineMatSelected, lineMatUnSelected}
 
   const centerCamera = () =>{ //TODO: Doesn't work?
