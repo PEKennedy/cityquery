@@ -86,7 +86,7 @@ const VisualizationRoot = (props) => {
   //TODO: make file inputs "multiple", change to iterate over them
   return (
     <MaterialsContext.Provider value={materialsContext}>
-      <VStack width="75%" height="100%" padding={2} borderBottomRightRadius={8}>
+      <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} frameloop="demand">
           <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault/>
@@ -94,8 +94,6 @@ const VisualizationRoot = (props) => {
           <CameraControls ref={cameraRef}/>
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
-          <Box position={[0, 0, 0]} ref={x}/>
-          <Plane position={[0,0,0]} />
           {objList}
         </Canvas>
       </VStack>

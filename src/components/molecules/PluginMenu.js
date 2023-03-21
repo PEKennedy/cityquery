@@ -11,12 +11,12 @@ const style = {
     width: '100%',
   },
   titleText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 500,
     color: '#000',
   },
   menuText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 500,
     color: '#000',
   },

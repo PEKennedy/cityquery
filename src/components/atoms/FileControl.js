@@ -55,10 +55,12 @@ const FileControl = (props) => {
         <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
         <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction}
             value={clearText}/>
-        <div height="500px">
-            <ul>
-                {filesList}
-            </ul>
+        <div>
+            <p>
+                <ul>
+                    {filesList}
+                </ul>
+            </p>
         </div>
     </div>
 }
