@@ -6,10 +6,10 @@ import { MaterialsContext } from '../../constants/context';
 
 
 //test funnction for getting and displaying a cityjson mesh (not working)
-const SurfaceObject = forwardRef((props,ref)=>{
+const SurfaceObject = (props)=>{
 
     // This reference gives us direct access to the THREE.Mesh object
-    //const ref = useRef()
+    const ref = useRef()
 
     //call dispose on cleanup (useEffect will call any returned function when the component unmounts)
     useEffect(()=>{
@@ -35,14 +35,15 @@ const SurfaceObject = forwardRef((props,ref)=>{
         return  mergeSurface(generateCombinedSurfaces(surfaces,semantics,obj_transform,all_verts));
     },[geometry,obj_transform,all_verts])
 
+    //
     //only rerender the mesh if the material or geometry changes
     const surfaceMesh = useMemo(()=>{
-        return <mesh {...props} ref={ref} onClick={props.makeSelected} material={mat}>
+        return <mesh {...props}  onClick={props.makeSelected} material={mat} ref={ref}>
             <primitive object={mesh_geometry} />
         </mesh>
     },[mesh_geometry, mat])
 
     return surfaceMesh;
-});
+};
 
 export default SurfaceObject;

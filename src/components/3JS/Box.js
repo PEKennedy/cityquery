@@ -1,8 +1,8 @@
 import React, { useRef, useState, forwardRef} from 'react';
 import { useFrame } from '@react-three/fiber';
 
-const Box = forwardRef((props,ref) => {
-  //const ref = useRef()
+const Box = (props,ref) => {
+  const ref = useRef()
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false)
   const [clicked, click] = useState(false)
@@ -21,6 +21,6 @@ const Box = forwardRef((props,ref) => {
         <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
   );
-});
+};
 
 export default Box;
