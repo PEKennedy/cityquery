@@ -25,6 +25,7 @@ const style = {
 
 const VisualizationPage = () => {
   const [cityFiles, setCityFiles] = useState({});
+  const [lasFiles, setLasFiles] = useState({});
   const [selected, setSelected] = useState({});
 
   const addFile = (file, fileName) => {
@@ -33,10 +34,17 @@ const VisualizationPage = () => {
     newCityFiles[fileName] = JSON.parse(file);
     setCityFiles(newCityFiles);
   }
+  const addFileLAS = (file, fileName) => {
+    //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
+    let newLASFile = cloneDeep(cityFiles);
+    newLASFile[fileName] = JSON.parse(file);
+    setCityFiles(newLASFile);
+  }
   
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
+    setLasFiles({});
     clearSelect();
   }
   
@@ -107,7 +115,7 @@ const VisualizationPage = () => {
     cityFiles[fileName] = output;
   }
 
-  const fileMenuContext = { addFile, clearCityFiles };
+  const fileMenuContext = { addFile, addFileLAS, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
