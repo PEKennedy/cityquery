@@ -208,7 +208,7 @@ function createPRF6(File,header){
 
 
 /*
-waveform functionality not implemented
+waveform functionality not implemented, would need to 
 */
 function createPRWaveForm(File,header){
     const fr = new FileReader();
@@ -240,11 +240,11 @@ function binToText(binary){
 
 
 /**
- * Loads a pointcloud from the specified external LAS file 
- * @param {*} cityJSONObj The cityJSONObj with the attribute to parse
+ * Loads a list of the  from the specified external LAS file 
+ * @param file the file that is to be loaded and parsed
  * @returns vertex position list
  */
-async function loadExternalLASPointCloud(cityJSONObj, file){
+async function loadExternalLASPointCloud(file){
     var attribs = cityJSONObj.attributes["pointcloud-file"];
     var fileType = attribs.mimeType;
     var uri = attribs.pointFile;
@@ -284,10 +284,8 @@ function LASObj(props){
     }
 
     console.log(props.cityFile);
-    console.log(props.object);
 
-    var pointsArr = loadExternalLASPointCloud(props.cityFile,props.object);
-    //var verts = loadExternalLASPointCloud(props.object);
+    var pointsArr = loadExternalLASPointCloud(props.cityFile);
     var verts = [];
     var numOfPointsL = pointsArr.length;
     var i = 0;
