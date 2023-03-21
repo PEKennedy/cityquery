@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { VStack } from 'native-base';
 
-import { Canvas, invalidate } from '@react-three/fiber'
+import { Canvas, invalidate } from '@react-three/fiber';
 import { PerspectiveCamera, OrbitControls, CameraControls } from '@react-three/drei';
 import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
