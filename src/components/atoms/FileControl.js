@@ -52,7 +52,11 @@ const FileControl = (props) => {
 
     useEffect(() => {
         if(fileMetaData && fileMetaData.length > 0){
-            setFilesList(fileMetaData.map((file,index) =>
+            if(fileMetaData.length == 0){
+                setFilesList([]);
+                return;
+            }
+            setFilesList(fileMetaData.map((file,index) => 
                 <li key={file.name}>{file.name}</li>
             ))
         }
