@@ -77,7 +77,6 @@ const FileControl = (props) => {
             ))
         }
     }, [fileMetaData])
-    console.log(checkboxValues);
 
     return <VStack marginTop={1} space={1}>
         <HStack style={style.inputsContainer}>
