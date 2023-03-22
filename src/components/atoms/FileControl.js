@@ -61,7 +61,6 @@ const FileControl = (props) => {
             ))
         }
     }, [fileMetaData])
-    console.log(checkboxValues);
 
     return <div>
         <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>

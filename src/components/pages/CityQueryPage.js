@@ -73,7 +73,6 @@ const CityQueryPage = () => {
       })
       if(newSelected[fileName]["objects"].length == 0){ //if no more selected objects
         delete newSelected[fileName]
-        console.log("deSelect file");
         let newCheckboxValues = [];
         checkboxValues.forEach((checkbox) => {
           if (checkbox !== fileName) {
@@ -94,8 +93,6 @@ const CityQueryPage = () => {
   const selectFile = (fileName) => {
     const file = cityFiles[fileName];
     let objectKeys = [];
-    console.log(file);
-    console.log(file.CityObjects);
     for (const [key, ] of Object.entries(file.CityObjects)) {
       objectKeys.push(key);
     }
@@ -104,7 +101,6 @@ const CityQueryPage = () => {
 
   const deSelectFile = (fileName) => {
     const file = cityFiles[fileName];
-    console.log("deSelect file");
     let objectKeys = [];
     for (const [key, ] of Object.entries(file.CityObjects)) {
       objectKeys.push(key);
