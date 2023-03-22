@@ -3,8 +3,8 @@ import { Pressable, SearchIcon } from 'native-base';
 
 const style = {
   link: {
-    height: '3vw',
-    width: '3vw',
+    height: '3.5vw',
+    width: '3.5vw',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
@@ -15,14 +15,14 @@ const style = {
   },
 };
 
-const SideMenuFilterTab = (props) => {
+const SideMenuSearchTab = (props) => {
   const { setLayout } = props;
 
   return (
     <Pressable style={style.link} onPress={() => setLayout('search')} >
-      <SearchIcon style={style.icon} />
+      <SearchIcon style={style.icon} size="1.25vw" />
     </Pressable>
   );
 };
 
-export default SideMenuFilterTab;
+export default SideMenuSearchTab;

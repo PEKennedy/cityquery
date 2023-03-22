@@ -28,7 +28,7 @@ const StartApplication = () => {
   const navigate = useNavigate();
   return (
     <Pressable
-      onPress={() => navigate(strings.routes.homePage)}
+      onPress={() => navigate(strings.routes.userManualPage)}
       alignItems={style.button.alignItems}
       justifyContent={style.button.justifyContent}
       width={style.button.width}
