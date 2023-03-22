@@ -1,7 +1,7 @@
-import React, { useRef, useState, forwardRef} from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 
-const Box = (props,ref) => {
+const Box = (props) => {
   const ref = useRef()
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false)

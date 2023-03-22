@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 import { generateCombinedSurfaces, mergeSurface } from './3dUtils'
 import { useContext } from 'react';

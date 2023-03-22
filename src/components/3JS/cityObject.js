@@ -95,7 +95,7 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
     })
 
     //if there are multiple geometries, create a group
-    if(geometries.length >= 1){ //was >, this is temp
+    if(geometries.length > 1){ 
         return <group>
             {geometries}
         </group>
