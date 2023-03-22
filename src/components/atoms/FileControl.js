@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react"
-import { Checkbox,HStack,VStack,Text} from 'native-base';
+import { Checkbox, HStack, VStack } from 'native-base';
+
+const style = {
+  checkboxItem: {
+    paddingTop: 10,
+    paddingLeft: 10,
+  },
+};
 
 /**
  * Presents a file upload button which can always accept more files, and a clear button.
@@ -12,18 +19,11 @@ import { Checkbox,HStack,VStack,Text} from 'native-base';
  * @returns JSX for a file input and the resulting fileList
  */
 
- const style = {
-   menuContainer: {
-
-   }
-}
-
 const FileControl = (props) => {
-    const { upId, clearId, fileType, clearText, addFile, clearFiles } = props;
+    const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isFileMenu } = props;
     const [fileMetaData, setFileMetaData] = useState([]);
     const [filesList, setFilesList] = useState([]);
     const [checkboxValues, setCheckboxValues] = useState([]);
-    var copy=[];
 
     const clearFilesFunction = (e) => {
         clearFiles();
@@ -41,7 +41,6 @@ const FileControl = (props) => {
             const file = e.target.files[0]
             setFileMetaData([...fileMetaData,file])
             const fr = new FileReader();
-
             //add an event listener for when the filereader has finished
             fr.addEventListener("load",e=>{
                 addFile(fr.result, file.name)
@@ -50,111 +49,53 @@ const FileControl = (props) => {
             //After having set the event listener, we can now use this to parse the file
             fr.readAsText(file);
         }
-
     }
 
     useEffect(() => {
-
         if(fileMetaData && fileMetaData.length > 0){
-
             setFilesList(fileMetaData.map((file,index) =>
-
                 <li key={file.name}>{file.name}</li>
-
-
             ))
         }
     }, [fileMetaData])
 
-
-    const checkboxPressed= (name)=>{
-
-      copy= checkboxValues;
-      copy.push(name);
-      setCheckboxValues(copy)
-
-
-
-
-    };
-
-    const checkboxUnpressed= (name)=>{
-      var copy2=[];
-      copy=checkboxValues
-
-      for (let i = 0; i < checkboxValues.length; i++) {
-        if(copy[i]!=name){
-          copy2[i]=copy[i];
-        }
-      }
-
-      setCheckboxValues(copy2)
-    };
-
     return <div>
         <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
-        <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction}
-            value={clearText}/>
-        <div height="500px">
-
-
-
-
-
-
-
-
-
-
-        {filesList.map(item => (
-          <VStack style={style.menuContainer}>
-          <HStack>
-
-
-
-          <div>
-               {
-                   (() => {
-                     while(1){
-                       switch(true) {
-
-                           case(checkboxValues.includes(item)): {
-                                   return (
-                                      <Checkbox value={item} onChange={() =>checkboxUnpressed(item)}  />
-
-                                   )
-                               }
-                           break;
-
-                           case(!checkboxValues.includes(item)): {
-                               return (
-                                    <Checkbox onChange={() =>checkboxPressed(item)}  />
-                               )
-                           }
-                           break;
-
-                         }
+        <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
+        <VStack style={style.menuContainer}>
+          {isFileMenu ? (
+            <Checkbox.Group defaultValue={checkboxValues} colorScheme="red" onChange={values => {
+              setCheckboxValues(values || []);
+            }}>
+              {filesList.map(item => (
+                <HStack style={style.checkboxItem}>
+                  <Checkbox value={item} marginRight={2} onChange={() => {
+                    let found = false;
+                    checkboxValues.forEach((value) => {
+                      if (value === item) {
+                        found = true;
+                        deSelectFile(item.key);
                       }
-                  })()
-               }
-           </div>
-
-
-            <li>{item}</li>
-          </HStack>
-          </VStack>
-        ))}
-
-
-        <p>You clicked</p>
-        {checkboxValues.map(item => (
-        <p>{item}</p>
-        ))}
-
-
-
-        </div>
-    </div>
+                    })
+                    if (!found) {
+                      selectFile(item.key);
+                    }
+                  }} />
+                  {item}
+                </HStack>
+              ))}
+            </Checkbox.Group>
+          ) : (
+            <div>
+                <p>
+                    <ul>
+                        {filesList}
+                    </ul>
+                </p>
+            </div>
+          )}
+        </VStack>
+      </div>
 }
 
 export default FileControl;

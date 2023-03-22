@@ -81,6 +81,27 @@ const CityQueryPage = () => {
     console.log("Clear all selections")
     setSelected({});
   }
+
+  const selectFile = (fileName) => {
+    const file = cityFiles[fileName];
+    let objectKeys = [];
+    console.log(file);
+    console.log(file.CityObjects);
+    for (const [key, value] of Object.entries(file.CityObjects)) {
+      objectKeys.push(key);
+    }
+    select(fileName, objectKeys, true);
+  }
+
+  const deSelectFile = (fileName) => {
+    const file = cityFiles[fileName];
+    console.log("deSelect file");
+    let objectKeys = [];
+    for (const [key, value] of Object.entries(file.CityObjects)) {
+      objectKeys.push(key);
+    }
+    deSelect(fileName, objectKeys);
+  }
   
   //example state.selected: {"file.city.json":{"objects"[objName1,objName2]}}
   //becomes in getSelected function:
@@ -107,7 +128,7 @@ const CityQueryPage = () => {
     cityFiles[fileName] = output;
   }
 
-  const fileMenuContext = { addFile, clearCityFiles };
+  const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
