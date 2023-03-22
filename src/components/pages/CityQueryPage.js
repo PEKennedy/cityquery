@@ -39,6 +39,7 @@ const CityQueryPage = () => {
   const clearCityFiles = () => {
     setCityFiles({});
     clearSelect();
+    setCheckboxValues([]);
   }
   
   const select_test = () => {
