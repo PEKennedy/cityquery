@@ -111,7 +111,10 @@ const VisualizationPage = () => {
   }
 
   const ModifyCityJSON = (fileName, output) => {
-    cityFiles[fileName] = output;
+    let newCityFiles = cloneDeep(cityFiles)
+    newCityFiles[fileName] = output;
+    console.log(newCityFiles)
+    setCityFiles(newCityFiles)
   }
 
   const fileMenuContext = { addFile, clearCityFiles };
