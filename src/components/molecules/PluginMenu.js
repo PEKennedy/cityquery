@@ -1,8 +1,7 @@
 import React from 'react';
 import { Text, VStack } from 'native-base';
-import { ModificationPluginList, SearchPluginList } from '../3JS/pyScript';
+import { ModificationPluginList } from '../3JS/pyScript';
 import { useContext } from 'react';
-
 import { strings } from '../../constants/strings';
 import { PluginMenuContext } from '../../constants/context';
 
@@ -23,7 +22,7 @@ const style = {
 };
 
 const PluginMenu = () => {
-  const { getSelected, ModifyCityJSON, select_test } = useContext(PluginMenuContext);
+  const { getSelected, ModifyCityJSON } = useContext(PluginMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
@@ -33,9 +32,6 @@ const PluginMenu = () => {
         {strings.modificationPlugins}
       </Text>
       <ModificationPluginList getSelected={getSelected} onResult={ModifyCityJSON} />
-      <input type={"button"} onClick={() => {
-        select_test()
-        }} value={"Select Building_1"} />
     </VStack>
   );
 };

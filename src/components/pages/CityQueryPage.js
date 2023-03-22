@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import { HStack, VStack } from 'native-base';
 import NavBar from '../organisms/NavBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
@@ -34,17 +34,13 @@ const CityQueryPage = () => {
     newCityFiles[fileName] = JSON.parse(file);
     setCityFiles(newCityFiles);
   }
-  
+
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
     clearSelect();
   }
-  
-  const select_test = () => {
-    select("twobuildings.city.json",["Building_1"])
-  }
-  
+
   const select = (fileName, objNames, append=false) => {
 
     let newSelected = cloneDeep(selected);
@@ -141,9 +137,9 @@ const CityQueryPage = () => {
   }
 
   const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues };
-  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
+  const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
-  const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
+  const selectionContext = { selected, getSelected, select, deSelect, clearSelect };
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
