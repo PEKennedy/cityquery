@@ -1,17 +1,14 @@
 import React, { memo, useRef } from 'react';
 import { VStack } from 'native-base';
 
-import { Canvas, invalidate } from '@react-three/fiber'
-import { PerspectiveCamera, OrbitControls, CameraControls } from '@react-three/drei';
-import Plane from '../3JS/Plane';
+import { Canvas } from '@react-three/fiber'
+import { PerspectiveCamera, CameraControls } from '@react-three/drei';
 import CityObjectDisplay from '../3JS/cityObject';
-import Box from '../3JS/Box';
-
 import { colourFloatToHex } from '../3JS/3dUtils';
 
 import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
-import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial, BackSide } from 'three';
+import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
 import { colours } from '../../constants/colours';
 
 //takes a file's contents, returns a list of objects as proper jsx types
@@ -26,14 +23,13 @@ const displayObjList = (cityJSONFile,fileName) => {
   return objs;
 }
 
-
-
 const VisualizationRoot = (props) => {
   const cityFiles = props.cityFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
-  const x = useRef();
+  const controlsRef = useRef();
+  const center = useRef();
   console.log("render root")
 
   //if a transparent material was wanted: , transparent:true, opacity:0.75, side:BackSide
@@ -47,31 +43,35 @@ const VisualizationRoot = (props) => {
 
   const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected, 
     lineMatSelected, lineMatUnSelected}
-
+  
+  //let boundingBox = new Box3()
   const centerCamera = () =>{ //TODO: Doesn't work?
-    console.log("Center Camera")
-    /*let selected = getSelected()
+    /*console.log("Center Camera")
+    let selected = getSelected()
     let keys = Object.keys(selected)
 
     let average_position = [0,0,0]
-    let count = 0
+    //let count = 0
+    console.log(controlsRef.current?.enabled)
+    
+    let points = [];
+
     keys.forEach((fileName)=>{
       let fileTranslation = selected[fileName]["file"]["transform"]["translate"]
-      average_position[0] += fileTranslation[0]
-      average_position[1] += fileTranslation[1]
-      average_position[2] += fileTranslation[2]
-      count += 1;
+      points.push(new Vector3(fileTranslation[0],fileTranslation[2],fileTranslation[1]))
     })
-    if(count == 0) return;
-    average_position[0] /= count;
-    average_position[1] /= count;
-    average_position[2] /= count;*/
+    if(points.length == 0) return;
+    boundingBox.setFromPoints(points)
 
-    /*cameraRef.current.position.x = average_position[0]
-    cameraRef.current.position.y = average_position[1]
-    cameraRef.current.position.z = average_position[2]*/
-    cameraRef.current?.fitToBox(x.current,true)//meshRef.current,true
-    invalidate()
+    console.log(boundingBox)*/
+    //controlsRef.current.enabled = false
+    controlsRef.current?.fitToBox(center.current,true)//meshRef.current,true
+    //controlsRef.current.enabled = true
+    
+    //console.log(controlsRef.current?.enabled)
+    //cameraRef.current?.update()
+    //controlsRef.current?.update();
+    //invalidate()
   }
 
   let objList = [];
@@ -81,20 +81,20 @@ const VisualizationRoot = (props) => {
     objList.push(...displayObjList(file,fileName))
   });
 
-  //console.log(objList)
-  //PerspectiveCamera
+
   //TODO: make file inputs "multiple", change to iterate over them
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
-        <Canvas onPointerMissed={clearSelect} frameloop="demand">
-          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault/>
-          <OrbitControls />
-          <CameraControls ref={cameraRef}/>
+        <Canvas onPointerMissed={clearSelect} >
+          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef}/>
+          <CameraControls ref={controlsRef} />
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
-          {objList}
+          <group ref={center}>
+            {objList}
+          </group>
         </Canvas>
       </VStack>
     </MaterialsContext.Provider>
