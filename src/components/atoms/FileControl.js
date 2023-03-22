@@ -1,6 +1,25 @@
-import { VStack } from "native-base";
+import { HStack, Pressable, VStack } from "native-base";
 import { useEffect, useState } from "react";
+import { strings } from "../../constants/strings";
 import '../../styles.css';
+
+const style = {
+  buttonContainer: {
+    width: 'fit-content',
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 8,
+    fontSize: 12,
+    padding: 1,
+    hover: {
+      bg: '#dfd2d2',
+    },
+  },
+  inputsContainer: {
+
+  },
+};
 
 /**
  * Presents a file upload button which can always accept more files, and a clear button.
@@ -12,7 +31,7 @@ import '../../styles.css';
  * @returns JSX for a file input and the resulting fileList
  */
 const FileControl = (props) => {
-    const { upId, clearId, fileType, clearText, addFile, clearFiles } = props; 
+    const { upId, clearId, fileType, clearText, addFile, clearFiles, isPluginMenu } = props; 
     const [fileMetaData, setFileMetaData] = useState([]);
     const [filesList, setFilesList] = useState([]);
 
@@ -56,12 +75,40 @@ const FileControl = (props) => {
         }
     }, [fileMetaData])
 
-    return <VStack space={3}>
-        <label className="fileUpload">
-            File Upload
-            <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange} />
-        </label>
-        <input className="clearButton" type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
+    return <VStack marginTop={1} space={1}>
+        <HStack style={style.inputsContainer}>
+          <Pressable
+            width={style.buttonContainer.width}
+            borderRadius={style.buttonContainer.borderRadius}
+            borderWidth={style.buttonContainer.borderWidth}
+            borderColor={style.buttonContainer.borderColor}
+            fontSize={style.buttonContainer.fontSize}
+            padding={style.buttonContainer.padding}
+            backgroundColor={style.buttonContainer.backgroundColor}
+            marginRight={2}
+            _hover={style.buttonContainer.hover}
+          >
+            <label>
+                {isPluginMenu ? strings.pluginUpload : strings.fileUpload}
+                <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange} />
+            </label>
+          </Pressable>
+          <Pressable
+            width={style.buttonContainer.width}
+            borderRadius={style.buttonContainer.borderRadius}
+            borderWidth={style.buttonContainer.borderWidth}
+            borderColor={style.buttonContainer.borderColor}
+            fontSize={style.buttonContainer.fontSize}
+            padding={style.buttonContainer.padding}
+            backgroundColor={style.buttonContainer.backgroundColor}
+            _hover={style.buttonContainer.hover}
+          >
+            <label>
+              {isPluginMenu ? strings.clearPlugins : strings.clearFiles}
+              <input className="input" type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
+            </label>
+          </Pressable>
+        </HStack>
         <div>
             <p>
                 <ul>
