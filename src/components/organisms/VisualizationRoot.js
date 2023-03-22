@@ -6,6 +6,7 @@ import { PerspectiveCamera, OrbitControls, CameraControls } from '@react-three/d
 import Plane from '../3JS/Plane';
 import CityObjectDisplay from '../3JS/cityObject';
 import Box from '../3JS/Box';
+import '../../styles.css';
 
 import { colourFloatToHex } from '../3JS/3dUtils';
 
@@ -87,7 +88,7 @@ const VisualizationRoot = (props) => {
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
-        <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
+        <input className="centerButton" value="Center Camera" type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} frameloop="demand">
           <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault/>
           <OrbitControls />

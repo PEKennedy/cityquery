@@ -1,0 +1,50 @@
+label {
+    width: fit-content;
+    padding: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.fileUpload {
+    width: fit-content;
+    padding: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.clearButton {
+    width: fit-content;
+    padding: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 12px;
+}
+
+input[type="file"] {
+    width: fit-content;
+    padding: 10px;
+    border-width: 1px;
+    border-color: #000000;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: none;
+}
+
+.centerButton {
+    width: fit-content;
+    padding: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    background-color: #ffffff;
+    border-radius: 8px;
+}

@@ -1,5 +1,6 @@
-import { useEffect } from "react";
-import { useState } from "react"
+import { VStack } from "native-base";
+import { useEffect, useState } from "react";
+import '../../styles.css';
 
 /**
  * Presents a file upload button which can always accept more files, and a clear button.
@@ -51,10 +52,12 @@ const FileControl = (props) => {
         }
     }, [fileMetaData])
 
-    return <div>
-        <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
-        <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction}
-            value={clearText}/>
+    return <VStack space={3}>
+        <label className="fileUpload">
+            File Upload
+            <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange} />
+        </label>
+        <input className="clearButton" type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
         <div>
             <p>
                 <ul>
@@ -62,7 +65,7 @@ const FileControl = (props) => {
                 </ul>
             </p>
         </div>
-    </div>
+    </VStack>
 }
 
 export default FileControl;
