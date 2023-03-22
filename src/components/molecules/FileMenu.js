@@ -22,7 +22,7 @@ const style = {
 };
 
 const FileMenu = () => {
-  const { addFile, clearCityFiles, selectFile, deSelectFile } = useContext(FileMenuContext);
+  const { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <HStack>
@@ -36,7 +36,8 @@ const FileMenu = () => {
       </Text>
       <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
         clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles}
-        selectFile={selectFile} deSelectFile={deSelectFile} isFileMenu />
+        selectFile={selectFile} deSelectFile={deSelectFile} checkboxValues={checkboxValues}
+        setCheckboxValues={setCheckboxValues} isFileMenu />
     </VStack>
   );
 };

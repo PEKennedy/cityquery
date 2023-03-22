@@ -26,6 +26,7 @@ const style = {
 const CityQueryPage = () => {
   const [cityFiles, setCityFiles] = useState({});
   const [selected, setSelected] = useState({});
+  const [checkboxValues, setCheckboxValues] = useState([]);
 
   const addFile = (file, fileName) => {
     //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
@@ -72,6 +73,14 @@ const CityQueryPage = () => {
       })
       if(newSelected[fileName]["objects"].length == 0){ //if no more selected objects
         delete newSelected[fileName]
+        console.log("deSelect file");
+        let newCheckboxValues = [];
+        checkboxValues.forEach((checkbox) => {
+          if (checkbox !== fileName) {
+            newCheckboxValues.push(checkbox);
+          }
+        })
+        setCheckboxValues(newCheckboxValues);
       }
       setSelected(newSelected)
     }
@@ -87,7 +96,7 @@ const CityQueryPage = () => {
     let objectKeys = [];
     console.log(file);
     console.log(file.CityObjects);
-    for (const [key, value] of Object.entries(file.CityObjects)) {
+    for (const [key, ] of Object.entries(file.CityObjects)) {
       objectKeys.push(key);
     }
     select(fileName, objectKeys, true);
@@ -97,7 +106,7 @@ const CityQueryPage = () => {
     const file = cityFiles[fileName];
     console.log("deSelect file");
     let objectKeys = [];
-    for (const [key, value] of Object.entries(file.CityObjects)) {
+    for (const [key, ] of Object.entries(file.CityObjects)) {
       objectKeys.push(key);
     }
     deSelect(fileName, objectKeys);
@@ -128,7 +137,7 @@ const CityQueryPage = () => {
     cityFiles[fileName] = output;
   }
 
-  const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile };
+  const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}

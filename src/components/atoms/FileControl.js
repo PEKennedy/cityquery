@@ -20,10 +20,9 @@ const style = {
  */
 
 const FileControl = (props) => {
-    const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isFileMenu } = props;
+    const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isFileMenu, checkboxValues, setCheckboxValues } = props;
     const [fileMetaData, setFileMetaData] = useState([]);
     const [filesList, setFilesList] = useState([]);
-    const [checkboxValues, setCheckboxValues] = useState([]);
 
     const clearFilesFunction = (e) => {
         clearFiles();
@@ -58,21 +57,23 @@ const FileControl = (props) => {
             ))
         }
     }, [fileMetaData])
+    console.log(checkboxValues);
 
     return <div>
         <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
         <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
         <VStack style={style.menuContainer}>
           {isFileMenu ? (
-            <Checkbox.Group defaultValue={checkboxValues} colorScheme="red" onChange={values => {
+            <Checkbox.Group defaultValue={checkboxValues} value={checkboxValues} colorScheme="red" onChange={values => {
+              console.log(values);
               setCheckboxValues(values || []);
             }}>
               {filesList.map(item => (
                 <HStack style={style.checkboxItem}>
-                  <Checkbox value={item} marginRight={2} onChange={() => {
+                  <Checkbox value={item.key} marginRight={2} onChange={() => {
                     let found = false;
                     checkboxValues.forEach((value) => {
-                      if (value === item) {
+                      if (value === item.key) {
                         found = true;
                         deSelectFile(item.key);
                       }
