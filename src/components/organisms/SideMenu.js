@@ -29,19 +29,6 @@ const style = {
   },
 };
 
-const getActiveLayout = (layout) => {
-  switch(layout) {
-    case 'file':
-      return <FileMenu />;
-    case 'search':
-      return <SearchMenu />;
-    case 'plugin':
-      return <PluginMenu />;
-    default:
-      return null;
-  }
-};
-
 const SideMenu = () => {
   const [layout, setLayout] = useState('');
 
@@ -54,7 +41,8 @@ const SideMenu = () => {
       <ScrollView height={"100%"}>
         <VStack style={style.listContainer} space={1}>
           <FileMenu />
-          {getActiveLayout(layout)}
+          <SearchMenu />
+          <PluginMenu />
         </VStack>
       </ScrollView>
     </HStack>
