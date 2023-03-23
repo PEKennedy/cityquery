@@ -24,8 +24,3 @@ const Box = (props) => {
 };
 
 export default Box;
-
-//<CustomMesh position={[1.7,0,0]} />
-//In another file I have a cityJSON test I'm working on
-
-//<CustomMesh position={[5,0,0]}/>
