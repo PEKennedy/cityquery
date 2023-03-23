@@ -18,19 +18,15 @@ const style = {
     fontWeight: 500,
     color: '#000',
     alignItems: 'center',
-
   },
 };
 
 const FileMenu = () => {
-  const { addFile, clearCityFiles } = useContext(FileMenuContext);
+  const { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues } = useContext(FileMenuContext);
   return (
-
-
     <VStack style={style.menuContainer}>
       <HStack>
         {/*Leaving this below as an example for using native base checkboxes.*/}
-
         <Text style={style.titleText}>
           {strings.fileMenu}
         </Text>
@@ -39,16 +35,10 @@ const FileMenu = () => {
         {strings.uploadList}
       </Text>
       <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
-        clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles} />
+        clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles}
+        selectFile={selectFile} deSelectFile={deSelectFile} checkboxValues={checkboxValues}
+        setCheckboxValues={setCheckboxValues} isFileMenu />
     </VStack>
-
-
-
-
-
-
-
-
   );
 };
 
