@@ -13,9 +13,13 @@ function scale(vert, transform){
 //complete transform given a cityjson "transform" property.
 //also switches z and y axis since cityjson z is up, but in threejs, y is up.
 function transform(vert,transform){
-    let scale = transform.scale;
-    let translate = transform.translate;
-    return [vert[0]*scale[0]+translate[0],vert[2]*scale[2]+translate[2],vert[1]*scale[1]+translate[1]];
+    if(transform){
+        let scale = transform.scale;
+        let translate = transform.translate;
+        return [vert[0]*scale[0]+translate[0],vert[2]*scale[2]+translate[2],vert[1]*scale[1]+translate[1]];
+    }
+    //if there is no transform, just fix the orientation (from z is up to y is up)
+    return [vert[0],vert[2],vert[1]];
 }
 
 //to be displayed correctly, triangle indices must specify vertices in ccw order
@@ -89,7 +93,9 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
 
     //scale the vertex positions, and flatten the arrays
     //But this sends the building off into the distance due to the large translation
+    
     let flat_verts = boundary_verts.map(vert=>transform(vert,obj_transform))
+
     let normal = newell_normal(flat_verts);
 
     flat_verts = flat_verts.flat(3);
@@ -116,10 +122,10 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
             v.applyAxisAngle(rot_axis.normalize(),axisAngle);
             rotated_flat.push(v.x,v.y,v.z);
         }
-        tris = Earcut.triangulate(rotated_flat,holes,3);
+        tris = triangulate(rotated_flat,holes,false)//Earcut.triangulate(rotated_flat,holes,3);
     }
     else{
-        tris = Earcut.triangulate(flat_verts,holes,3);
+        tris = triangulate(flat_verts,holes,reverseNormal_cond)//Earcut.triangulate(flat_verts,holes,3);
         //if the triangles are facing away from the camera, flip the triangles to face outwards correctly
         if(reverseNormal_cond){
             tris = reverseWindingOrder(tris);
@@ -137,6 +143,32 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     geo.setAttribute('color',new BufferAttribute(colours,3))
 
     return geo
+}
+
+function triangulate(verts,holes,reverse){
+    //console.log(verts.length)
+    if(verts.length == 12){
+        //console.log("y")
+        //let x = Earcut.triangulate(verts,holes,3);
+        //console.log(x)
+        //103321
+        if(reverse) return [2,3,0,0,1,2]
+        return [1,0,3,3,2,1]
+        
+    }
+    if(verts.length == 9){
+        //console.log("x")
+        //let x = Earcut.triangulate(verts,holes,3);
+        //console.log(x)
+        if(reverse) return [1,2,0]
+        
+        return [1,0,2]
+    }
+    //console.log("xx")
+    //let x = Earcut.triangulate(verts,holes,3);
+    //return x
+    //console.log(x)
+    return Earcut.triangulate(verts,holes,3);
 }
 
 //generates a list of bufferGeometries for surfaces (note "combined" is not an accurate description anymore)

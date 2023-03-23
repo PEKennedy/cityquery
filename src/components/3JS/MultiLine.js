@@ -28,9 +28,11 @@ function MultiLineObj(props){
             segment.forEach((index)=>{
                 verts_filtered.push(all_verts[index]);
             })
-            const verts = new Float32Array(
-                verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
-            );
+
+            let transformed_verts = verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
+
+
+            const verts = new Float32Array(transformed_verts);
     
             let colours = []
             colours.push(...colourVerts(semantics,index,segment.length));
