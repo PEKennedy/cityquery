@@ -93,6 +93,9 @@ Parses and creates the header object of a LAS file to be used in the parsing of 
 @params File - The LAS file
 */
 function createHeader(File){
+    //const buffer = new ArrayBuffer(375)
+    //buffer.
+    const test = new Uint8Array(File.slice(95,97));
     //const fr = new FileReader();
     //fr.readAsBinaryString(File.slice(0,4));
     this.LASF = File.slice(0,4);//fr.result);
