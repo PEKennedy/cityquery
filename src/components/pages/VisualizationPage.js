@@ -36,16 +36,23 @@ const VisualizationPage = () => {
   }
   const addFileLAS = (file, fileName) => {
     //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
-    let newLASFile = cloneDeep(cityFiles);
-    newLASFile[fileName] = JSON.parse(file);
-    setCityFiles(newLASFile);
+    let newLASFile = cloneDeep(lasFiles);
+    newLASFile[fileName] = file;
+    //console.log(fileName)
+    //console.log(file)
+    //console.log(typeof(file))
+    setLasFiles(newLASFile);//{fileName:file});//newLASFile);
+    //console.log(lasFiles)
   }
   
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
-    setLasFiles({});
     clearSelect();
+  }
+
+  const clearLASFiles = () => {
+    setLasFiles({});
   }
   
   const select_test = () => {
@@ -115,7 +122,7 @@ const VisualizationPage = () => {
     cityFiles[fileName] = output;
   }
 
-  const fileMenuContext = { addFile, addFileLAS, clearCityFiles };
+  const fileMenuContext = { addFile, addFileLAS, clearLASFiles, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
@@ -129,7 +136,7 @@ const VisualizationPage = () => {
               <ToolBar />
               <HStack style={style.innerContainer}>
                 <SideMenu />
-                <VisualizationRoot cityFiles={cityFiles} selected={selected} />
+                <VisualizationRoot cityFiles={cityFiles} lasFiles={lasFiles} selected={selected} />
               </HStack>
             </VStack>
           </SelectionContext.Provider>

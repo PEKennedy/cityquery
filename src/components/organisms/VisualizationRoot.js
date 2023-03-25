@@ -13,6 +13,7 @@ import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial, BackSide } from 'three';
 import { colours } from '../../constants/colours';
+import LASObj from '../3JS/LAS';
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
@@ -30,6 +31,7 @@ const displayObjList = (cityJSONFile,fileName) => {
 
 const VisualizationRoot = (props) => {
   const cityFiles = props.cityFiles;
+  const lasFiles = props.lasFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
@@ -81,6 +83,13 @@ const VisualizationRoot = (props) => {
     objList.push(...displayObjList(file,fileName))
   });
 
+  let LASList = [];
+  Object.keys(lasFiles).forEach((fileName,index) =>{
+    let file = lasFiles[fileName]
+    //console.log(file)
+    LASList.push(<LASObj file={file} fileName={fileName} key={fileName}/>)
+  }); 
+
   //console.log(objList)
   //PerspectiveCamera
   //TODO: make file inputs "multiple", change to iterate over them
@@ -97,6 +106,7 @@ const VisualizationRoot = (props) => {
           <Box position={[0, 0, 0]} ref={x}/>
           <Plane position={[0,0,0]} />
           {objList}
+          {LASList}
         </Canvas>
       </VStack>
     </MaterialsContext.Provider>

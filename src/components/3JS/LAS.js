@@ -4,9 +4,10 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { BufferAttribute, BufferGeometry } from 'three';
 //TODO
 //parses a pointcloud LAS file into something usable
-async function parseLASFile(File){
+//async 
+function parseLASFile(File){
 
-
+    console.log("parse")
     /*
     Create header block
     */
@@ -85,50 +86,53 @@ Parses and creates the header object of a LAS file to be used in the parsing of 
 @params File - The LAS file
 */
 function createHeader(File){
-    const fr = new FileReader();
-    fr.readAsBinaryString(File.slice(0,4));
-    this.LASF = binToText(fr.result);
-    fr.readAsBinaryString(File.slice(4,6));
-    this.FSID = parseInt(fr.result);
+    //const fr = new FileReader();
+    //fr.readAsBinaryString(File.slice(0,4));
+    this.LASF = File.slice(0,4);//fr.result);
+    //fr.readAsBinaryString(File.slice(4,6));
+    this.FSID = parseInt(File.slice(4,6));
+    //Global encording through Number of var length records are skipped
+    //fr.readAsBinaryString(File.slice(58,89))
+    this.generatingSW = File.slice(58,89)//binToText(fr.result)
+    console.log(this.generatingSW)
+    //fr.readAsBinaryString(File.slice(104,105));
+    this.PDRF = parseInt(File.slice(104,105));
+    //fr.readAsBinaryString(File.slice(105,107));
+    this.PDRL = parseInt(File.slice(105,107));
+    //fr.readAsBinaryString(File.slice(107,111));
+    this.LNPR = parseInt(File.slice(107,111));
+    //fr.readAsBinaryString(File.slice(111,131));
+    this.LNPRBR = parseInt(File.slice(111,131));
 
-    fr.readAsBinaryString(File.slice(104,105));
-    this.PDRF = parseInt(fr.result);
-    fr.readAsBinaryString(File.slice(105,107));
-    this.PDRL = parseInt(fr.result);
-    fr.readAsBinaryString(File.slice(107,111));
-    this.LNPR = parseInt(fr.result);
-    fr.readAsBinaryString(File.slice(111,131));
-    this.LNPRBR = parseInt(fr.result);
+    //fr.readAsBinaryString(File.slice(131,139));
+    this.XScale = parseFloat(File.slice(131,139));
+    //fr.readAsBinaryString(File.slice(139,147));
+    this.YScale = parseFloat(File.slice(139,147));
+    //fr.readAsBinaryString(File.slice(147,155));
+    this.ZScale = parseFloat(File.slice(147,155));
+    //fr.readAsBinaryString(File.slice(155,163));
+    this.XOffset = parseFloat(File.slice(155,163));
+    //fr.readAsBinaryString(File.slice(163,171));
+    this.YOffset = parseFloat(File.slice(163,171));
+    //fr.readAsBinaryString(File.slice(171,179));
+    this.ZOffset = parseFloat(File.slice(171,179));
 
-    fr.readAsBinaryString(File.slice(131,139));
-    this.XScale = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(139,147));
-    this.YScale = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(147,155));
-    this.ZScale = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(155,163));
-    this.XOffset = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(163,171));
-    this.YOffset = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(171,179));
-    this.ZOffset = parseFloat(fr.result);
-
-    fr.readAsBinaryString(File.slice(179,187));
-    this.MaxX = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(187,195));
-    this.MinX = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(195,203));
-    this.MaxY = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(203,211));
-    this.MinY = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(211,219));
-    this.MaxZ = parseFloat(fr.result);
-    fr.readAsBinaryString(File.slice(219,227));
-    this.MinZ = parseFloat(fr.result);
-
-    fr.readAsBinaryString(File.slice(247,255));
-    this.NumOfPR = parseFloat(fr.result);
-    
+    //fr.readAsBinaryString(File.slice(179,187));
+    this.MaxX = parseFloat(File.slice(179,187));
+    //fr.readAsBinaryString(File.slice(187,195));
+    this.MinX = parseFloat(File.slice(187,195));
+    //fr.readAsBinaryString(File.slice(195,203));
+    this.MaxY = parseFloat(File.slice(195,203));
+    //fr.readAsBinaryString(File.slice(203,211));
+    this.MinY = parseFloat(File.slice(203,211));
+    //fr.readAsBinaryString(File.slice(211,219));
+    this.MaxZ = parseFloat(File.slice(211,219));
+    //fr.readAsBinaryString(File.slice(219,227));
+    this.MinZ = parseFloat(File.slice(219,227));
+    //start of waveform data packet record through num of extended var len records skipped
+    //fr.readAsBinaryString(File.slice(247,255));
+    this.NumOfPR = parseFloat(File.slice(247,255));
+    //num of pts by return (120 bytes) skipped
 }
 /*
 Parses and returns the x y and z value of a specific point record in the LAS file for PR format 1
@@ -230,38 +234,14 @@ function createPRWaveForm(File,header){
 
     /* need to implement still, may not be necessary to make, would only be an extra validation check
     */
-function binToText(binary){
+/*function binToText(binary){
+    console.log(binary)
     var text = 'lasf';
 
     return text;
-}
+}*/
+//Unnecessary, file is already a string
 
-
-
-
-/**
- * Loads a list of the  from the specified external LAS file 
- * @param file the file that is to be loaded and parsed (expectes raw file)
- * @returns vertex position list
- */
-async function loadExternalLASPointCloud(file){
-
-
-    if(!file.type.includes(".las")){
-        console.error("Attempted to load an external pointcloud file which was not .las");
-        return;
-    }
-
-     try{
-
-        var parsedLAS = parseLASFile(file);
-        console.log(parsedLAS);
-        return parsedLAS;
-
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 //The visual representation of a LAS pointcloud
 function LASObj(props){
@@ -271,21 +251,14 @@ function LASObj(props){
     const ref = useRef();
     // Subscribe this component to the render-loop, rotate the mesh every frame
     //useFrame((state, delta) => (ref.current.rotation.x += 0.01))
-
-    if(props.cityFile == undefined){ //not loaded yet
-    //if(props.object == undefined){
-        //console.log("pt cloud not defined yet")
-        return (<points ref={ref} visible={false}></points>);
-    }
-
-    console.log(props.cityFile);
-
-    var pointsArr = loadExternalLASPointCloud(props.cityFile);
+    console.log(props.file)
+    let pointsArr = parseLASFile(props.file)
     var verts = [];
     var numOfPointsL = pointsArr.length;
     var i = 0;
-    while(numOfPointsL < i){
-        verts = verts + pointsArr[i][0] + pointsArr[i][1] + pointsArr[i][2];
+    while(i < numOfPointsL){
+        verts.push(pointsArr[i][0],pointsArr[i][1],pointsArr[i][2]);
+        i++;
     }
     console.log(verts)
     if(verts == undefined){
