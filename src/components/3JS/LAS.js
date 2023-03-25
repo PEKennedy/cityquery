@@ -8,75 +8,82 @@ import { BufferAttribute, BufferGeometry } from 'three';
 function parseLASFile(File){
 
     console.log("parse")
-    /*
-    Create header block
-    */
-   var header = new createHeader(File);
-
+    var header = new createHeader(File);
     var i = 0;
     var PRArray = [];
-
+    var PRStart = header.startOfPD;
     if (header.PDRF === 1){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 2){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF2(File, header);
+            PRArray[i] = createPRF2(File, header,  PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 3){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF3(File, header);
+            PRArray[i] = createPRF3(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 4){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 5){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 6){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF6(File, header);
+            PRArray[i] = createPRF6(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 7){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 8){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 9){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header, PRStart);
+            PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     else if(header.PDRF === 10){
         while(i < header.NumOfPR){
-            PRArray[i] = createPRF1(File, header);
+            PRArray[i] = createPRF1(File, header,  PRStart);
+                        PRStart = PRStart + header.PDRL;
             i++;
         }
     }
     return PRArray;
+
 
     
 }
@@ -96,6 +103,8 @@ function createHeader(File){
     this.generatingSW = File.slice(58,89)//binToText(fr.result)
     console.log(this.generatingSW)
     //fr.readAsBinaryString(File.slice(104,105));
+    this.startOfPD = parseInt(File.slice(96,100));
+
     this.PDRF = parseInt(File.slice(104,105));
     //fr.readAsBinaryString(File.slice(105,107));
     this.PDRL = parseInt(File.slice(105,107));
@@ -138,7 +147,7 @@ function createHeader(File){
 Parses and returns the x y and z value of a specific point record in the LAS file for PR format 1
 @Params File - the LAS file being parsed, header - the parsed header of the LAS file
 */
-function createPRF1(File,header){
+function createPRF1(File,header, PRStart){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
@@ -153,7 +162,7 @@ function createPRF1(File,header){
 Parses and returns the x y and z value of a specific point record in the LAS file in PR format 2
 @Params File - the LAS file being parsed, header - the parsed header of the LAS file
 */
-function createPRF2(File,header){
+function createPRF2(File,header, PRStart){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
@@ -175,7 +184,7 @@ function createPRF2(File,header){
 Parses and returns the x y and z value of a specific point record in the LAS file for PR format 3
 @Params File - the LAS file being parsed, header - the parsed header of the LAS file
 */
-function createPRF3(File,header){
+function createPRF3(File,header, PRStart){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
@@ -198,7 +207,7 @@ function createPRF3(File,header){
 Parses and returns the x y and z value of a specific point record in the LAS file for PR format 6
 @Params File - the LAS file being parsed, header - the parsed header of the LAS file
 */
-function createPRF6(File,header){
+function createPRF6(File,header, PRStart){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(0,4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
@@ -231,16 +240,6 @@ function createPRWaveForm(File,header){
     var verticesTemp = v0;
     return verticesTemp;
 }
-
-    /* need to implement still, may not be necessary to make, would only be an extra validation check
-    */
-/*function binToText(binary){
-    console.log(binary)
-    var text = 'lasf';
-
-    return text;
-}*/
-//Unnecessary, file is already a string
 
 
 //The visual representation of a LAS pointcloud
