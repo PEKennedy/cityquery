@@ -204,7 +204,7 @@ function createPRF3(File,header,prStart){
 Parses and returns the x y and z value of a specific point record in the LAS file for PR format 6
 @Params File - the LAS file being parsed, header - the parsed header of the LAS file, prStart - starting byte of PR
 */
-function createPRF6(File,header){
+function createPRF6(File,header,prStart){
     const fr = new FileReader();
     fr.readAsBinaryString(File.slice(prStart+0,prStart+4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
@@ -220,13 +220,13 @@ function createPRF6(File,header){
 /*
 waveform functionality not implemented
 */
-function createPRWaveForm(File,header){
+function createPRWaveForm(File,header, prStart){
     const fr = new FileReader();
-    fr.readAsBinaryString(File.slice(0,4));
+    fr.readAsBinaryString(File.slice(prStart+0,prStart+4));
     var x = (parseInt(fr.result))*header.XScale + header.XOffset;
-    fr.readAsBinaryString(File.slice(4,8));
+    fr.readAsBinaryString(File.slice(prStart+4,prStart+8));
     var y = (parseInt(fr.result))*header.YScale + header.YOffset;
-    fr.readAsBinaryString(File.slice(8,12));
+    fr.readAsBinaryString(File.slice(prStart+8,prStart+12));
     var z = (parseInt(fr.result))*header.ZScale + header.ZOffset;
     var v0 = [x,y,z];
 
@@ -292,7 +292,7 @@ function LASObj(props){
     var numOfPointsL = pointsArr.length;
     var i = 0;
     while(numOfPointsL < i){
-        verts = verts + pointsArr[i][0] + pointsArr[i][1] + pointsArr[i][2];
+        verts.push(pointsArr[i][0], pointsArr[i][1], pointsArr[i][2]);
     }
     console.log(verts)
     if(verts == undefined){
