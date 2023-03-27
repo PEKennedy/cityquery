@@ -53,13 +53,25 @@ const config = {
       },*/
       {
         test: /\.(js|jsx|json)$/,
-        exclude: /node_modules/,
+        
         use: {
           loader: 'babel-loader',
           options: {
-            presets:['@babel/preset-env']
+            presets:['@babel/preset-env', "@babel/preset-react"]
           }
-        }
+        },
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|jsx|json)$/,
+        
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets:['react-native']
+          }
+        },
+        include: /react-native/
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
