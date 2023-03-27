@@ -39,14 +39,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build_old": "Set NODE_ENV=production&&webpack --config webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
-    "serve": "webpack serve",
-    "x": "webpack --mode=production --node-env=production",
+    "serve": "npx serve -s dist",
+    "production":"yarn build&&yarn serve",
     "build": "react-scripts build"
   },
   "eslintConfig": {
