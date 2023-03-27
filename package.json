@@ -46,7 +46,8 @@
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
-    "build":"webpack --mode=production --node-env=production"
+    "x": "webpack --mode=production --node-env=production",
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
