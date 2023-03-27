@@ -1,7 +1,7 @@
 export const strings = {
-	cityQuery: "City Query",
+	cityQuery: "CityQuery",
 	startApplication: 'Start Application',
-  home: "Home",
+  userManual: "User Manual",
   visualization: "Visualization Page",
   modificationPlugins: "Modification Plugins:",
   searchPlugins: "Search Plugins:",
@@ -11,19 +11,19 @@ export const strings = {
   searchMenu: "Search Menu",
   routes: {
     landingPage: '/',
-    homePage: '/home',
-    visualizationPage: '/visualization'
+    userManualPage: '/userManual',
+    cityQueryPage: '/cityQuery'
   },
 };
 
-export const toolBarData = [
+export const navBarData = [
   {
-    label: 'Home',
-    link: strings.routes.homePage,
+    label: 'User Manual',
+    link: strings.routes.userManualPage,
   },
   {
-    label: 'Visualization',
-    link: strings.routes.visualizationPage,
+    label: 'CityQuery',
+    link: strings.routes.cityQueryPage,
   },
   {
     label: 'Exit',

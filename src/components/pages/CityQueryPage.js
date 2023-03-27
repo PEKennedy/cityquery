@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { HStack, VStack } from 'native-base';
-import ToolBar from '../organisms/ToolBar';
+import NavBar from '../organisms/NavBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
 import { FileMenuContext, PluginMenuContext, SearchMenuContext, SelectionContext } from '../../constants/context';
@@ -19,11 +19,11 @@ const style = {
     height: '85%',
     backgroundColor: '#FFF',
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 10,
   },
 };
 
-const VisualizationPage = () => {
+const CityQueryPage = () => {
   const [cityFiles, setCityFiles] = useState({});
   const [lasFiles, setLasFiles] = useState({});
   const [selected, setSelected] = useState({});
@@ -119,7 +119,10 @@ const VisualizationPage = () => {
   }
 
   const ModifyCityJSON = (fileName, output) => {
-    cityFiles[fileName] = output;
+    let newCityFiles = cloneDeep(cityFiles)
+    newCityFiles[fileName] = output;
+    console.log(newCityFiles)
+    setCityFiles(newCityFiles)
   }
 
   const fileMenuContext = { addFile, addFileLAS, clearLASFiles, clearCityFiles };
@@ -133,7 +136,7 @@ const VisualizationPage = () => {
         <SearchMenuContext.Provider value={searchMenuContext}>
           <SelectionContext.Provider value={selectionContext}>
             <VStack style={style.pageContainer}>
-              <ToolBar />
+              <NavBar selected="CityQuery" />
               <HStack style={style.innerContainer}>
                 <SideMenu />
                 <VisualizationRoot cityFiles={cityFiles} lasFiles={lasFiles} selected={selected} />
@@ -146,4 +149,4 @@ const VisualizationPage = () => {
   );
 };
 
-export default VisualizationPage;
+export default CityQueryPage;

@@ -68,15 +68,15 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         }
         if(type == "MultiSurface" || type == "CompositeSurface"){
             return <SurfaceObject fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>;
         }
         if(type == "Solid"){
             return <SolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>;
         }
         if(type == "MultiSolid" || type == "CompositeSolid"){
             return <MultiSolidObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex} 
-                objName={objectName} selected={is_selected} makeSelected={makeSelected} />;
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>;
         }
 
         /*if(object.attributes != undefined && object.attributes["pointcloud-file"] != undefined){
@@ -92,13 +92,15 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
         //but with "attributes"."pointcloud-file".pointFile
     }
 
+    if(object.geometry == undefined) return <></>;
     //for each geometry, choose a display type
+    if(object.geometry == undefined) return <></>;
     object.geometry.forEach((geometry,index)=>{
         geometries.push(chooseDisplayType(cityFile, objectName, index, is_selected, fileName, clickSelection))
     })
 
     //if there are multiple geometries, create a group
-    if(geometries.length > 1){
+    if(geometries.length > 1){ 
         return <group>
             {geometries}
         </group>

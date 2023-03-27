@@ -3,8 +3,8 @@ import { Pressable, AddIcon } from 'native-base';
 
 const style = {
   link: {
-    height: '3vw',
-    width: '3vw',
+    height: '3.5vw',
+    width: '3.5vw',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
@@ -20,7 +20,7 @@ const SideMenuPluginTab = (props) => {
 
   return (
     <Pressable style={style.link} onPress={() => setLayout('plugin')} >
-      <AddIcon style={style.icon} />
+      <AddIcon style={style.icon} size="1.25vw" />
     </Pressable>
   );
 };

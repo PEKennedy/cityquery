@@ -4,17 +4,17 @@ import FileMenu from '../molecules/FileMenu';
 import SearchMenu from '../molecules/SearchMenu';
 import SideMenuPluginTab from '../atoms/SideMenuPluginTab';
 import PluginMenu from '../molecules/PluginMenu';
-import SideMenuFilterTab from '../atoms/SideMenuFilterTab';
+import SideMenuSearchTab from '../atoms/SideMenuSearchTab';
 
 const style = {
   menuContainer: {
     height: '100%',
-    width: '25%',
+    width: '30%',
     borderRightColor: '#d2303b',
     borderRightWidth: 1,
   },
   tabsContainer: {
-    width: '20%',
+    width: '17%',
     height: '100%',
     borderRightColor: '#d2303b',
     borderRightWidth: 1,
@@ -23,7 +23,7 @@ const style = {
     justifyContent: 'center',
   },
   listContainer: {
-    width: '80%',
+    width: '83%',
     height: '100%',
     padding: 10,
   },
@@ -48,10 +48,10 @@ const SideMenu = () => {
   return (
     <HStack style={style.menuContainer}>
       <VStack style={style.tabsContainer} space={3}>
-        <SideMenuFilterTab setLayout={setLayout} />
+        <SideMenuSearchTab setLayout={setLayout} />
         <SideMenuPluginTab setLayout={setLayout} />
       </VStack>
-      <ScrollView height={500}>
+      <ScrollView height={"100%"}>
         <VStack style={style.listContainer} space={1}>
           <FileMenu />
           {getActiveLayout(layout)}

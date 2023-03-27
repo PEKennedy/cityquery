@@ -36,8 +36,8 @@ function reverseWindingOrder(tris){
     Earcut will try to triangulate all vertices passed to it, so we must filter the vertices
         down from all vertices in the file to what we want.
     Earcut also assumes all vertices used to create holes in the polygon are at the end of the 
-        vertex list, and grouped together by hole; Such that holes can be specified by a 'start of
-        the hole' list of vertex indices.
+        vertex list, and grouped together by hole; Such that holes can be specified by an index
+        indicating the 'first vertex of the hole'.
 
     Earcut([vertices of the polygon],[hole indices],# dimensions)
     The vertex list must be 'flat' too (no nested lists like cityjson uses)
@@ -90,25 +90,19 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     //scale the vertex positions, and flatten the arrays
     //But this sends the building off into the distance due to the large translation
     let flat_verts = boundary_verts.map(vert=>transform(vert,obj_transform))
-
-    let v1 = new Vector3(flat_verts[0][0],flat_verts[0][1],flat_verts[0][2])
-    let v2 = new Vector3(flat_verts[1][0],flat_verts[1][1],flat_verts[1][2])
-    let v3 = new Vector3(flat_verts[2][0],flat_verts[2][1],flat_verts[2][2])
+    let normal = newell_normal(flat_verts);
 
     flat_verts = flat_verts.flat(3);
 
-    //Since by the cityjson spec, a surface is all along the same plane,
-    // 2 verts crossed together should produce the normal
-    let normal = v2.sub(v1).cross(v3.sub(v1)) // boundary_verts[0]
+
+    //The tricky part, to use the Earcut algorithm (for now, this could probably be improved),
+    //we must rotate the surface such that not everything lies along the z-axis (which breaks Earcut)
     let rot_axis = new Vector3(0,0,1).cross(normal);
-
-
     let tris = [];
-
     let rotated_flat = [];
-
     let axisAngle = Math.PI/2;
     let reverseNormal_cond = normal.z > 0;
+    //flip the normals if this is an inverted mesh
     if(invert){
         axisAngle = -Math.PI/2;
         reverseNormal_cond = normal.z < 0;
@@ -145,6 +139,7 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     return geo
 }
 
+//generates a list of bufferGeometries for surfaces (note "combined" is not an accurate description anymore)
 function generateCombinedSurfaces(surfaces,semantics,obj_transform,all_verts,invert=false){
     let surface_meshes = surfaces.map((surface, index) =>{
         return generateSurface(surface,semantics,index,obj_transform,all_verts,invert);
@@ -152,6 +147,7 @@ function generateCombinedSurfaces(surfaces,semantics,obj_transform,all_verts,inv
     return surface_meshes;
 }
 
+//takes a list of geometries from generateCombinedSurfaces and merges them
 function mergeSurface(surfaces){
     let combined_geo = BufferGeometryUtils.mergeBufferGeometries(surfaces)
     combined_geo.computeVertexNormals()
@@ -184,16 +180,31 @@ function colourVerts(semantics,surface_index,numVerts){
     return vertex_colours
 }
 
-function getSelectedTint(selected){
-    let tint = 0xFFFFFF //default to white
-    if(selected){
-        tint = colours.selected //if selected, change the tint
-    }
-    return tint
-}
 
 function colourFloatToHex(colour){
     return Math.round(colour[0]*0xFF0000 + colour[1]*0x00FF00 + colour[2]*0x0000FF);
 }
 
-export {transform, reverseWindingOrder, colourVerts, getSelectedTint, generateCombinedSurfaces, mergeSurface, colourFloatToHex}
+/*
+A normal in computer graphics is a vector that indicates what way a triangle faces,
+ which determines whether a face is visible, and how light bounces off of it.
+This function is the Newell method for finding a normal for a polygon.
+ This is what Ninja uses, and seems to be what some CityJSON example files expect, as it somehow?
+  avoids the normals being flipped.
+See https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal for the algorithm pseudocode
+*/
+function newell_normal(vertices){
+    let n = new Vector3(0,0,0);
+    for(let i=0;i<vertices.length;i++){
+        let next_index = i+1
+        if(next_index == vertices.length) next_index = 0;
+        let current = vertices[i]
+        let next = vertices[next_index]
+        n.x += (current[1]-next[1])*(current[2]+next[2])
+        n.y += (current[2]-next[2])*(current[0]+next[0])
+        n.z += (current[0]-next[0])*(current[1]+next[1])
+    }
+    return n.normalize();
+}
+
+export {transform, reverseWindingOrder, colourVerts, generateCombinedSurfaces, mergeSurface, colourFloatToHex}

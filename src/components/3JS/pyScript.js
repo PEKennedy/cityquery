@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import FileControl from "../atoms/FileControl"
+import python_packages from "../../constants/python_packages";
 
 const style = {
     listStyle: {
@@ -12,6 +13,29 @@ const style = {
     },
 };
 
+let loaded_packages = []
+
+//only try to load packages if they aren't loaded yet. not working, look at js promises
+//to see if its something to do with resolve
+function arePackagesLoadded(pkgs){
+    return new Promise((resolve,reject)=>{
+        let not_found = []
+        pkgs.forEach((pkg,index)=>{
+            let found = loaded_packages.find((pk,index)=>{
+                return pk===pkg;
+            })
+            if(found) return;
+            else not_found.push(pkg);
+        })
+        console.log(loaded_packages)
+        console.log(not_found)
+        window.pyodide.loadPackage(not_found).then(()=>{
+            loaded_packages.push(...not_found)
+            resolve()
+        })
+    })
+}
+
 /**
  * Checks for if the python library pyodide is loaded
  * Then asynchronously calls pyodide to run the supplied python code string
@@ -21,9 +45,13 @@ const style = {
 function runPy(code){
     return new Promise((resolve,reject)=>{
       window.languagePluginLoader.then(() => {
-        window.pyodide.loadPackage([]).then(() => {
+        window.pyodide.loadPackage(python_packages).then(() => {
           resolve(window.pyodide.runPython(code))
         })
+        
+        /*arePackagesLoadded(["numpy"]).then(()=>{
+            resolve(window.pyodide.runPython(code))
+        })*/
       })
     })
 }
@@ -87,7 +115,7 @@ function SearchPluginList(props){
 
     return(
         <div>
-            <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
+            <FileControl upId={"searchUpload"} clearId={"searchClear"} fileType={".py"}
                 clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
             <ul style={style.listStyle}>
                 {objList}
@@ -239,7 +267,8 @@ function PluginParameters(props){
         setInputs(x)
     }
 
-    
+    //TODO: we could end up with different plugins using the same parameter names, these ids should be
+    //made unique
     keys.forEach((paramName,index)=>{
         let type = params[paramName]
 
