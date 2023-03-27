@@ -45,18 +45,34 @@ const config = {
   ],
   module: {
     rules: [
-      {
+      /*{
         test: /\.(js|jsx)$/i,
-        loader: "babel-loader",
+        loader: "babel-loader"
+        //,
+        //exclude: /node_modules/,
+      },*/
+      {
+        test: /\.(js|jsx|json)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets:['@babel/preset-env']
+          }
+        }
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: "asset",
       },
-
+      {
+        test: /\.css$/, 
+        use: [ 'style-loader','css-loader' ]
+      }
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
+
   },
 };
 
