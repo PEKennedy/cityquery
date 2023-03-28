@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack , HStack, Text} from 'native-base';
+import { VStack , HStack, Text, ScrollView} from 'native-base';
 import NavBar from '../organisms/NavBar';
 
 const style = {
@@ -25,6 +25,7 @@ const UserManualPage = () => {
     <VStack style={style.pageContainer}>
       <NavBar selected="User Manual" />
       <VStack style={style.innerContainer}>
+      <ScrollView>
         <Text style={{fontWeight: "bold", fontSize: 24, textAlign: "center"}}>
         Welcome to the CityQuery User Manual
         </Text>
@@ -53,6 +54,7 @@ Alongside each listed file is a checkbox that will automatically select and dese
 There are two types of plugins that can be inserted into CityQuery, Search plugins, and Modification plugins, both of which are written in python. Search plugins read the loaded files and select any objects that fit what you are searching for, while modification plugins are plugins that take objects that have been selected and modifies them by the values specified in the plugin. 
 The menus for these plugins are equivalent to the file selection menus and, when loaded, have unique input boxes for the plugin parameters. Once your plugin has its parameters filled in, press the run plugin button to execute the plugin with your chosen parameters. The results of the plugin will be automatically displayed on the visualization screen.
         </Text>
+        </ScrollView>
       </VStack>
     </VStack>
     
