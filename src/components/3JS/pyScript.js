@@ -178,10 +178,10 @@ function ModificationPlugin(props){
     }
   
     return( 
-        <>
+        <div>
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Modification"}/>
             <br/>
-        </>
+        </div>
     );
   
 }
@@ -210,10 +210,10 @@ function SearchPlugin(props){
     }
   
     return( 
-        <>
+        <div>
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Search"}/>
             <br/>
-        </>
+        </div>
     );
 }
 

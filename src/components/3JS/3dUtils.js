@@ -13,7 +13,7 @@ function scale(vert, transform){
 //complete transform given a cityjson "transform" property.
 //also switches z and y axis since cityjson z is up, but in threejs, y is up.
 function transform(vert,transform){
-    if(transform){
+    if(transform != undefined){
         let scale = transform.scale;
         let translate = transform.translate;
         return [vert[0]*scale[0]+translate[0],vert[2]*scale[2]+translate[2],vert[1]*scale[1]+translate[1]];
@@ -90,7 +90,6 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     else{
         holes = null;
     }
-
     //scale the vertex positions, and flatten the arrays
     //But this sends the building off into the distance due to the large translation
     
@@ -145,29 +144,19 @@ function generateSurface(surface, semantics, index, obj_transform, all_verts, in
     return geo
 }
 
-function triangulate(verts,holes,reverse){
-    //console.log(verts.length)
+/*
+Triangulate the faces, if there are only 4 vertices or 3 vertices, then we can simply return
+the appropriate arrays directly. Otherwise, use the earcut algorithm.
+*/
+function triangulate(verts,holes,reverse=false){
     if(verts.length == 12){
-        //console.log("y")
-        //let x = Earcut.triangulate(verts,holes,3);
-        //console.log(x)
-        //103321
         if(reverse) return [2,3,0,0,1,2]
         return [1,0,3,3,2,1]
-        
     }
     if(verts.length == 9){
-        //console.log("x")
-        //let x = Earcut.triangulate(verts,holes,3);
-        //console.log(x)
         if(reverse) return [1,2,0]
-        
         return [1,0,2]
     }
-    //console.log("xx")
-    //let x = Earcut.triangulate(verts,holes,3);
-    //return x
-    //console.log(x)
     return Earcut.triangulate(verts,holes,3);
 }
 
@@ -187,7 +176,8 @@ function mergeSurface(surfaces){
     return combined_geo;
 }
 
-
+//Checks a cityjson semantics object against the colours constants file to get a geometry its correct
+//surface type colour
 function getColour(semantics,surface_index){
     if(semantics == undefined){
         let surface_colour = colours.default;
@@ -203,6 +193,8 @@ function getColour(semantics,surface_index){
     return surface_colour;
 }
 
+//Given a cityjson semantics object, and the index for the surface/geometry, builds 
+//an array of colour values for the three.js buffer geometry vertex colours.
 function colourVerts(semantics,surface_index,numVerts){
     let surface_colour = getColour(semantics,surface_index);
     let vertex_colours = [];
@@ -212,7 +204,7 @@ function colourVerts(semantics,surface_index,numVerts){
     return vertex_colours
 }
 
-
+//Sometimes we need to convert a colour specified as a decimal value and convert it to hex
 function colourFloatToHex(colour){
     return Math.round(colour[0]*0xFF0000 + colour[1]*0x00FF00 + colour[2]*0x0000FF);
 }

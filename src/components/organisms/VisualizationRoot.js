@@ -99,6 +99,11 @@ const VisualizationRoot = (props) => {
     objList.push(...displayObjList(file,fileName))
   });
 
+  //frameloop="demand" could go on canvas, but it doesn't work with CameraControls in particular
+  //TODO: make file inputs "multiple", change to iterate over them
+  //far={...} controls the far clipping plane, in the future proper use of LODs
+  //console.log(objList)
+  //PerspectiveCamera
   let LASList = [];
   Object.keys(lasFiles).forEach((fileName,index) =>{
     let file = lasFiles[fileName]
@@ -106,10 +111,6 @@ const VisualizationRoot = (props) => {
     LASList.push(<LASObj file={file} fileName={fileName} key={fileName}/>)
   }); 
 
-  //console.log(objList)
-  //PerspectiveCamera
-  //TODO: make file inputs "multiple", change to iterate over them
-  //<Box position={[0, 0, 0]} ref={x}/>
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="75%" height="100%" padding={2} borderBottomRightRadius={8}>

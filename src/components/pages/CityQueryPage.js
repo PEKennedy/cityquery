@@ -82,9 +82,9 @@ const CityQueryPage = () => {
     let newSelected = cloneDeep(selected);
     if(newSelected[fileName]){
       objNames.forEach((name,index)=>{
-        console.log(name)
+        //console.log(name)
         let indexForRemoving = newSelected[fileName]["objects"].findIndex((val)=>{return val==name})
-        console.log(indexForRemoving)
+        //console.log(indexForRemoving)
         newSelected[fileName]["objects"].splice(indexForRemoving,1);
       })
       if(newSelected[fileName]["objects"].length == 0){ //if no more selected objects
