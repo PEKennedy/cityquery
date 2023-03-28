@@ -21,8 +21,11 @@ const style = {
   },
 };
 
+//TODO: LAS functionality is unfinished/not working, so we have disabled its upload interface
+//for now
 const FileMenu = () => {
-  const { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues } = useContext(FileMenuContext);
+  const { addFile, addFileLAS, clearCityFiles, clearLASFiles, selectFile,
+     deSelectFile, checkboxValues, setCheckboxValues } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <HStack>
@@ -38,6 +41,8 @@ const FileMenu = () => {
         clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles}
         selectFile={selectFile} deSelectFile={deSelectFile} checkboxValues={checkboxValues}
         setCheckboxValues={setCheckboxValues} isFileMenu />
+        {/*<FileControl upId={"lasUpload"} clearId={"lasClear"} fileType={".las"}
+        clearText={"Clear LAS Files"} addFile={addFileLAS} clearFiles={clearLASFiles} />*/}
     </VStack>
   );
 };

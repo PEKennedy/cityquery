@@ -1,5 +1,14 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
+/*
+This file can often make or break whether the app builds or not
+In particular, native-base (used for UI styling) needs react native, which
+in turn means you need the second babel loader with the react-native preset.
+Other module rules are quite essential and could break the app if changed.
+
+Similarly the NodePolyfillPlugin is required for some packages to work.
+*/
+
 const path = require("path");
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
@@ -46,17 +55,37 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/i,
-        loader: "babel-loader",
+        test: /\.(js|jsx|json)$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets:['@babel/preset-env', "@babel/preset-react"]
+          }
+        },
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|jsx|json)$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets:['react-native']
+          }
+        },
+        include: /react-native/
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: "asset",
       },
-
+      {
+        test: /\.css$/, 
+        use: [ 'style-loader','css-loader' ]
+      }
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
+
   },
 };
 
