@@ -29,7 +29,6 @@ const UserManualPage = () => {
         Welcome to the CityQuery User Manuel.
         </Text>
         <Text style={{fontSize: 16}}>
-To get started, press the start application button in the center of the screen. This will bring you to the visualization page, which is the main page that you will be on while using CityQuery.
 At the top of the screen, you will see three options, User Manual, CityQuery, and exit.
 These buttons allow you to navigate the pages of CityQuery, going to the user manual, visualization page (which is your current location), and back to the start screen.
         </Text>
@@ -40,7 +39,7 @@ These buttons allow you to navigate the pages of CityQuery, going to the user ma
         <Text style={{fontSize: 16}}>
 To visualize your data, make sure you are on the CityQuery page, and then under File Menu, press Upload Files. This will prompt you to select your CityJSON files that you want displayed. Once selected, these files will be automatically displayed on the visualization screen on the right side of the page.  
 If the display is empty, press the Center Camera button in the top left corner to be automatically brought to where your file is located. Please note that if multiple files are loaded, the Center Camera button will bring the camera to the central location of all files.
-The visualization screen’s camera can also be controlled via the mouse. Pressing the left mouse button and dragging the mouse rotates the cameras view in the direction the mouse is dragged while pressing the right mouse button and dragging the mouse pans the camera in the direction the mouse is dragged. The camera can also be zoomed in and out via the mouses scroll wheel.
+{"\n"}{"\n"}The visualization screen’s camera can also be controlled via the mouse. Pressing the left mouse button and dragging the mouse rotates the cameras view in the direction the mouse is dragged while pressing the right mouse button and dragging the mouse pans the camera in the direction the mouse is dragged. The camera can also be zoomed in and out via the mouses scroll wheel.
 {"\n"} {"\n"}
 To clear the visualization screen, press the clear files button and the objects will be removed from the visualization screen and the file list on the left.
 Alongside each listed file is a checkbox that will automatically select all objects that are a part of that file, highlighting the objects and selecting them for use in plugins. Individual objects in the file can also be selected by clicking on them with the left mouse button and groups of objects can be selected by holding shift and clicking objects.
