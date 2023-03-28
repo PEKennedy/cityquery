@@ -99,7 +99,7 @@ const VisualizationRoot = (props) => {
       <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
         <Canvas onPointerMissed={clearSelect} >
-          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef}/>
+          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={3000}/>
           <CameraControls ref={controlsRef} />
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
