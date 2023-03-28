@@ -30,7 +30,7 @@ const UserManualPage = () => {
         </Text>
         <Text style={{fontSize: 16}}>
 At the top of the screen, you will see three options, User Manual, CityQuery, and exit.
-These buttons allow you to navigate the pages of CityQuery, going to the user manual, visualization page (which is your current location), and back to the start screen.
+These buttons allow you to navigate the pages of CityQuery, going to the user manual (which is your current location), visualization page, and back to the start screen.
         </Text>
         <Text style={{fontWeight: "bold", fontSize: 20, textAlign: "center"}}>
         {"\n"}
