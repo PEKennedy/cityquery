@@ -1,0 +1,15 @@
+.input {
+    display: none;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.pluginInput {
+    border-radius: 8px;
+    padding: 5px;
+    border-color: #000000;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

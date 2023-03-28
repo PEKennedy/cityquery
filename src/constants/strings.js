@@ -9,6 +9,11 @@ export const strings = {
   fileMenu: "File Menu",
   pluginMenu: "Plugin Menu",
   searchMenu: "Search Menu",
+  pluginUpload: "Upload Plugins",
+  fileUpload: "Upload Files",
+  clearPlugins: "Clear Plugins",
+  clearFiles: "Clear Files",
+  runPlugin: "Run Plugin",
   routes: {
     landingPage: '/',
     userManualPage: '/userManual',
