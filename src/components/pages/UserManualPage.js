@@ -26,7 +26,7 @@ const UserManualPage = () => {
       <NavBar selected="User Manual" />
       <VStack style={style.innerContainer}>
         <Text style={{fontWeight: "bold", fontSize: 24, textAlign: "center"}}>
-        Welcome to the CityQuery User Manual.
+        Welcome to the CityQuery User Manual
         </Text>
         <Text style={{fontSize: 16}}>
 At the top of the screen, you will see three options, User Manual, CityQuery, and exit.
@@ -42,7 +42,7 @@ If the display is empty, press the Center Camera button in the top left corner t
 {"\n"}{"\n"}The visualization screen’s camera can also be controlled via the mouse. Pressing the left mouse button and dragging the mouse rotates the cameras view in the direction the mouse is dragged while pressing the right mouse button and dragging the mouse pans the camera in the direction the mouse is dragged. The camera can also be zoomed in and out via the mouses scroll wheel.
 {"\n"} {"\n"}
 To clear the visualization screen, press the clear files button and the objects will be removed from the visualization screen and the file list on the left.
-Alongside each listed file is a checkbox that will automatically select all objects that are a part of that file, highlighting the objects and selecting them for use in plugins. Individual objects in the file can also be selected by clicking on them with the left mouse button and groups of objects can be selected by holding shift and clicking objects.
+Alongside each listed file is a checkbox that will automatically select and deselect all objects that are a part of that file, highlighting the objects and selecting them for use in plugins. Individual objects in the file can also be selected by clicking on them with the left mouse button and groups of objects can be selected by holding shift and clicking objects.
         </Text>
 
         <Text style={{fontWeight: "bold", fontSize: 20, textAlign: "center"}}>
