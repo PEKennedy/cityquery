@@ -17,18 +17,19 @@ const style = {
     fontSize: 14,
     fontWeight: 500,
     color: '#000',
+    alignItems: 'center',
   },
 };
 
 //TODO: LAS functionality is unfinished/not working, so we have disabled its upload interface
 //for now
 const FileMenu = () => {
-  const { addFile, addFileLAS, clearCityFiles, clearLASFiles } = useContext(FileMenuContext);
+  const { addFile, addFileLAS, clearCityFiles, clearLASFiles, selectFile,
+     deSelectFile, checkboxValues, setCheckboxValues } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <HStack>
         {/*Leaving this below as an example for using native base checkboxes.*/}
-        {/*<Checkbox />*/}
         <Text style={style.titleText}>
           {strings.fileMenu}
         </Text>
@@ -37,8 +38,10 @@ const FileMenu = () => {
         {strings.uploadList}
       </Text>
       <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
-        clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles} />
-      {/*<FileControl upId={"lasUpload"} clearId={"lasClear"} fileType={".las"}
+        clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles}
+        selectFile={selectFile} deSelectFile={deSelectFile} checkboxValues={checkboxValues}
+        setCheckboxValues={setCheckboxValues} isFileMenu />
+        {/*<FileControl upId={"lasUpload"} clearId={"lasClear"} fileType={".las"}
         clearText={"Clear LAS Files"} addFile={addFileLAS} clearFiles={clearLASFiles} />*/}
     </VStack>
   );

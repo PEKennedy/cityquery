@@ -43,9 +43,9 @@ const VisualizationRoot = (props) => {
   const lineMatSelected = new LineBasicMaterial({color:selected_colour, vertexColors:false, linewidth:1})
   const lineMatUnSelected = new LineBasicMaterial({color:0xFFFFFF, vertexColors:true, linewidth:1})
 
-  const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected, 
+  const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected,
     lineMatSelected, lineMatUnSelected}
-  
+
   //let boundingBox = new Box3()
   const centerCamera = () =>{ //TODO: Doesn't work?
     /*console.log("Center Camera")
@@ -55,7 +55,7 @@ const VisualizationRoot = (props) => {
     let average_position = [0,0,0]
     //let count = 0
     console.log(controlsRef.current?.enabled)
-    
+
     let points = [];
 
     keys.forEach((fileName)=>{
@@ -69,7 +69,7 @@ const VisualizationRoot = (props) => {
     //controlsRef.current.enabled = false
     controlsRef.current?.fitToBox(center.current,true)//meshRef.current,true
     //controlsRef.current.enabled = true
-    
+
     //console.log(controlsRef.current?.enabled)
     //cameraRef.current?.update()
     //controlsRef.current?.update();
