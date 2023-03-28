@@ -10,13 +10,14 @@ const style = {
         listStylePosition: 'inside',
         listStyleType: 'none',
         padding: 0,
-        fontSize: 14,
+        margin: 0,
+        fontSize: 12,
     },
     buttonStyle: {
         marginTop: 10,
     },
     paramList: {
-        width: '50%',
+        width: '75%',
         minWidth: 175,
     },
     runButton: {
@@ -318,7 +319,7 @@ function PluginParameters(props){
 
 
     return(
-        <form paddingLeft={0} width="100%'">
+        <form paddingLeft={0} width="100%">
             <ul style={style.listStyle}>
                 {tabList}
             </ul>

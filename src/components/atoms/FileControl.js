@@ -20,6 +20,16 @@ const style = {
     paddingTop: 10,
     paddingLeft: 10,
   },
+  listStyle: {
+    listStylePosition: 'inside',
+    padding: 0,
+    margin: 0,
+    fontSize: 14,
+},
+p: {
+  marginTop: 10,
+  marginBottom: 10,
+},
   inputsContainer: {
 
   },
@@ -138,8 +148,8 @@ const FileControl = (props) => {
             </Checkbox.Group>
           ) : (
             <div>
-                <p>
-                    <ul>
+                <p style={style.p}>
+                    <ul style={style.listStyle}>
                         {filesList}
                     </ul>
                 </p>

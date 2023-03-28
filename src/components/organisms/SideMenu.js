@@ -9,7 +9,7 @@ import SideMenuSearchTab from '../atoms/SideMenuSearchTab';
 const style = {
   menuContainer: {
     height: '100%',
-    width: '30%',
+    width: '25%',
     borderRightColor: '#d2303b',
     borderRightWidth: 1,
   },
@@ -23,21 +23,21 @@ const style = {
     justifyContent: 'center',
   },
   listContainer: {
-    width: '83%',
+    width: '100%',
     height: '100%',
     padding: 10,
   },
 };
 
 const SideMenu = () => {
-  const [layout, setLayout] = useState('');
+  //const [layout, setLayout] = useState('');
 
   return (
     <HStack style={style.menuContainer}>
-      <VStack style={style.tabsContainer} space={3}>
+      {/*<VStack style={style.tabsContainer} space={3}>
         <SideMenuSearchTab setLayout={setLayout} />
         <SideMenuPluginTab setLayout={setLayout} />
-      </VStack>
+      </VStack>*/}
       <ScrollView height={"100%"}>
         <VStack style={style.listContainer} space={1}>
           <FileMenu />

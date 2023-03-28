@@ -102,7 +102,7 @@ const VisualizationRoot = (props) => {
   //far={...} controls the far clipping plane, in the future proper use of LODs
   return (
     <MaterialsContext.Provider value={materialsContext}>
-      <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
+      <VStack width="75%" height="100%" padding={2} borderBottomRightRadius={8}>
         <Pressable
           width={style.centerButton.width}
           borderRadius={style.centerButton.borderRadius}
