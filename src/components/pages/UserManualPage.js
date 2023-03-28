@@ -25,8 +25,8 @@ const UserManualPage = () => {
     <VStack style={style.pageContainer}>
       <NavBar selected="User Manual" />
       <VStack style={style.innerContainer}>
-        <Text style={{fontWeight: "bold", fontSize: 20, textAlign: "center"}}>
-        Welcome to the CityQuery User Manuel.
+        <Text style={{fontWeight: "bold", fontSize: 24, textAlign: "center"}}>
+        Welcome to the CityQuery User Manual.
         </Text>
         <Text style={{fontSize: 16}}>
 At the top of the screen, you will see three options, User Manual, CityQuery, and exit.
@@ -37,7 +37,7 @@ These buttons allow you to navigate the pages of CityQuery, going to the user ma
         Visualization
         </Text>
         <Text style={{fontSize: 16}}>
-To visualize your data, make sure you are on the CityQuery page, and then under File Menu, press Upload Files. This will prompt you to select your CityJSON files that you want displayed. Once selected, these files will be automatically displayed on the visualization screen on the right side of the page.  
+To visualize your data, make sure you are on the CityQuery page, and then under File Menu, press the Upload Files button. This will prompt you to select your CityJSON files that you want displayed. Once selected, these files will be automatically displayed on the visualization screen on the right side of the page.  
 If the display is empty, press the Center Camera button in the top left corner to be automatically brought to where your file is located. Please note that if multiple files are loaded, the Center Camera button will bring the camera to the central location of all files.
 {"\n"}{"\n"}The visualization screen’s camera can also be controlled via the mouse. Pressing the left mouse button and dragging the mouse rotates the cameras view in the direction the mouse is dragged while pressing the right mouse button and dragging the mouse pans the camera in the direction the mouse is dragged. The camera can also be zoomed in and out via the mouses scroll wheel.
 {"\n"} {"\n"}
