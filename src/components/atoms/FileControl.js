@@ -82,7 +82,7 @@ const FileControl = (props) => {
                 setFilesList([]);
                 return;
             }
-            setFilesList(fileMetaData.map((file,index) => 
+            setFilesList(fileMetaData.map((file,index) =>
                 <li key={file.name}>{file.name}</li>
             ))
         }
