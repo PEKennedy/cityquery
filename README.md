@@ -2,7 +2,14 @@
 
 This is the project repository for cityquery, an app which lets you visualize and query geographic building data such as cityJSON files. Contact Peter if you have trouble, and the sooner the better, so we can sort through setup issues, or anything I miss here.
 
-## To setup and run:
+## To setup and run (Production build)
+1. In a terminal at cityquery, run `yarn production`
+Alternatively:
+1. In a terminal at cityquery, run `yarn install`
+2. Run `yarn build`
+3. Run `yarn serve`
+
+## To setup and run (development build):
 1. In a terminal at cityquery, run `yarn install`
 2. Once the installation is finished, run `yarn start`
 3. The frontend is now available at localhost:3000

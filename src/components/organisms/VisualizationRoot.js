@@ -10,7 +10,11 @@ import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
 import { colours } from '../../constants/colours';
+<<<<<<< HEAD
 import { useEffect } from 'react';
+=======
+import LASObj from '../3JS/LAS';
+>>>>>>> master
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
@@ -26,6 +30,7 @@ const displayObjList = (cityJSONFile,fileName) => {
 
 const VisualizationRoot = (props) => {
   const cityFiles = props.cityFiles;
+  const lasFiles = props.lasFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
@@ -85,17 +90,25 @@ const VisualizationRoot = (props) => {
   //frameloop="demand" could go on canvas, but it doesn't work with CameraControls in particular
   //TODO: make file inputs "multiple", change to iterate over them
   //far={...} controls the far clipping plane, in the future proper use of LODs
+  let LASList = [];
+  Object.keys(lasFiles).forEach((fileName,index) =>{
+    let file = lasFiles[fileName]
+    //console.log(file)
+    LASList.push(<LASObj file={file} fileName={fileName} key={fileName}/>)
+  }); 
+
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="70%" height="100%" padding={2} borderBottomRightRadius={8}>
         <input type="button" id={"test"} name={"test"} onClick={centerCamera} />
-        <Canvas onPointerMissed={clearSelect}>
-          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={10000}/>
+        <Canvas onPointerMissed={clearSelect} >
+          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={3000}/>
           <CameraControls ref={controlsRef} />
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
           <group ref={center}>
             {objList}
+            {LASList}
           </group>
         </Canvas>
       </VStack>

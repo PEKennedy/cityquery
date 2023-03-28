@@ -6,6 +6,7 @@ import MultiSolidObj from './MultiSolid';
 
 import { useContext } from 'react';
 import { SelectionContext } from '../../constants/context';
+import LASObj from './LAS';
 
 
 const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
@@ -37,7 +38,11 @@ const CityObjectDisplay = ({cityFile,objectName,fileName}) => {
       is_selected = fileObjs.find((name)=>{return name == objectName}) != undefined;
     }
 
+    const displayLASFile = (cityFile, geoIndex, is_selected, fileName, makeSelected) => {
+        return <LASObj fileName={fileName} cityFile={cityFile} geoIndex={geoIndex}
+                objName={objectName} selected={is_selected} makeSelected={makeSelected}/>
 
+    }
     //given a file (need a file as it contains the both object and the vertices) and an object name,
     //gives the proper jsx for display
     const chooseDisplayType = (cityFile, objectName, geoIndex, is_selected, fileName, makeSelected) => {

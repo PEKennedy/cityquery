@@ -25,6 +25,7 @@ const style = {
 
 const CityQueryPage = () => {
   const [cityFiles, setCityFiles] = useState({});
+  const [lasFiles, setLasFiles] = useState({});
   const [selected, setSelected] = useState({});
 
   const addFile = (file, fileName) => {
@@ -33,11 +34,25 @@ const CityQueryPage = () => {
     newCityFiles[fileName] = JSON.parse(file);
     setCityFiles(newCityFiles);
   }
+  const addFileLAS = (file, fileName) => {
+    //this.setState({ cityFiles:[...this.state.cityFiles,JSON.parse(file)] })
+    let newLASFile = cloneDeep(lasFiles);
+    newLASFile[fileName] = file;
+    //console.log(fileName)
+    //console.log(file)
+    //console.log(typeof(file))
+    setLasFiles(newLASFile);//{fileName:file});//newLASFile);
+    //console.log(lasFiles)
+  }
   
   //clear all files from the canvas
   const clearCityFiles = () => {
     setCityFiles({});
     clearSelect();
+  }
+
+  const clearLASFiles = () => {
+    setLasFiles({});
   }
   
   const select_test = () => {
@@ -110,7 +125,7 @@ const CityQueryPage = () => {
     setCityFiles(newCityFiles)
   }
 
-  const fileMenuContext = { addFile, clearCityFiles };
+  const fileMenuContext = { addFile, addFileLAS, clearLASFiles, clearCityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
@@ -124,7 +139,7 @@ const CityQueryPage = () => {
               <NavBar selected="CityQuery" />
               <HStack style={style.innerContainer}>
                 <SideMenu />
-                <VisualizationRoot cityFiles={cityFiles} selected={selected} />
+                <VisualizationRoot cityFiles={cityFiles} lasFiles={lasFiles} selected={selected} />
               </HStack>
             </VStack>
           </SelectionContext.Provider>

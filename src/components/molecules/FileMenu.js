@@ -20,8 +20,10 @@ const style = {
   },
 };
 
+//TODO: LAS functionality is unfinished/not working, so we have disabled its upload interface
+//for now
 const FileMenu = () => {
-  const { addFile, clearCityFiles } = useContext(FileMenuContext);
+  const { addFile, addFileLAS, clearCityFiles, clearLASFiles } = useContext(FileMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <HStack>
@@ -36,6 +38,8 @@ const FileMenu = () => {
       </Text>
       <FileControl upId={"cityUpload"} clearId={"cityClear"} fileType={".json"}
         clearText={"Clear CityJSON Files"} addFile={addFile} clearFiles={clearCityFiles} />
+      {/*<FileControl upId={"lasUpload"} clearId={"lasClear"} fileType={".las"}
+        clearText={"Clear LAS Files"} addFile={addFileLAS} clearFiles={clearLASFiles} />*/}
     </VStack>
   );
 };
