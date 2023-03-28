@@ -26,9 +26,10 @@ function loadCityJsonPointCloud(verts,obj_transform,geometry){
         colours.push(...colourVerts(semantics,i,1));
     })
     colours = new Float32Array(colours);
-    const vertices = new Float32Array(
-        verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
-    );
+
+    let transformed_verts = verts_filtered.map((v)=>transform(v,obj_transform)).flat(2)
+    const vertices = new Float32Array(transformed_verts);
+
     return <bufferGeometry>
         <bufferAttribute attach="attributes-position" count={vertices.length / 3} array={vertices} itemSize={3} />
         <bufferAttribute attach="attributes-color" count={colours.length / 3} array={colours} itemSize={3} /> 

@@ -1,15 +1,36 @@
 import { useEffect, useState } from "react"
 import FileControl from "../atoms/FileControl"
 import python_packages from "../../constants/python_packages";
+import { Pressable, VStack } from "native-base";
+import '../../styles.css';
+import { strings } from "../../constants/strings";
 
 const style = {
     listStyle: {
         listStylePosition: 'inside',
         listStyleType: 'none',
         padding: 0,
+        margin: 0,
+        fontSize: 12,
     },
     buttonStyle: {
         marginTop: 10,
+    },
+    paramList: {
+        width: '75%',
+        minWidth: 175,
+    },
+    runButton: {
+        width: 'fit-content',
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#000000',
+        borderRadius: 8,
+        fontSize: 12,
+        padding: 1,
+        hover: {
+            bg: '#dfd2d2',
+        },
     },
 };
 
@@ -82,7 +103,7 @@ function ModificationPluginList(props){
     return(
         <div>
             <FileControl upId={"pyUpload"} clearId={"pyClear"} fileType={".py"}
-                clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
+                clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles} isPluginMenu />
             <ul style={style.listStyle}>
                 {objList}
             </ul>
@@ -116,7 +137,7 @@ function SearchPluginList(props){
     return(
         <div>
             <FileControl upId={"searchUpload"} clearId={"searchClear"} fileType={".py"}
-                clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles}/>
+                clearText={"Clear Plugins"} addFile={addFile} clearFiles={clearFiles} isPluginMenu />
             <ul style={style.listStyle}>
                 {objList}
             </ul>
@@ -273,36 +294,51 @@ function PluginParameters(props){
         let type = params[paramName]
 
         if(type == "float"){
-            tabList.push(<div key={paramName}>
+            tabList.push(<VStack style={style.paramList} key={paramName}>
                 <label htmlFor={paramName}>{paramName} </label>
-                <input type={"number"} name={paramName} id={paramName} onChange={handleChange}/>
+                <input className="pluginInput" type={"number"} name={paramName} id={paramName} onChange={handleChange}/>
                 <br/>
-            </div>)  
+            </VStack>)  
         }
         else if(type == "int"){
-            tabList.push(<div key={paramName}>
+            tabList.push(<VStack style={style.paramList} key={paramName}>
                 <label htmlFor={paramName}>{paramName} </label>
-                <input type={"number"} name={paramName} id={paramName} onChange={handleChange} step={"1"}/>
+                <input className="pluginInput" type={"number"} name={paramName} id={paramName} onChange={handleChange} step={"1"}/>
                 <br/>
-            </div>)
+            </VStack>)
         }
         else if(type == "string"){
-            tabList.push(<div key={paramName}>
+            tabList.push(<VStack style={style.paramList} key={paramName}>
                 <label htmlFor={paramName}>{paramName} </label>
-                <input type={"text"} name={paramName} id={paramName} onChange={handleChange}/>
+                <input className="pluginInput" type={"text"} name={paramName} id={paramName} onChange={handleChange}/>
                 <br/>
-            </div>)
+            </VStack>)
         }
     })
     tabList.push(<></>);
 
 
     return(
-        <form paddingLeft={0} width="100%'">
+        <form paddingLeft={0} width="100%">
             <ul style={style.listStyle}>
                 {tabList}
             </ul>
-            <input style={style.buttonStyle} onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value={props.runText || "Run"}/>
+            <Pressable
+                width={style.runButton.width}
+                borderRadius={style.runButton.borderRadius}
+                borderWidth={style.runButton.borderWidth}
+                borderColor={style.runButton.borderColor}
+                fontSize={style.runButton.fontSize}
+                padding={style.runButton.padding}
+                backgroundColor={style.runButton.backgroundColor}
+                marginTop={2}
+                _hover={style.runButton.hover}
+            >
+                <label>
+                    {strings.runPlugin}
+                    <input className="input" style={style.buttonStyle} onClick={onRun} key={"submit"} type="button" id="runPy" name="runPy" value={props.runText || "Run"}/>
+                </label>
+            </Pressable>
         </form>
     );
 }

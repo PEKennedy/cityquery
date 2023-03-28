@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import { HStack, VStack } from 'native-base';
 import NavBar from '../organisms/NavBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
@@ -155,7 +155,7 @@ const CityQueryPage = () => {
   const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues, addFileLAS, clearLASFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
-  const selectionContext = {selected, getSelected, select, deSelect, clearSelect, select_test}
+  const selectionContext = { selected, getSelected, select, deSelect, clearSelect };
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>

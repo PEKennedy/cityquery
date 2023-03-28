@@ -1,11 +1,37 @@
-import { useEffect } from "react";
-import { useState } from "react"
-import { Checkbox, HStack, VStack } from 'native-base';
+import { Checkbox, HStack, Pressable, VStack } from "native-base";
+import { useEffect, useState } from "react";
+import { strings } from "../../constants/strings";
+import '../../styles.css';
 
 const style = {
+  buttonContainer: {
+    width: 'fit-content',
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 8,
+    fontSize: 12,
+    padding: 1,
+    hover: {
+      bg: '#dfd2d2',
+    },
+  },
   checkboxItem: {
     paddingTop: 10,
     paddingLeft: 10,
+  },
+  listStyle: {
+    listStylePosition: 'inside',
+    padding: 0,
+    margin: 0,
+    fontSize: 14,
+},
+p: {
+  marginTop: 10,
+  marginBottom: 10,
+},
+  inputsContainer: {
+
   },
 };
 
@@ -20,7 +46,7 @@ const style = {
  */
 
 const FileControl = (props) => {
-    const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isFileMenu, checkboxValues, setCheckboxValues } = props;
+    const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isPluginMenu, isFileMenu, checkboxValues, setCheckboxValues } = props;
     const [fileMetaData, setFileMetaData] = useState([]);
     const [filesList, setFilesList] = useState([]);
 
@@ -62,9 +88,40 @@ const FileControl = (props) => {
         }
     }, [fileMetaData])
 
-    return <div>
-        <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange}></input>
-        <input type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
+    return <VStack marginTop={1} space={1}>
+        <HStack style={style.inputsContainer}>
+          <Pressable
+            width={style.buttonContainer.width}
+            borderRadius={style.buttonContainer.borderRadius}
+            borderWidth={style.buttonContainer.borderWidth}
+            borderColor={style.buttonContainer.borderColor}
+            fontSize={style.buttonContainer.fontSize}
+            padding={style.buttonContainer.padding}
+            backgroundColor={style.buttonContainer.backgroundColor}
+            marginRight={2}
+            _hover={style.buttonContainer.hover}
+          >
+            <label>
+                {isPluginMenu ? strings.pluginUpload : strings.fileUpload}
+                <input type="file" id={upId} name={upId} accept={fileType} onChange={handleFileChange} />
+            </label>
+          </Pressable>
+          <Pressable
+            width={style.buttonContainer.width}
+            borderRadius={style.buttonContainer.borderRadius}
+            borderWidth={style.buttonContainer.borderWidth}
+            borderColor={style.buttonContainer.borderColor}
+            fontSize={style.buttonContainer.fontSize}
+            padding={style.buttonContainer.padding}
+            backgroundColor={style.buttonContainer.backgroundColor}
+            _hover={style.buttonContainer.hover}
+          >
+            <label>
+              {isPluginMenu ? strings.clearPlugins : strings.clearFiles}
+              <input className="input" type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
+            </label>
+          </Pressable>
+        </HStack>
         <VStack style={style.menuContainer}>
           {isFileMenu ? (
             <Checkbox.Group defaultValue={checkboxValues} value={checkboxValues} colorScheme="red" onChange={values => {
@@ -91,15 +148,15 @@ const FileControl = (props) => {
             </Checkbox.Group>
           ) : (
             <div>
-                <p>
-                    <ul>
+                <p style={style.p}>
+                    <ul style={style.listStyle}>
                         {filesList}
                     </ul>
                 </p>
             </div>
           )}
         </VStack>
-      </div>
+      </VStack>
 }
 
 export default FileControl;

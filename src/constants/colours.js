@@ -21,7 +21,7 @@ const common = {
 export const colours = {
     semantics:{
         primary:{
-            "RoofSurface":          common['black'],
+            "RoofSurface":          common['red'],
             "GroundSurface":        common['grey'],
             "WallSurface":          common['brown'],
             "ClosureSurface":       common['grey'],
@@ -62,5 +62,5 @@ export const colours = {
         }
     },
     selected: [1,0.25,0.25],
-    default: [0.7,0.7,0.7]
+    default: [0.4,0.2,0.1]
 };
