@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
 import { colours } from '../../constants/colours';
+import LASObj from '../3JS/LAS';
 import '../../styles.css';
 
 const style = {
@@ -41,6 +42,7 @@ const displayObjList = (cityJSONFile,fileName) => {
 
 const VisualizationRoot = (props) => {
   const cityFiles = props.cityFiles;
+  const lasFiles = props.lasFiles;
   const { clearSelect, getSelected } = useContext(SelectionContext);
 
   const cameraRef = useRef();
@@ -59,7 +61,7 @@ const VisualizationRoot = (props) => {
 
   const materialsContext = {standMatSelected, standMatUnSelected, pointMatSelected, pointMatUnSelected,
     lineMatSelected, lineMatUnSelected}
-  
+
   //let boundingBox = new Box3()
   const centerCamera = () =>{ //TODO: Doesn't work?
     /*console.log("Center Camera")
@@ -69,7 +71,7 @@ const VisualizationRoot = (props) => {
     let average_position = [0,0,0]
     //let count = 0
     console.log(controlsRef.current?.enabled)
-    
+
     let points = [];
 
     keys.forEach((fileName)=>{
@@ -83,7 +85,7 @@ const VisualizationRoot = (props) => {
     //controlsRef.current.enabled = false
     controlsRef.current?.fitToBox(center.current,true)//meshRef.current,true
     //controlsRef.current.enabled = true
-    
+
     //console.log(controlsRef.current?.enabled)
     //cameraRef.current?.update()
     //controlsRef.current?.update();
@@ -97,9 +99,17 @@ const VisualizationRoot = (props) => {
     objList.push(...displayObjList(file,fileName))
   });
 
-  //frameloop="demand" could go on canvas, but it doesn't work with CameraControls in particular
+  let LASList = [];
+  Object.keys(lasFiles).forEach((fileName,index) =>{
+    let file = lasFiles[fileName]
+    //console.log(file)
+    LASList.push(<LASObj file={file} fileName={fileName} key={fileName}/>)
+  }); 
+
+  //console.log(objList)
+  //PerspectiveCamera
   //TODO: make file inputs "multiple", change to iterate over them
-  //far={...} controls the far clipping plane, in the future proper use of LODs
+  //<Box position={[0, 0, 0]} ref={x}/>
   return (
     <MaterialsContext.Provider value={materialsContext}>
       <VStack width="75%" height="100%" padding={2} borderBottomRightRadius={8}>
@@ -119,12 +129,13 @@ const VisualizationRoot = (props) => {
           </label>
         </Pressable>
         <Canvas onPointerMissed={clearSelect} >
-          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={10000}/>
+          <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={3000}/>
           <CameraControls ref={controlsRef} />
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
           <group ref={center}>
             {objList}
+            {LASList}
           </group>
         </Canvas>
       </VStack>
