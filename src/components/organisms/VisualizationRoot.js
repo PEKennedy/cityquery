@@ -10,11 +10,8 @@ import { useContext } from 'react';
 import { SelectionContext, MaterialsContext } from '../../constants/context';
 import { MeshStandardMaterial, PointsMaterial, LineBasicMaterial } from 'three';
 import { colours } from '../../constants/colours';
-<<<<<<< HEAD
-import { useEffect } from 'react';
-=======
+//import { useEffect } from 'react';
 import LASObj from '../3JS/LAS';
->>>>>>> master
 
 //takes a file's contents, returns a list of objects as proper jsx types
 const displayObjList = (cityJSONFile,fileName) => {
