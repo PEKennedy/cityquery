@@ -183,7 +183,8 @@ function getColour(semantics,surface_index){
         let surface_colour = colours.default;
         return surface_colour;
     }
-    let surface_type_ind = semantics.values[surface_index];
+    //flat because sometimes it is a 2 or 3 deep array (which seems pointless, but thats the standard)
+    let surface_type_ind = semantics.values.flat(3)[surface_index]; 
     let surface_type = semantics.surfaces[surface_type_ind].type;
     //console.log(surface_type)
     let surface_colour = [];
