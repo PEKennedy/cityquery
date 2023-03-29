@@ -26,9 +26,6 @@ const PluginMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
-        {strings.pluginMenu}
-      </Text>
-      <Text style={style.menuText}>
         {strings.modificationPlugins}
       </Text>
       <ModificationPluginList getSelected={getSelected} onResult={ModifyCityJSON} />

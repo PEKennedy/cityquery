@@ -29,7 +29,6 @@ const FileMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       <HStack>
-        {/*Leaving this below as an example for using native base checkboxes.*/}
         <Text style={style.titleText}>
           {strings.fileMenu}
         </Text>

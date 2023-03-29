@@ -25,9 +25,6 @@ const SearchMenu = () => {
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
-        {strings.searchMenu}
-      </Text>
-      <Text style={style.menuText}>
         {strings.searchPlugins}
       </Text>
       <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select}/>
