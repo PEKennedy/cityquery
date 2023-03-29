@@ -1,3 +1,4 @@
+
 //Taken From: https://pyodide.org/en/latest/usage/webworker.html
 
 // Setup your project to serve `pyWorkerRun.js`. You should also serve

@@ -174,7 +174,7 @@ function ModificationPlugin(props){
 
         fileNames.forEach((fileName)=>{
             let selection = selected[fileName];
-            runPy(props.script+
+            asyncRun(props.script+
                 "\nmodifyCityJSON("+
                 JSON.stringify(selection.file)+
                 "," +
@@ -182,8 +182,8 @@ function ModificationPlugin(props){
                 ","+
                 JSON.stringify(parameters)+
                 ")"
-            ).then((output)=>{
-                props.onResult(fileName,JSON.parse(output)) //file_name
+            ,{}).then((output)=>{
+                props.onResult(fileName,JSON.parse(output.results)) //file_name
             });
         })
     }
@@ -208,15 +208,17 @@ function SearchPlugin(props){
 
         fileNames.forEach((fileName)=>{
             let file = files[fileName];
-            runPy(props.script+
+            //runPy(props.script+
+            asyncRun(props.script+
                 "\nsearchCityJSON("+
                 JSON.stringify(file)+
                 "," +
                 JSON.stringify(parameters)+
                 ")"
-            ).then((output)=>{
-                props.onResult(fileName,JSON.parse(output)) //file_name
+            ,{}).then((output)=>{
+                props.onResult(fileName,JSON.parse(output.results)) //file_name
             });
+            //setParams(JSON.parse(params.results))
         })
     }
   
@@ -243,10 +245,14 @@ function PluginParameters(props){
     const [inputs, setInputs] = useState({})
 
     const getParams = (script) =>{
-        runPy(script+"\ngetParams()").then((params) =>{
+        /*runPy(script+"\ngetParams()").then((params) =>{
             console.log(params);
             setParams(JSON.parse(params))
-            //return JSON.parse(params);
+        })*/
+        asyncRun(script+"\ngetParams()",{}).then((params) =>{
+            //console.log(params)
+            //console.log(JSON.parse(params.results));
+            setParams(JSON.parse(params.results))
         })
     }
 
