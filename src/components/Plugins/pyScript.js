@@ -7,6 +7,8 @@ import { strings } from "../../constants/strings";
 
 import { asyncRun } from "./pyWorker";
 
+import CitySpinner from "../atoms/Spinner";
+
 const style = {
     listStyle: {
         listStylePosition: 'inside',
@@ -165,12 +167,15 @@ function SearchPluginList(props){
  */
 function ModificationPlugin(props){
 
-    const runPlugin = (parameters) =>{
-        console.log(parameters)
+    const [running, setRunning] = useState(false);
 
+    const runPlugin = (parameters) =>{
         let selected = props.getSelected()
-        console.log(selected)
         let fileNames = Object.keys(selected)
+        //console.log(parameters)
+        //console.log(selected)
+        if(fileNames.length == 0) return;
+        setRunning(true)
 
         fileNames.forEach((fileName)=>{
             let selection = selected[fileName];
@@ -184,12 +189,14 @@ function ModificationPlugin(props){
                 ")"
             ,{}).then((output)=>{
                 props.onResult(fileName,JSON.parse(output.results)) //file_name
+                setRunning(false)
             });
         })
     }
   
     return( 
         <div>
+            {running? <CitySpinner label={"Running Modification"} aLabel={"Running Modification"}/> : <></>}
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Modification"}/>
             <br/>
         </div>
@@ -198,13 +205,17 @@ function ModificationPlugin(props){
 }
 
 function SearchPlugin(props){
+    const [running, setRunning] = useState(false);
+
 
     const runPlugin = (parameters) =>{
-        console.log(parameters)
-
         let files = props.getSelected()
-        console.log(files)
         let fileNames = Object.keys(files)
+        //console.log(parameters)
+        //console.log(files)
+
+        if(fileNames.length == 0) return;
+        setRunning(true)
 
         fileNames.forEach((fileName)=>{
             let file = files[fileName];
@@ -217,6 +228,7 @@ function SearchPlugin(props){
                 ")"
             ,{}).then((output)=>{
                 props.onResult(fileName,JSON.parse(output.results)) //file_name
+                setRunning(false)
             });
             //setParams(JSON.parse(params.results))
         })
@@ -224,6 +236,7 @@ function SearchPlugin(props){
   
     return( 
         <div>
+            {running? <CitySpinner label={"Running Search"} aLabel={"Running Search"}/> : <></>}
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Search"}/>
             <br/>
         </div>
