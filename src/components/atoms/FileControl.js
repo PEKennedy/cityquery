@@ -19,17 +19,18 @@ const style = {
   checkboxItem: {
     paddingTop: 10,
     paddingLeft: 10,
+    fontSize: 14,
   },
   listStyle: {
     listStylePosition: 'inside',
     padding: 0,
     margin: 0,
     fontSize: 14,
-},
-p: {
-  marginTop: 10,
-  marginBottom: 10,
-},
+  },
+  p: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
   inputsContainer: {
 
   },
@@ -117,7 +118,7 @@ const FileControl = (props) => {
             _hover={style.buttonContainer.hover}
           >
             <label>
-              {isPluginMenu ? strings.clearPlugins : strings.clearFiles}
+              {strings.clear}
               <input className="input" type="button" id={clearId} name={clearId} onClick={clearFilesFunction} value={clearText} />
             </label>
           </Pressable>
