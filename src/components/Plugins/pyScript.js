@@ -8,6 +8,7 @@ import { strings } from "../../constants/strings";
 import { asyncRun } from "./pyWorker";
 
 import CitySpinner from "../atoms/Spinner";
+import { cloneDeep } from "lodash";
 
 const style = {
     listStyle: {
@@ -207,8 +208,68 @@ function ModificationPlugin(props){
 function SearchPlugin(props){
     const [running, setRunning] = useState(false);
 
+    //parallelized plugin running
+    //since the python seems the slowest part of the whole process, try to parallelize the search
+    //as much as possible. Since a search runs iteratively over every object in every file, and searches
+    //do not depend on other cityobjects, this is the easiest to parallelize.
 
+    //For each file, for each cityobject, pass the plugin the cityobject, and all other objects of the file
     const runPlugin = (parameters) =>{
+        let files = props.getSelected()
+        let fileNames = Object.keys(files)
+        //console.log(parameters)
+        //console.log(files)
+
+        if(fileNames.length == 0) return;
+        setRunning(true)
+
+        let threads = 0;
+
+        fileNames.forEach((fileName)=>{
+            let file = files[fileName];
+            
+            //get a copy of the other objects, without unnecessary data
+            let otherObjs = cloneDeep(file);
+            delete otherObjs.CityObjects;
+
+            let objNames = Object.keys(file)
+
+            objNames.forEach((objName,ind)=>{
+                let obj = file.CityObjects[objName]
+                let strictlyRelevantObjs = cloneDeep(otherObjs)
+                let relevantVerts = []
+                obj.geometries.forEach((v_ind)=>{
+                    relevantVerts.push(otherObjs.vertices[v_ind]);
+                })
+                delete strictlyRelevantObjs.vertices;
+                threads += 1;
+                asyncRun(props.script+
+                    "\nsearchCityJSON("+
+                    JSON.stringify(objName)+
+                    "," +
+                    JSON.stringify(obj)+
+                    "," +
+                    JSON.stringify(strictlyRelevantObjs) +
+                    "," +
+                    JSON.stringify(relevantVerts) +
+                    "," +
+                    JSON.stringify(parameters)+
+                    ")"
+                ,{}).then((output)=>{
+                    props.onResult(fileName,JSON.parse(output.results),true) //file_name
+                    threads -= 1;
+                    if(threads == 0){
+                        setRunning(false)
+                    }
+                });
+            })
+
+        })
+    }
+
+
+    //Old runPlugin
+    /*const runPlugin = (parameters) =>{
         let files = props.getSelected()
         let fileNames = Object.keys(files)
         //console.log(parameters)
@@ -232,7 +293,7 @@ function SearchPlugin(props){
             });
             //setParams(JSON.parse(params.results))
         })
-    }
+    }*/
   
     return( 
         <div>
