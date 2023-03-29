@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { VStack, Text } from 'native-base';
 import { strings } from '../../constants/strings';
-import { SearchPluginList } from '../3JS/pyScript';
+import { SearchPluginList } from '../Plugins/pyScript';
 import { SearchMenuContext } from '../../constants/context';
 
 const style = {

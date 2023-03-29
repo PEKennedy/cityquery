@@ -5,6 +5,8 @@ import { Pressable, VStack } from "native-base";
 import '../../styles.css';
 import { strings } from "../../constants/strings";
 
+import { asyncRun } from "./pyWorker";
+
 const style = {
     listStyle: {
         listStylePosition: 'inside',
@@ -76,6 +78,15 @@ function runPy(code){
       })
     })
 }
+
+async function runPyAsync(code){
+    try{
+        const {results, err} = await asyncRun(code,)
+    } catch(e){
+
+    }
+}
+
 
 /**
  * Creates a FileControl for python plugins, and for each uploaded plugin creates a <ModificationPlugin> element
