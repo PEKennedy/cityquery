@@ -144,7 +144,7 @@ function SearchPluginList(props){
     }
 
     let objList = files.map((file,index) =>
-        <SearchPlugin script={file} key={index} getSelected={props.getSelected} onResult={props.onResult} />
+        <SearchPlugin script={file} key={index} getSelected={props.getSelected} onResult={props.onResult} clearSelect={props.clearSelect} />
     );
 
     return(
@@ -209,29 +209,49 @@ function SearchPlugin(props){
 
 
     const runPlugin = (parameters) =>{
-        let files = props.getSelected()
+        let files = props.getSelected() //not actually the selected, jus the things to apply the operation
+        //to, in this case, all files.
         let fileNames = Object.keys(files)
         //console.log(parameters)
         //console.log(files)
 
         if(fileNames.length == 0) return;
         setRunning(true)
-
+        //props.clearSelect()
+        let promises = []
+        let fileNamesOut = [];
         fileNames.forEach((fileName)=>{
             let file = files[fileName];
             //runPy(props.script+
-            asyncRun(props.script+
+            promises.push(asyncRun(props.script+
                 "\nsearchCityJSON("+
                 JSON.stringify(file)+
                 "," +
                 JSON.stringify(parameters)+
                 ")"
-            ,{}).then((output)=>{
-                props.onResult(fileName,JSON.parse(output.results)) //file_name
-                setRunning(false)
-            });
+            ,{}));
+            fileNamesOut.push(fileName)
+            
+
             //setParams(JSON.parse(params.results))
         })
+        Promise.all(promises).then((res)=>{
+            console.log(res)
+            res.forEach((output,index)=>{
+                console.log(output)
+                let fileName = fileNamesOut[index];
+                console.log(fileName)
+                if(output.results){
+                    //select()
+                    props.onResult(fileName,JSON.parse(output.results)) //file_name
+                }
+                else{
+                    console.error(output.error)
+                }
+                //console.log(fileName)
+            })
+            setRunning(false)
+        });
     }
   
     return( 

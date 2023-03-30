@@ -65,16 +65,19 @@ const CityQueryPage = () => {
 
     let newSelected = cloneDeep(selected);
 
+    
     if(newSelected[fileName] == undefined){
       newSelected[fileName] = {"objects":objNames}
     }
     else if(append){
-      newSelected[fileName]["objects"].push(objNames)
+      newSelected[fileName]["objects"].push(...objNames)
+      newSelected[fileName]["objects"] = [...new Set(newSelected[fileName]["objects"])]
     }
     else{
       newSelected[fileName]["objects"] = objNames
     }
     setSelected(newSelected)
+    console.log(newSelected)
   }
 
   const deSelect = (fileName, objNames) => {
@@ -154,7 +157,7 @@ const CityQueryPage = () => {
 
   const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues, addFileLAS, clearLASFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
-  const searchMenuContext = { cityFiles, select }
+  const searchMenuContext = { cityFiles, select, clearSelect }
   const selectionContext = { selected, getSelected, select, deSelect, clearSelect };
 
   return (

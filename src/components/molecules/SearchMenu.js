@@ -21,7 +21,7 @@ const style = {
 };
 
 const SearchMenu = () => {
-  const { cityFiles, select } = useContext(SearchMenuContext);
+  const { cityFiles, select, clearSelect } = useContext(SearchMenuContext);
   return (
     <VStack style={style.menuContainer}>
       <Text style={style.titleText}>
@@ -30,7 +30,7 @@ const SearchMenu = () => {
       <Text style={style.menuText}>
         {strings.searchPlugins}
       </Text>
-      <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select}/>
+      <SearchPluginList getSelected={()=>{return cityFiles}} onResult={select} clearSelect={clearSelect}/>
     </VStack>
   );
 };
