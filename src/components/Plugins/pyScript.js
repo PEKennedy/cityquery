@@ -5,6 +5,10 @@ import { Pressable, VStack } from "native-base";
 import '../../styles.css';
 import { strings } from "../../constants/strings";
 
+import { asyncRun } from "./pyWorker";
+
+import CitySpinner from "../atoms/Spinner";
+
 const style = {
     listStyle: {
         listStylePosition: 'inside',
@@ -76,6 +80,15 @@ function runPy(code){
       })
     })
 }
+
+async function runPyAsync(code){
+    try{
+        const {results, err} = await asyncRun(code,)
+    } catch(e){
+
+    }
+}
+
 
 /**
  * Creates a FileControl for python plugins, and for each uploaded plugin creates a <ModificationPlugin> element
@@ -154,16 +167,19 @@ function SearchPluginList(props){
  */
 function ModificationPlugin(props){
 
-    const runPlugin = (parameters) =>{
-        console.log(parameters)
+    const [running, setRunning] = useState(false);
 
+    const runPlugin = (parameters) =>{
         let selected = props.getSelected()
-        console.log(selected)
         let fileNames = Object.keys(selected)
+        //console.log(parameters)
+        //console.log(selected)
+        if(fileNames.length == 0) return;
+        setRunning(true)
 
         fileNames.forEach((fileName)=>{
             let selection = selected[fileName];
-            runPy(props.script+
+            asyncRun(props.script+
                 "\nmodifyCityJSON("+
                 JSON.stringify(selection.file)+
                 "," +
@@ -171,14 +187,16 @@ function ModificationPlugin(props){
                 ","+
                 JSON.stringify(parameters)+
                 ")"
-            ).then((output)=>{
-                props.onResult(fileName,JSON.parse(output)) //file_name
+            ,{}).then((output)=>{
+                props.onResult(fileName,JSON.parse(output.results)) //file_name
+                setRunning(false)
             });
         })
     }
   
     return( 
         <div>
+            {running? <CitySpinner label={"Running Modification"} aLabel={"Running Modification"}/> : <></>}
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Modification"}/>
             <br/>
         </div>
@@ -187,30 +205,38 @@ function ModificationPlugin(props){
 }
 
 function SearchPlugin(props){
+    const [running, setRunning] = useState(false);
+
 
     const runPlugin = (parameters) =>{
-        console.log(parameters)
-
         let files = props.getSelected()
-        console.log(files)
         let fileNames = Object.keys(files)
+        //console.log(parameters)
+        //console.log(files)
+
+        if(fileNames.length == 0) return;
+        setRunning(true)
 
         fileNames.forEach((fileName)=>{
             let file = files[fileName];
-            runPy(props.script+
+            //runPy(props.script+
+            asyncRun(props.script+
                 "\nsearchCityJSON("+
                 JSON.stringify(file)+
                 "," +
                 JSON.stringify(parameters)+
                 ")"
-            ).then((output)=>{
-                props.onResult(fileName,JSON.parse(output)) //file_name
+            ,{}).then((output)=>{
+                props.onResult(fileName,JSON.parse(output.results)) //file_name
+                setRunning(false)
             });
+            //setParams(JSON.parse(params.results))
         })
     }
   
     return( 
         <div>
+            {running? <CitySpinner label={"Running Search"} aLabel={"Running Search"}/> : <></>}
             <PluginParameters script={props.script} onRun={runPlugin} runText={"Run Search"}/>
             <br/>
         </div>
@@ -232,10 +258,14 @@ function PluginParameters(props){
     const [inputs, setInputs] = useState({})
 
     const getParams = (script) =>{
-        runPy(script+"\ngetParams()").then((params) =>{
+        /*runPy(script+"\ngetParams()").then((params) =>{
             console.log(params);
             setParams(JSON.parse(params))
-            //return JSON.parse(params);
+        })*/
+        asyncRun(script+"\ngetParams()",{}).then((params) =>{
+            //console.log(params)
+            //console.log(JSON.parse(params.results));
+            setParams(JSON.parse(params.results))
         })
     }
 

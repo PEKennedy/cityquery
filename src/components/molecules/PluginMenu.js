@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, VStack } from 'native-base';
-import { ModificationPluginList } from '../3JS/pyScript';
+import { ModificationPluginList } from '../Plugins/pyScript';
 import { useContext } from 'react';
 import { strings } from '../../constants/strings';
 import { PluginMenuContext } from '../../constants/context';
