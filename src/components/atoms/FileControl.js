@@ -1,7 +1,9 @@
 import { Checkbox, HStack, Pressable, VStack } from "native-base";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CityFilesContext } from "../../constants/context";
 import { strings } from "../../constants/strings";
 import '../../styles.css';
+import ObjectList from "../molecules/ObjectList";
 
 const style = {
   buttonContainer: {
@@ -50,6 +52,7 @@ const FileControl = (props) => {
     const { upId, clearId, fileType, clearText, addFile, clearFiles, selectFile, deSelectFile, isPluginMenu, isFileMenu, checkboxValues, setCheckboxValues } = props;
     const [fileMetaData, setFileMetaData] = useState([]);
     const [filesList, setFilesList] = useState([]);
+    const cityFiles = useContext(CityFilesContext);
 
     const clearFilesFunction = (e) => {
         clearFiles();
@@ -89,6 +92,13 @@ const FileControl = (props) => {
         }
     }, [fileMetaData])
 
+    let cityFilesArray = [];
+    for (const [key, ] of Object.entries(cityFiles)) {
+      let file = cityFiles[key];
+      file.key = key;
+      cityFilesArray.push(file);
+    }
+
     return <VStack marginTop={1} space={1}>
         <HStack style={style.inputsContainer}>
           <Pressable
@@ -126,25 +136,27 @@ const FileControl = (props) => {
         <VStack style={style.menuContainer}>
           {isFileMenu ? (
             <Checkbox.Group defaultValue={checkboxValues} value={checkboxValues} colorScheme="red" onChange={values => {
-              console.log(values);
               setCheckboxValues(values || []);
             }}>
-              {filesList.map(item => (
-                <HStack style={style.checkboxItem}>
-                  <Checkbox value={item.key} marginRight={2} onChange={() => {
-                    let found = false;
-                    checkboxValues.forEach((value) => {
-                      if (value === item.key) {
-                        found = true;
-                        deSelectFile(item.key);
+              {cityFilesArray.map(item => (
+                <VStack width="100%">
+                  <HStack style={style.checkboxItem}>
+                    <Checkbox value={item.key} marginRight={2} onChange={() => {
+                      let found = false;
+                      checkboxValues.forEach((value) => {
+                        if (value === item.key) {
+                          found = true;
+                          deSelectFile(item.key);
+                        }
+                      })
+                      if (!found) {
+                        selectFile(item.key);
                       }
-                    })
-                    if (!found) {
-                      selectFile(item.key);
-                    }
-                  }} />
-                  {item}
-                </HStack>
+                    }} />
+                    {item.key}
+                  </HStack>
+                  <ObjectList file={item.CityObjects} fileName={item.key} />
+                </VStack>
               ))}
             </Checkbox.Group>
           ) : (

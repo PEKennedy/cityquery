@@ -129,6 +129,10 @@ const VisualizationRoot = (props) => {
             <input className="input" type="button" id={"test"} name={"test"} onClick={centerCamera} />
           </label>
         </Pressable>
+        <input type="button" onClick={() => {
+          getSelected();
+        }}
+        />
         <Canvas onPointerMissed={clearSelect} >
           <PerspectiveCamera  position={[0,5,10]} fov={75} makeDefault ref={cameraRef} far={3000}/>
           <CameraControls ref={controlsRef} />

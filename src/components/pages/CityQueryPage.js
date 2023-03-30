@@ -3,7 +3,7 @@ import { HStack, VStack } from 'native-base';
 import NavBar from '../organisms/NavBar';
 import VisualizationRoot from '../organisms/VisualizationRoot';
 import SideMenu from '../organisms/SideMenu';
-import { FileMenuContext, PluginMenuContext, SearchMenuContext, SelectionContext } from '../../constants/context';
+import { CityFilesContext, FileMenuContext, PluginMenuContext, SearchMenuContext, SelectionContext, SelectObjectContext } from '../../constants/context';
 import { cloneDeep } from 'lodash';
 
 const style = {
@@ -62,6 +62,7 @@ const CityQueryPage = () => {
   }
   
   const select = (fileName, objNames, append=false) => {
+    console.log(objNames);
 
     let newSelected = cloneDeep(selected);
 
@@ -69,12 +70,13 @@ const CityQueryPage = () => {
       newSelected[fileName] = {"objects":objNames}
     }
     else if(append){
-      newSelected[fileName]["objects"].push(objNames)
+      newSelected[fileName]["objects"].push(...objNames)
     }
     else{
       newSelected[fileName]["objects"] = objNames
     }
     setSelected(newSelected)
+    console.log(newSelected);
   }
 
   const deSelect = (fileName, objNames) => {
@@ -137,6 +139,7 @@ const CityQueryPage = () => {
 
   //Get the selected state with the corresponding cityFile
   const getSelected = () => {
+    console.log(selected);
     let newSelected = cloneDeep(selected)
     let keys = Object.keys(newSelected)
     keys.forEach((fileName)=>{
@@ -152,23 +155,28 @@ const CityQueryPage = () => {
     setCityFiles(newCityFiles)
   }
 
-  const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues, addFileLAS, clearLASFiles };
+  const fileMenuContext = { addFile, clearCityFiles, selectFile, deSelectFile, checkboxValues, setCheckboxValues, addFileLAS, clearLASFiles, cityFiles };
   const pluginMenuContext = { cityFiles, getSelected, ModifyCityJSON, select_test, select, deSelect, clearSelect };
   const searchMenuContext = { cityFiles, select }
   const selectionContext = { selected, getSelected, select, deSelect, clearSelect };
+  const selectObjectContext = { select, deSelect };
 
   return (
     <FileMenuContext.Provider value={fileMenuContext}>
       <PluginMenuContext.Provider value={pluginMenuContext}>
         <SearchMenuContext.Provider value={searchMenuContext}>
           <SelectionContext.Provider value={selectionContext}>
-            <VStack style={style.pageContainer}>
-              <NavBar selected="CityQuery" />
-              <HStack style={style.innerContainer}>
-                <SideMenu />
-                <VisualizationRoot cityFiles={cityFiles} lasFiles={lasFiles} selected={selected} />
-              </HStack>
-            </VStack>
+            <SelectObjectContext.Provider value={selectObjectContext}>
+              <CityFilesContext.Provider value={cityFiles}>
+                <VStack style={style.pageContainer}>
+                  <NavBar selected="CityQuery" />
+                  <HStack style={style.innerContainer}>
+                    <SideMenu />
+                    <VisualizationRoot cityFiles={cityFiles} lasFiles={lasFiles} selected={selected} />
+                  </HStack>
+                </VStack>
+              </CityFilesContext.Provider>
+            </SelectObjectContext.Provider>
           </SelectionContext.Provider>
         </SearchMenuContext.Provider>
       </PluginMenuContext.Provider>
