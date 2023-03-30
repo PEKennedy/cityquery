@@ -71,6 +71,7 @@ const CityQueryPage = () => {
     }
     else if(append){
       newSelected[fileName]["objects"].push(...objNames)
+      newSelected[fileName]["objects"] = [...new Set(newSelected[fileName]["objects"])]
     }
     else{
       newSelected[fileName]["objects"] = objNames
