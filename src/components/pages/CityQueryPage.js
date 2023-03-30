@@ -63,6 +63,7 @@ const CityQueryPage = () => {
   
   const select = (fileName, objNames, append=false) => {
     console.log(objNames);
+    console.log(selected);
 
     let newSelected = cloneDeep(selected);
 

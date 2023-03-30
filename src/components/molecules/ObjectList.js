@@ -4,7 +4,7 @@ import ObjectInList from '../atoms/ObjectInList';
 
 const style = {
   listContainer: {
-    height: 300,
+    maxHeight: 300,
     width: '100%',
     marginLeft: 20,
     marginright: 20,
